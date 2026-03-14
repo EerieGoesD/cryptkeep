@@ -1,0 +1,29 @@
+name: cryptkeep
+description: "CryptKeep — zero-knowledge password manager by EERIE"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.8.4
+  encrypt: ^5.0.3
+  pointycastle: ^3.9.1
+  uuid: ^4.5.1
+  provider: ^6.1.2
+  kdbx: ^2.4.2
+  file_picker: ^8.0.0
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
