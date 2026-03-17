@@ -206,9 +206,9 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
   }
 
   Widget _buildMeta() {
-    final fmt = (DateTime dt) {
+    String fmt(DateTime dt) {
       return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-    };
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
