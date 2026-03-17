@@ -243,7 +243,7 @@ class _AddEditEntryScreenState extends State<AddEditEntryScreen> {
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: validId.isEmpty ? null : validId,
+                      initialValue: validId.isEmpty ? null : validId,
                       decoration: const InputDecoration(
                         labelText: 'Category (optional)',
                         prefixIcon: Icon(Icons.folder_outlined),

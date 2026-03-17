@@ -43,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final userId = response.user!.id;
       final key = CryptoService.deriveKey(_passwordCtrl.text, userId);
 
+      if (!mounted) return;
       await context.read<AppState>().unlock(key);
 
       if (!mounted) return;

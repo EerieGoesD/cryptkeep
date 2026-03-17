@@ -183,7 +183,7 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: const Color(0xFF8B5CF6),
+          activeThumbColor: const Color(0xFF8B5CF6),
         ),
       ],
     );

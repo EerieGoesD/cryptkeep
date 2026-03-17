@@ -24,6 +24,17 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  msix: ^3.16.7
+
+msix_config:
+  display_name: CryptKeep
+  publisher_display_name: EERIE
+  identity_name: 20715EerieGoesD.CryptKeep
+  publisher: CN=A2A89A47-0B2B-4C32-B85C-9753888A9FFC
+  msix_version: 1.0.0.0
+  logo_path: windows/runner/resources/app_icon.ico
+  capabilities: internetClient
+  store: true
 
 flutter:
   uses-material-design: true
