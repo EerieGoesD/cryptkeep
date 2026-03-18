@@ -219,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
                   ),
                   InkWell(
-                    onTap: () => launchUrl(Uri.parse('mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Bug%20Report')),
+                    onTap: () => launchUrl(Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues')),
                     child: const Text('Report an Issue',
                         style: TextStyle(
                             color: Color(0xFF8B5CF6),
