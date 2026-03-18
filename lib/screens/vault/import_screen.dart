@@ -87,7 +87,10 @@ class _ImportScreenState extends State<ImportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Import from KeePass')),
-      body: SingleChildScrollView(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,6 +169,8 @@ class _ImportScreenState extends State<ImportScreen> {
                     label: const Text('Import Entries'),
                   ),
           ],
+        ),
+      ),
         ),
       ),
     );
