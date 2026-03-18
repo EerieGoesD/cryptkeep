@@ -189,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 Center(
                   child: InkWell(
                     onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
@@ -200,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontWeight: FontWeight.w600)),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
                 Center(
                   child: InkWell(
                     onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
