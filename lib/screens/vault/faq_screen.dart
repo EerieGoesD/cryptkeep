@@ -65,6 +65,12 @@ class FaqScreen extends StatelessWidget {
       a: 'Yes. Install the app on any device, log in with the same account '
           'and master password, and your vault will be available instantly.',
     ),
+    (
+      q: 'Can I permanently delete my account?',
+      a: 'Yes. Go to Settings and tap "Delete Account." '
+          'This will permanently remove your account and all vault data from the server. '
+          'This action cannot be undone.',
+    ),
   ];
 
   @override
