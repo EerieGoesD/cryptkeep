@@ -165,13 +165,15 @@ class _VaultScreenState extends State<VaultScreen> {
     );
     if (confirmed != true) return;
 
-    for (final id in _selected) {
-      await VaultService.delete(id);
-    }
+    final idsToDelete = Set<String>.from(_selected);
     setState(() {
-      _entries.removeWhere((e) => _selected.contains(e.id));
+      _entries.removeWhere((e) => idsToDelete.contains(e.id));
       _selected.clear();
     });
+
+    for (final id in idsToDelete) {
+      await VaultService.delete(id);
+    }
   }
 
   void _toggleSelect(String id) {
