@@ -67,7 +67,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Account')),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
           padding: const EdgeInsets.all(28),
           child: Form(
             key: _formKey,
@@ -163,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 4),
                 Center(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
                     child: const Text('Made by EERIE',
                         style: TextStyle(
@@ -174,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 Center(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
                     child: const Text('☕ Buy Me a Coffee',
                         style: TextStyle(
@@ -185,6 +188,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ],
             ),
+          ),
+        ),
           ),
         ),
       ),
