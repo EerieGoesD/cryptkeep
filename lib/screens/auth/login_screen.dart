@@ -76,6 +76,17 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const FaqScreen()),
+                      ),
+                      icon: const Icon(Icons.help_outline, size: 18, color: Color(0xFF8B5CF6)),
+                      label: const Text('What is CryptKeep?',
+                          style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   const Icon(Icons.lock_outline, size: 48, color: Color(0xFF8B5CF6)),
                   const SizedBox(height: 20),
                   const Text('Welcome back',
@@ -133,17 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const FaqScreen()),
-                      ),
-                      icon: const Icon(Icons.help_outline, size: 18, color: Color(0xFF8B5CF6)),
-                      label: const Text('What is CryptKeep?',
-                          style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13)),
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   const Center(
                     child: Text('Using CryptKeep is 100% free.',
@@ -182,14 +182,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w600)),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Center(
                     child: InkWell(
                       onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
                       child: const Text('Privacy Policy',
                           style: TextStyle(
-                              color: Color(0xFF94A3B8),
-                              fontSize: 12)),
+                              color: Color(0xFF8B5CF6),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
