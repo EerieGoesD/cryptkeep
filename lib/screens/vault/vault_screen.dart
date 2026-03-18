@@ -332,6 +332,11 @@ class _VaultScreenState extends State<VaultScreen> {
                 onPressed: _sync,
               ),
         IconButton(
+          icon: const Icon(Icons.checklist, size: 22),
+          tooltip: 'Select entries',
+          onPressed: () => _selectAll(),
+        ),
+        IconButton(
           icon: const Icon(Icons.help_outline, size: 22),
           tooltip: 'FAQ & About',
           onPressed: () => Navigator.of(context).push(
