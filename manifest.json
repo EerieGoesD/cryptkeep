@@ -1,6 +1,6 @@
 {
-    "name": "cryptkeep",
-    "short_name": "cryptkeep",
+    "name": "CryptKeep",
+    "short_name": "CryptKeep",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
