@@ -211,6 +211,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontWeight: FontWeight.w600)),
                   ),
                 ),
+                const SizedBox(height: 8),
+                Center(
+                  child: InkWell(
+                    onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
+                    child: const Text('Privacy Policy',
+                        style: TextStyle(
+                            color: Color(0xFF94A3B8),
+                            fontSize: 12)),
+                  ),
+                ),
               ],
             ),
           ),

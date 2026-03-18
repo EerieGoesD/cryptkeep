@@ -114,19 +114,21 @@ class FaqScreen extends StatelessWidget {
           const SizedBox(height: 24),
 
           // ── Buy Me a Coffee ──────────────────────────────────────────────
-          OutlinedButton.icon(
-            onPressed: () => launchUrl(
-              Uri.parse(_buyMeCoffeeUrl),
-              mode: LaunchMode.externalApplication,
-            ),
-            icon: const Text('☕', style: TextStyle(fontSize: 18)),
-            label: const Text('Buy Me a Coffee'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF8B5CF6),
-              side: const BorderSide(color: Color(0xFF8B5CF6)),
-              minimumSize: const Size(0, 48),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+          Center(
+            child: OutlinedButton.icon(
+              onPressed: () => launchUrl(
+                Uri.parse(_buyMeCoffeeUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+              icon: const Text('☕', style: TextStyle(fontSize: 18)),
+              label: const Text('Buy Me a Coffee'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF8B5CF6),
+                side: const BorderSide(color: Color(0xFF8B5CF6)),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+              ),
             ),
           ),
           const SizedBox(height: 32),
