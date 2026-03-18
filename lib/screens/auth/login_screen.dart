@@ -76,6 +76,14 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Icon(Icons.lock_outline, size: 48, color: Color(0xFF8B5CF6)),
+                  const SizedBox(height: 20),
+                  const Text('Welcome back',
+                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 6),
+                  const Text('Sign in to access your vault.',
+                      style: TextStyle(color: Color(0xFF94A3B8))),
+                  const SizedBox(height: 20),
                   Center(
                     child: TextButton.icon(
                       onPressed: () => Navigator.of(context).push(
@@ -86,15 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13)),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  const Icon(Icons.lock_outline, size: 48, color: Color(0xFF8B5CF6)),
                   const SizedBox(height: 20),
-                  const Text('Welcome back',
-                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 6),
-                  const Text('Sign in to access your vault.',
-                      style: TextStyle(color: Color(0xFF94A3B8))),
-                  const SizedBox(height: 36),
                   TextFormField(
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Center(
                     child: InkWell(
                       onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w600)),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 32),
                   Center(
                     child: InkWell(
                       onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
