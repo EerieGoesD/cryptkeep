@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
                   const Center(
-                    child: Text('This website is free.',
+                    child: Text('Using CryptKeep is 100% free.',
                         style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
                   ),
                   const SizedBox(height: 4),
