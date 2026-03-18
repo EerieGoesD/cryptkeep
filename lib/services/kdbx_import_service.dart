@@ -27,21 +27,27 @@ class KdbxImportService {
           entry.getString(KdbxKeyCommon.PASSWORD)?.getText() ?? '';
       final url = entry.getString(KdbxKeyCommon.URL)?.getText() ?? '';
 
-      // Try standard 'Notes' key, then iterate all string keys as fallback
+      // Get the standard Notes field
       var notes = entry.getString(KdbxKey('Notes'))?.getText() ?? '';
-      if (notes.isEmpty) {
-        for (final se in entry.stringEntries) {
-          final keyLower = se.key.key.toLowerCase();
-          if (keyLower == 'notes') {
-            notes = se.value?.getText() ?? '';
-            break;
-          }
+
+      // Collect custom fields (anything beyond Title, UserName, Password, URL, Notes)
+      const standardKeys = {'title', 'username', 'password', 'url', 'notes'};
+      final customParts = <String>[];
+      for (final se in entry.stringEntries) {
+        if (standardKeys.contains(se.key.key.toLowerCase())) continue;
+        final value = se.value?.getText() ?? '';
+        if (value.isNotEmpty) {
+          customParts.add('${se.key.key}: $value');
+        } else {
+          // Some entries use the key name itself as the data (e.g. backup codes)
+          customParts.add(se.key.key);
         }
       }
 
-      if (kDebugMode) {
-        debugPrint('KDBX Import [$title] keys: ${entry.stringEntries.map((e) => e.key.key).toList()}');
-        debugPrint('KDBX Import [$title] notes: "$notes"');
+      // Append custom fields to notes
+      if (customParts.isNotEmpty) {
+        final customText = customParts.join('\n');
+        notes = notes.isEmpty ? customText : '$notes\n\n$customText';
       }
 
       entries.add(VaultEntry(
