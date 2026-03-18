@@ -115,11 +115,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                   const SizedBox(height: 16),
                   Center(
-                    child: TextButton(
-                      onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                      ),
-                      child: const Text("Don't have an account? Create one"),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("Don't have an account? ",
+                            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                          ),
+                          child: const Text('Create one',
+                              style: TextStyle(
+                                  color: Color(0xFF8B5CF6),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 8),
