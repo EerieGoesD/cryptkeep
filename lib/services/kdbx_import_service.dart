@@ -12,6 +12,7 @@ class KdbxImportService {
   static Future<List<VaultEntry>> parse(
       Uint8List fileBytes, String password) async {
     final credentials = Credentials(ProtectedValue.fromString(password));
+    KdbxFormat.dartWebWorkaround = kIsWeb;
     final kdbxFormat = KdbxFormat();
     final file = await kdbxFormat.read(fileBytes, credentials);
 
