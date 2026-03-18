@@ -132,22 +132,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
+                  const Center(
+                    child: Text('This website is free.',
+                        style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                  ),
+                  const SizedBox(height: 4),
                   Center(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const Text('This app is free. Made by ',
-                            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
-                        GestureDetector(
-                          onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
-                          child: const Text('EERIE',
-                              style: TextStyle(
-                                  color: Color(0xFF8B5CF6),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600)),
-                        ),
-                      ],
+                    child: GestureDetector(
+                      onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
+                      child: const Text('Made by EERIE',
+                          style: TextStyle(
+                              color: Color(0xFF8B5CF6),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600)),
                     ),
                   ),
                   const SizedBox(height: 8),

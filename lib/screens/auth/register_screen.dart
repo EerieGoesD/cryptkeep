@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/crypto_service.dart';
+import '../vault/faq_screen.dart';
 import '../vault/vault_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -143,6 +145,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onPressed: _register,
                         child: const Text('Create Vault'),
                       ),
+                const SizedBox(height: 8),
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FaqScreen()),
+                    ),
+                    icon: const Icon(Icons.help_outline, size: 18, color: Color(0xFF8B5CF6)),
+                    label: const Text('What is CryptKeep?',
+                        style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13)),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                const Center(
+                  child: Text('This website is free.',
+                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                ),
+                const SizedBox(height: 4),
+                Center(
+                  child: GestureDetector(
+                    onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
+                    child: const Text('Made by EERIE',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: GestureDetector(
+                    onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
+                    child: const Text('☕ Buy Me a Coffee',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
               ],
             ),
           ),
