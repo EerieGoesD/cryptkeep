@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.eerie" "\0"
-            VALUE "FileDescription", "cryptkeep" "\0"
+            VALUE "FileDescription", "CryptKeep" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "cryptkeep" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.eerie. All rights reserved." "\0"
             VALUE "OriginalFilename", "cryptkeep.exe" "\0"
-            VALUE "ProductName", "cryptkeep" "\0"
+            VALUE "ProductName", "CryptKeep" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
