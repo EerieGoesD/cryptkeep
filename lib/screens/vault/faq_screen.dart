@@ -95,14 +95,21 @@ class FaqScreen extends StatelessWidget {
             style: TextStyle(color: Color(0xFF94A3B8)),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Made by EERIE',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF8B5CF6),
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1,
+          const Text.rich(
+            TextSpan(
+              text: 'Made by ',
+              style: TextStyle(color: Color(0xFF94A3B8), letterSpacing: 1),
+              children: [
+                TextSpan(
+                  text: 'EERIE',
+                  style: TextStyle(
+                    color: Color(0xFF8B5CF6),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
 
@@ -117,7 +124,7 @@ class FaqScreen extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFF8B5CF6),
               side: const BorderSide(color: Color(0xFF8B5CF6)),
-              minimumSize: const Size(double.infinity, 48),
+              minimumSize: const Size(0, 48),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),

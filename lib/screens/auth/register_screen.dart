@@ -168,11 +168,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Center(
                   child: InkWell(
                     onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
-                    child: const Text('Made by EERIE',
-                        style: TextStyle(
-                            color: Color(0xFF8B5CF6),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600)),
+                    child: const Text.rich(
+                      TextSpan(
+                        text: 'Made by ',
+                        style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                        children: [
+                          TextSpan(
+                            text: 'EERIE',
+                            style: TextStyle(
+                              color: Color(0xFF8B5CF6),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
