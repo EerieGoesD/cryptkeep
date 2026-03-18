@@ -36,6 +36,7 @@ class _VaultScreenState extends State<VaultScreen> {
   final Set<String> _collapsed = {};
 
   bool _syncing = false;
+  bool _deleting = false;
   DateTime? _lastSync;
   String? _notification;
   Timer? _notifTimer;
@@ -78,6 +79,10 @@ class _VaultScreenState extends State<VaultScreen> {
   }
 
   Future<void> _sync() async {
+    if (_deleting) {
+      _showNotification('Please wait, deleting entries...');
+      return;
+    }
     final now = DateTime.now();
     if (_lastSync != null && now.difference(_lastSync!).inSeconds < 30) {
       final secs = 30 - now.difference(_lastSync!).inSeconds;
@@ -169,10 +174,13 @@ class _VaultScreenState extends State<VaultScreen> {
     setState(() {
       _entries.removeWhere((e) => idsToDelete.contains(e.id));
       _selected.clear();
+      _deleting = true;
     });
 
-    for (final id in idsToDelete) {
-      await VaultService.delete(id);
+    try {
+      await Future.wait(idsToDelete.map((id) => VaultService.delete(id)));
+    } finally {
+      if (mounted) setState(() => _deleting = false);
     }
   }
 
