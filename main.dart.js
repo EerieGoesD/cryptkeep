@@ -48179,7 +48179,7 @@ return A.G($async$x_,r)},
 L(a){var s,r=this,q=null,p=A.kN(!1,r.e,B.qQ,B.np,1,!1,q,new A.aDX()),o=r.w
 o=A.kN(!1,r.f,A.Fh(q,q,q,q,q,q,q,q,!0,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,q,"Master Password",!0,!0,!1,q,q,q,q,q,q,q,q,A.eI(q,q,q,A.ji(o?B.eu:B.et,B.aM,q,q),q,q,new A.aDY(r),q,q,q,q),q,q,q,q,q),q,1,o,q,new A.aDZ())
 s=r.r?B.fe:A.ae9(B.a0M,r.ganb())
-return A.qG(q,A.ve(!0,A.e3(new A.em(B.ow,A.Id(A.afD(A.h9(A.a([B.qM,B.hg,B.a0d,B.nc,B.a08,B.nb,p,B.d3,o,B.na,s,B.jm,A.e3(A.fE(B.a0r,new A.aE_(a),q),q,q),B.d4,A.e3(A.aPH(B.qK,B.D3,new A.aE0(a)),q,q),B.jn,B.oX,B.dQ,A.e3(A.jk(!1,q,!0,B.D4,q,!0,q,q,q,q,q,q,q,q,q,new A.aE1(),q,q,q,q,q,q,q),q,q),B.d4,A.e3(A.jk(!1,q,!0,B.D7,q,!0,q,q,q,q,q,q,q,q,q,new A.aE2(),q,q,q,q,q,q,q),q,q)],t.p),B.aU,B.N,B.a3),r.d),B.l4),q),q,q),B.aE,!0),q)}}
+return A.qG(q,A.ve(!0,A.e3(new A.em(B.ow,A.Id(A.afD(A.h9(A.a([B.qM,B.hg,B.a0e,B.nc,B.a08,B.nb,p,B.d3,o,B.na,s,B.jm,A.e3(A.fE(B.a0s,new A.aE_(a),q),q,q),B.d4,A.e3(A.aPH(B.qK,B.D3,new A.aE0(a)),q,q),B.jn,B.oX,B.dQ,A.e3(A.jk(!1,q,!0,B.D4,q,!0,q,q,q,q,q,q,q,q,q,new A.aE1(),q,q,q,q,q,q,q),q,q),B.d4,A.e3(A.jk(!1,q,!0,B.D7,q,!0,q,q,q,q,q,q,q,q,q,new A.aE2(),q,q,q,q,q,q,q),q,q)],t.p),B.aU,B.N,B.a3),r.d),B.l4),q),q,q),B.aE,!0),q)}}
 A.aDQ.prototype={
 $0(){return this.a.r=!0},
 $S:0}
@@ -48282,8 +48282,8 @@ l=A.kN(!1,p.f,A.Fh(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,
 s=A.kN(!1,p.r,B.KP,o,1,p.x,o,new A.aFZ(p))
 r=A.fv(10)
 r=A.ir(o,B.Ti,B.C,o,o,new A.dK(B.aL,o,A.aNW(B.S,1),r,o,o,B.aZ),o,o,o,B.pZ,o,o,o)
-q=p.w?B.fe:A.ae9(B.a0q,p.gaq9())
-return A.qG(n,A.ve(!0,A.e3(new A.em(B.ow,A.Id(A.afD(A.h9(A.a([B.a0G,B.nc,B.a0w,B.nb,m,B.d3,l,B.d3,s,B.jl,r,B.na,q,B.d4,A.e3(A.aPH(B.qK,B.D3,new A.aG_(a)),o,o),B.jn,B.oX,B.dQ,A.e3(A.jk(!1,o,!0,B.D4,o,!0,o,o,o,o,o,o,o,o,o,new A.aG0(),o,o,o,o,o,o,o),o,o),B.d4,A.e3(A.jk(!1,o,!0,B.D7,o,!0,o,o,o,o,o,o,o,o,o,new A.aG1(),o,o,o,o,o,o,o),o,o)],t.p),B.aU,B.N,B.a3),p.d),B.l4),o),o,o),B.aE,!0),o)}}
+q=p.w?B.fe:A.ae9(B.a0r,p.gaq9())
+return A.qG(n,A.ve(!0,A.e3(new A.em(B.ow,A.Id(A.afD(A.h9(A.a([B.a0H,B.nc,B.a0x,B.nb,m,B.d3,l,B.d3,s,B.jl,r,B.na,q,B.d4,A.e3(A.aPH(B.qK,B.D3,new A.aG_(a)),o,o),B.jn,B.oX,B.dQ,A.e3(A.jk(!1,o,!0,B.D4,o,!0,o,o,o,o,o,o,o,o,o,new A.aG0(),o,o,o,o,o,o,o),o,o),B.d4,A.e3(A.jk(!1,o,!0,B.D7,o,!0,o,o,o,o,o,o,o,o,o,new A.aG1(),o,o,o,o,o,o,o),o,o)],t.p),B.aU,B.N,B.a3),p.d),B.l4),o),o,o),B.aE,!0),o)}}
 A.aFQ.prototype={
 $0(){return this.a.w=!0},
 $S:0}
@@ -48497,7 +48497,7 @@ return A.r(A.i2(n,!1,t.g).xz(o),$async$x8)
 case 4:p.V(new l.ayw(p,b))
 case 1:return A.F(q,r)}})
 return A.G($async$x8,r)},
-L(a){var s,r,q,p,o,n,m=this,l=null,k=A.lJ(A.i2(a,!0,t.g).b,t.oo),j=B.b.i0(k,new A.ayC(m))?m.y:"",i=A.cb(m.a.c!=null?"Edit Entry":"New Entry",l,l,l,l,l,l),h=m.z?B.Rw:A.fE(B.a0x,m.gaqM(),l),g=t.p
+L(a){var s,r,q,p,o,n,m=this,l=null,k=A.lJ(A.i2(a,!0,t.g).b,t.oo),j=B.b.i0(k,new A.ayC(m))?m.y:"",i=A.cb(m.a.c!=null?"Edit Entry":"New Entry",l,l,l,l,l,l),h=m.z?B.Rw:A.fE(B.a0y,m.gaqM(),l),g=t.p
 i=A.rK(A.a([h],g),l,i)
 h=m.e
 h===$&&A.b()
@@ -48622,7 +48622,7 @@ if(o.e){s=o.d
 s===$&&A.b()
 s=s.d}else s="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
 r=t.p
-s=A.ls(A.h9(A.a([B.a0F,B.dQ,A.cb(s,n,n,n,B.XB,n,n)],r),B.aU,B.N,B.a3))
+s=A.ls(A.h9(A.a([B.a0G,B.dQ,A.cb(s,n,n,n,B.XB,n,n)],r),B.aU,B.N,B.a3))
 q=o.e
 p=A.ji(q?B.eu:B.et,B.aM,n,18)
 q=q?"Hide":"Show"
@@ -48698,11 +48698,11 @@ A.aBL.prototype={
 $1(a){return""+A.z2(a)+"-"+B.c.mm(B.d.j(A.aoW(a)),2,"0")+"-"+B.c.mm(B.d.j(A.aoV(a)),2,"0")},
 $S:593}
 A.xM.prototype={
-L(a){var s=null,r=A.rK(s,s,B.a0n),q=A.baO(s,s,s,s,s,s,s,s,s,B.S,s,B.Vn,s,s,new A.d4(A.fv(10),B.t),B.Es,s,s,s,s)
-q=A.a([B.Kt,B.jl,B.a09,B.dQ,B.a0v,B.dQ,B.a0z,B.jn,new A.TQ(!0,new A.aeO(),s,s,s,q,s,s,!1,s,!0,s,new A.a1e(B.a0c,B.a0a,q,s,s),s),B.jo,B.a0s,B.jl],t.p)
+L(a){var s=null,r=A.rK(s,s,B.a0o),q=A.baO(s,s,s,s,s,s,s,s,s,B.S,s,B.Vn,s,s,new A.d4(A.fv(10),B.t),B.Es,s,s,s,s)
+q=A.a([B.Kt,B.jl,B.a09,B.dQ,B.a0w,B.dQ,B.a0A,B.jn,new A.TQ(!0,new A.aeO(),s,s,s,q,s,s,!1,s,!0,s,new A.a1e(B.a0c,B.a0a,q,s,s),s),B.jo,B.a0t,B.jl],t.p)
 B.b.N(q,A.aOY(10,new A.aeP(),!0,t.l7))
 q.push(B.jo)
-q.push(B.a0h)
+q.push(B.a0i)
 q.push(B.d4)
 return A.qG(r,A.aju(q,B.cz,s,B.ak,!1),s)}}
 A.aeO.prototype={
@@ -48796,7 +48796,7 @@ break
 case 6:case 1:return A.F(q,r)
 case 2:return A.E(o.at(-1),r)}})
 return A.G($async$wO,r)},
-L(a){var s,r,q=this,p=null,o=A.rK(p,p,B.a0C),n=A.fv(12),m=q.w!=null,l=A.aNW(m?B.S:B.ef,1),k=m?B.K1:B.Kd
+L(a){var s,r,q=this,p=null,o=A.rK(p,p,B.a0D),n=A.fv(12),m=q.w!=null,l=A.aNW(m?B.S:B.ef,1),k=m?B.K1:B.Kd
 k=A.ji(k,m?B.S:B.aM,p,40)
 if(m){s=q.r
 s.toString}else s="Tap to select .kdbx file"
@@ -48805,8 +48805,8 @@ n=A.pH(p,A.ir(p,A.h9(A.a([k,B.jl,A.cb(s,p,p,p,A.iP(p,p,m?B.cw:B.aM,p,p,p,p,p,p,p
 l=q.e
 m=A.kN(!1,q.d,A.Fh(p,p,p,p,p,p,p,p,!0,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,"KeePass Master Password",!0,!0,!1,p,B.qL,p,p,p,p,p,p,A.eI(p,p,p,A.ji(l?B.eu:B.et,B.aM,p,p),p,p,new A.aD4(q),p,p,p,p),p,p,p,p,p),p,1,l,p,p)
 if(q.f)l=B.fe
-else l=new A.Eq(!0,q.gaml(),p,p,p,p,B.C,p,!1,p,!0,p,new A.a_l(B.a0m,B.Ki,p,p,p),p)
-return A.qG(o,A.Id(A.h9(A.a([B.a0O,B.d4,B.a0y,B.jo,n,B.hg,m,B.jo,l],r),B.aU,B.N,B.a3),B.Jp),p)}}
+else l=new A.Eq(!0,q.gaml(),p,p,p,p,B.C,p,!1,p,!0,p,new A.a_l(B.a0n,B.Ki,p,p,p),p)
+return A.qG(o,A.Id(A.h9(A.a([B.a0O,B.d4,B.a0z,B.jo,n,B.hg,m,B.jo,l],r),B.aU,B.N,B.a3),B.Jp),p)}}
 A.aD2.prototype={
 $0(){var s=this.a,r=this.b.a,q=J.co(r)
 s.r=q.gbe(r).b
@@ -48884,7 +48884,7 @@ return null},
 $S:0}
 A.ajX.prototype={
 $1(a){var s=null,r=this.a,q=A.WR(s,B.cX,!0,s,!0,B.a2,s,A.aNj(),r,s,s,s,s,s,2,B.lW,B.am,!0,s,!0,s,!1,s,B.cL,s,s,s,s,s,s,s,s,1,s,s,!1,"\u2022",s,s,s,new A.ajU(a),s,!1,s,s,!1,s,!0,s,B.cz,s,s,s,s,s,s,s,s,s,s,s,s,!0,B.aG,s,B.hk,s,s,s,s)
-return A.wQ(A.a([A.fE(B.dU,new A.ajV(a),s),A.fE(B.a0f,new A.ajW(a,r),s)],t.p),B.aL,q,B.a0t)},
+return A.wQ(A.a([A.fE(B.dU,new A.ajV(a),s),A.fE(B.a0g,new A.ajW(a,r),s)],t.p),B.aL,q,B.a0u)},
 $S:62}
 A.ajU.prototype={
 $1(a){var s=B.c.e5(a)
@@ -48902,7 +48902,7 @@ return null},
 $S:0}
 A.ajT.prototype={
 $1(a){var s=null,r=A.cb('Delete "'+this.a+"\"? Entries in this category won't be deleted, just uncategorised.",s,s,s,s,s,s)
-return A.wQ(A.a([A.fE(B.dU,new A.ajR(a),s),A.fE(B.jv,new A.ajS(a),s)],t.p),B.aL,r,B.a0D)},
+return A.wQ(A.a([A.fE(B.dU,new A.ajR(a),s),A.fE(B.jv,new A.ajS(a),s)],t.p),B.aL,r,B.a0E)},
 $S:62}
 A.ajR.prototype={
 $0(){A.c_(this.a,!1).eU(!1)
@@ -48947,9 +48947,9 @@ L(a){var s,r,q=this,p=null,o=A.fv(10),n=q.x,m=n.length===0
 n=A.ls(A.cb(m?"\u2014":n,p,p,p,B.Z_,p,p))
 s=t.p
 o=A.h0(A.h9(A.a([A.ir(p,A.f1(A.a([n,A.eI(p,p,p,B.lU,p,p,m?p:new A.aEX(q,a),p,p,p,"Copy")],s),B.a_,B.N,B.a3,0),B.C,p,p,new A.dK(B.kx,p,p,o,p,p,B.aZ),p,p,p,B.Jc,p,p,1/0),B.hg,A.f1(A.a([B.a0L,A.cb(""+q.d,p,p,p,B.D0,p,p)],s),B.a_,B.N,B.a3,0),new A.Im(q.d,new A.aEY(q),8,64,56,B.S,B.ef,p),B.d4,q.CG("Uppercase (A\u2013Z)",q.e,new A.aEZ(q)),q.CG("Lowercase (a\u2013z)",q.f,new A.aF_(q)),q.CG("Digits (0\u20139)",q.r,new A.aF0(q)),q.CG("Symbols (!@#\u2026)",q.w,new A.aF1(q))],s),B.aU,B.N,B.bO),p,340)
-n=A.aPH(B.KA,B.a0o,q.gahY())
+n=A.aPH(B.KA,B.a0p,q.gahY())
 r=A.fE(B.dU,new A.aF2(a),p)
-return A.wQ(A.a([n,r,A.ae9(B.a0u,q.x.length===0?p:new A.aF3(q,a))],s),B.aL,o,B.a0J)},
+return A.wQ(A.a([n,r,A.ae9(B.a0v,q.x.length===0?p:new A.aF3(q,a))],s),B.aL,o,B.a0J)},
 CG(a,b,c){var s=null
 return A.f1(A.a([A.cb(a,s,s,s,B.bQ,s,s),new A.WF(b,c,B.S,s)],t.p),B.a_,B.iG,B.a3,0)}}
 A.aEQ.prototype={
@@ -49065,8 +49065,8 @@ s=n==null?o:n.z
 n=A.cb("Signed in as "+(s==null?"":s),o,o,o,B.bQ,o,o)
 r=p.r
 r=A.kN(!0,p.e,A.Fh(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"Master Password",!0,!0,!1,o,o,o,o,o,o,o,o,A.eI(o,o,o,A.ji(r?B.eu:B.et,B.aM,o,o),o,o,new A.aJD(p),o,o,o,o),o,o,o,o,o),o,1,r,new A.aJE(p),new A.aJF())
-q=p.f?B.fe:A.ae9(B.a0l,p.gasW())
-return A.qG(o,A.ve(!0,A.e3(A.Id(A.afD(A.h9(A.a([B.qM,B.hg,B.a0p,B.nc,n,B.nb,r,B.na,q,B.jm,A.e3(A.fE(B.D6,p.gasX(),o),o,o)],t.p),B.aU,B.fW,B.a3),p.d),B.l4),o,o),B.aE,!0),o)}}
+q=p.f?B.fe:A.ae9(B.a0m,p.gasW())
+return A.qG(o,A.ve(!0,A.e3(A.Id(A.afD(A.h9(A.a([B.qM,B.hg,B.a0q,B.nc,n,B.nb,r,B.na,q,B.jm,A.e3(A.fE(B.D6,p.gasX(),o),o,o)],t.p),B.aU,B.fW,B.a3),p.d),B.l4),o,o),B.aE,!0),o)}}
 A.aJz.prototype={
 $0(){return this.a.f=!0},
 $S:0}
@@ -49245,7 +49245,7 @@ m.push(new A.M4(k,"","Uncategorised"))}return m},
 L(a){var s,r,q,p,o=this,n=null,m=A.lJ(A.i2(a,!0,t.g).b,t.oo),l=o.gUI(),k=o.aek(l,m),j=o.w,i=j.a
 if(i!==0){s=A.eI(n,n,n,B.KE,n,n,o.gafj(),n,n,n,n)
 i=A.cb(""+i+" selected",n,n,n,n,n,n)
-i=A.rK(A.a([A.fE(B.a0E,o.gar9(),n),A.eI(n,n,n,B.Kn,n,n,o.gagg(),n,n,n,"Delete selected")],t.p),s,i)}else i=o.aes()
+i=A.rK(A.a([A.fE(B.a0F,o.gar9(),n),A.eI(n,n,n,B.Kn,n,n,o.gagg(),n,n,n,"Delete selected")],t.p),s,i)}else i=o.aes()
 s=t.p
 r=A.a([],s)
 if(j.a===0)r.push(new A.c2(B.Jl,A.WR(n,B.cX,!1,n,!0,B.a2,n,A.aNj(),o.f,n,n,n,n,n,2,B.KS,B.am,!0,n,!0,n,!1,n,B.cL,n,n,n,n,n,n,n,n,1,n,n,!1,"\u2022",n,n,n,n,n,!1,n,n,!1,n,!0,n,B.cz,n,n,n,n,n,n,n,n,n,n,n,n,!0,B.aG,n,B.hk,n,n,n,n),n))
@@ -49262,7 +49262,7 @@ r=A.h9(r,B.a_,B.N,B.a3)
 if(j.a!==0)j=n
 else j=new A.RH(B.qN,new A.aKK(o,a),B.a2W,n)
 return A.qG(i,r,j)},
-aes(){var s=this,r=null,q=t.p,p=A.a([B.a0k],q),o=s.Q
+aes(){var s=this,r=null,q=t.p,p=A.a([B.a0l],q),o=s.Q
 if(o!=null)p.push(A.ls(A.cb(o,1,B.bH,r,B.YZ,B.dS,r)))
 p=A.f1(p,B.a_,B.N,B.a3,0)
 o=s.y?B.Rv:A.eI(r,r,r,B.Ku,r,r,s.gasf(),r,r,r,"Sync (pull from server)")
@@ -49334,7 +49334,7 @@ $1(a){return!1},
 $S:93}
 A.aKl.prototype={
 $1(a){var s=null,r=A.cb('Delete "'+this.a.b+'"? This cannot be undone.',s,s,s,s,s,s)
-return A.wQ(A.a([A.fE(B.dU,new A.aKj(a),s),A.fE(B.jv,new A.aKk(a),s)],t.p),B.aL,r,B.a0A)},
+return A.wQ(A.a([A.fE(B.dU,new A.aKj(a),s),A.fE(B.jv,new A.aKk(a),s)],t.p),B.aL,r,B.a0B)},
 $S:62}
 A.aKj.prototype={
 $0(){A.c_(this.a,!1).eU(!1)
@@ -114906,14 +114906,14 @@ B.Bq=new A.d4(B.Ep,B.t)
 B.GH=new A.x4(null,B.aL,null,null,0,null,B.Bq)
 B.GI=new A.Df(null,null,null,null,null,null)
 B.bQ=new A.p(!0,B.aM,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0e=new A.bx("No categories yet. Tap + to create one.",null,B.bQ,null,null,null,null,null,null)
-B.GJ=new A.ka(B.a9,null,null,B.a0e,null)
+B.a0f=new A.bx("No categories yet. Tap + to create one.",null,B.bQ,null,null,null,null,null,null)
+B.GJ=new A.ka(B.a9,null,null,B.a0f,null)
+B.ZE=new A.p(!0,B.aM,null,null,null,null,13,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
+B.a0d=new A.bx("Using CryptKeep is 100% free.",null,B.ZE,null,null,null,null,null,null)
+B.oX=new A.ka(B.a9,null,null,B.a0d,null)
 B.a4r=new A.ayr(0,"material")
 B.GR=new A.lh(null,null,null,null,null,null,null,null,null,null)
 B.fe=new A.ka(B.a9,null,null,B.GR,null)
-B.ZE=new A.p(!0,B.aM,null,null,null,null,13,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0H=new A.bx("This website is free.",null,B.ZE,null,null,null,null,null,null)
-B.oX=new A.ka(B.a9,null,null,B.a0H,null)
 B.GL=new A.oG(1,"error")
 B.oY=new A.oG(5,"heartbeat")
 B.oZ=new A.oG(6,"accessToken")
@@ -115180,8 +115180,8 @@ B.kZ=new A.Rg(0,"down")
 B.am=new A.Rg(1,"start")
 B.IE=new A.Ri(null)
 B.IF=new A.Ed(null,null,null,null,null,null,null,null,null)
-B.a0j=new A.bx("None",null,null,null,null,null,null,null,null)
-B.IG=new A.jg("",B.a0j,B.df,null,t.b7)
+B.a0k=new A.bx("None",null,null,null,null,null,null,null,null)
+B.IG=new A.jg("",B.a0k,B.df,null,t.b7)
 B.IH=new A.Ef(null,null,null,null)
 B.H=new A.b8(0)
 B.b_=new A.b8(1e5)
@@ -115774,8 +115774,8 @@ B.a3=new A.Ti(1,"max")
 B.bJ=new A.axh(1,"down")
 B.Km=new A.cq(B.qF,18,null,null,null)
 B.jk=new A.dm(10,null,null,null)
-B.a0g=new A.bx("Import KeePass (.kdbx)",null,null,null,null,null,null,null,null)
-B.Mo=s([B.Km,B.jk,B.a0g],t.p)
+B.a0h=new A.bx("Import KeePass (.kdbx)",null,null,null,null,null,null,null,null)
+B.Mo=s([B.Km,B.jk,B.a0h],t.p)
 B.Tk=new A.qB(B.aD,B.N,B.a3,B.a_,null,B.bJ,null,0,B.Mo,null)
 B.So=new A.nt("import",B.Tk,null,t.wI)
 B.Kl=new A.cq(B.lT,18,null,null,null)
@@ -115820,8 +115820,8 @@ B.Fa=new A.bH(0,B.X,B.HU,B.d0,1)
 B.NY=s([B.F0,B.Fa],t.E)
 B.O_=s(["pointerdown","pointermove","pointerleave","pointerup","pointercancel","touchstart","touchend","touchmove","touchcancel","mousedown","mousemove","mouseleave","mouseup","wheel"],t.s)
 B.rk=s([1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384,32768,65536,131072,262144,524288,1048576,2097152,4194304,8388608,16777216,33554432,67108864,134217728,268435456,536870912,1073741824,2147483648],t.t)
-B.a0B=new A.bx("Edit",null,null,null,null,null,null,null,null)
-B.Sk=new A.nt("edit",B.a0B,null,t.wI)
+B.a0C=new A.bx("Edit",null,null,null,null,null,null,null,null)
+B.Sk=new A.nt("edit",B.a0C,null,t.wI)
 B.WX=new A.p(!0,B.mj,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.jv=new A.bx("Delete",null,B.WX,null,null,null,null,null,null)
 B.Sl=new A.nt("delete",B.jv,null,t.wI)
@@ -117009,8 +117009,8 @@ B.j1=new A.kH(null,null)
 B.Ke=new A.ci(983712,"MaterialIcons",!1)
 B.KF=new A.cq(B.Ke,18,B.S,null,null)
 B.Y2=new A.p(!0,B.aM,null,null,null,null,12.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0i=new A.bx("If you lose your master password, your vault cannot be recovered.",null,B.Y2,null,null,null,null,null,null)
-B.Jz=new A.Ez(1,B.lJ,B.a0i,null)
+B.a0j=new A.bx("If you lose your master password, your vault cannot be recovered.",null,B.Y2,null,null,null,null,null,null)
+B.Jz=new A.Ez(1,B.lJ,B.a0j,null)
 B.NP=s([B.KF,B.jk,B.Jz],t.p)
 B.Ti=new A.qB(B.aD,B.N,B.a3,B.a_,null,B.bJ,null,0,B.NP,null)
 B.Tl=new A.Hx(1333)
@@ -117698,42 +117698,42 @@ B.a0a=new A.bx("\u2615",null,B.Zz,null,null,null,null,null,null)
 B.a0b=new A.bx("Create Account",null,null,null,null,null,null,null,null)
 B.a0c=new A.bx("Buy Me a Coffee",null,null,null,null,null,null,null,null)
 B.nr=new A.p(!0,null,null,null,null,null,26,B.bb,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0d=new A.bx("Welcome back",null,B.nr,null,null,null,null,null,null)
-B.a0f=new A.bx("Save",null,null,null,null,null,null,null,null)
-B.a0h=new A.bx("v1.0.0 \xb7 Built with Flutter & Supabase",null,B.dT,B.d7,null,null,null,null,null)
+B.a0e=new A.bx("Welcome back",null,B.nr,null,null,null,null,null,null)
+B.a0g=new A.bx("Save",null,null,null,null,null,null,null,null)
+B.a0i=new A.bx("v1.0.0 \xb7 Built with Flutter & Supabase",null,B.dT,B.d7,null,null,null,null,null)
 B.WA=new A.p(!0,null,null,null,null,null,null,B.bb,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0k=new A.bx("CryptKeep",null,B.WA,null,null,null,null,null,null)
-B.a0l=new A.bx("Unlock",null,null,null,null,null,null,null,null)
-B.a0m=new A.bx("Import Entries",null,null,null,null,null,null,null,null)
-B.a0n=new A.bx("FAQ & About",null,null,null,null,null,null,null,null)
-B.a0o=new A.bx("Regenerate",null,null,null,null,null,null,null,null)
+B.a0l=new A.bx("CryptKeep",null,B.WA,null,null,null,null,null,null)
+B.a0m=new A.bx("Unlock",null,null,null,null,null,null,null,null)
+B.a0n=new A.bx("Import Entries",null,null,null,null,null,null,null,null)
+B.a0o=new A.bx("FAQ & About",null,null,null,null,null,null,null,null)
+B.a0p=new A.bx("Regenerate",null,null,null,null,null,null,null,null)
 B.D2=new A.bx("Add",null,null,null,null,null,null,null,null)
 B.dU=new A.bx("Cancel",null,null,null,null,null,null,null,null)
-B.a0p=new A.bx("Unlock Vault",null,B.nr,null,null,null,null,null,null)
-B.a0q=new A.bx("Create Vault",null,null,null,null,null,null,null,null)
-B.a0r=new A.bx("Don't have an account? Create one",null,null,null,null,null,null,null,null)
+B.a0q=new A.bx("Unlock Vault",null,B.nr,null,null,null,null,null,null)
+B.a0r=new A.bx("Create Vault",null,null,null,null,null,null,null,null)
+B.a0s=new A.bx("Don't have an account? Create one",null,null,null,null,null,null,null,null)
 B.WG=new A.p(!0,B.S,null,null,null,null,13,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.D3=new A.bx("What is CryptKeep?",null,B.WG,null,null,null,null,null,null)
 B.WZ=new A.p(!0,B.aM,null,null,null,null,16,B.bb,null,0.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0s=new A.bx("Frequently Asked Questions",null,B.WZ,null,null,null,null,null,null)
-B.a0t=new A.bx("Rename Category",null,null,null,null,null,null,null,null)
-B.a0u=new A.bx("Use",null,null,null,null,null,null,null,null)
+B.a0t=new A.bx("Frequently Asked Questions",null,B.WZ,null,null,null,null,null,null)
+B.a0u=new A.bx("Rename Category",null,null,null,null,null,null,null,null)
+B.a0v=new A.bx("Use",null,null,null,null,null,null,null,null)
 B.D_=new A.p(!0,B.S,null,null,null,null,13,B.cV,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.D4=new A.bx("Made by EERIE",null,B.D_,null,null,null,null,null,null)
-B.a0v=new A.bx("Zero-knowledge password manager",null,B.bQ,B.d7,null,null,null,null,null)
-B.a0w=new A.bx("Your master password encrypts everything locally.\nWe never see your passwords.",null,B.bQ,null,null,null,null,null,null)
-B.a0x=new A.bx("Save",null,B.D0,null,null,null,null,null,null)
-B.a0y=new A.bx("Select your KeePass file and enter its master password. All entries will be imported and encrypted with your CryptKeep key.",null,B.bQ,null,null,null,null,null,null)
+B.a0w=new A.bx("Zero-knowledge password manager",null,B.bQ,B.d7,null,null,null,null,null)
+B.a0x=new A.bx("Your master password encrypts everything locally.\nWe never see your passwords.",null,B.bQ,null,null,null,null,null,null)
+B.a0y=new A.bx("Save",null,B.D0,null,null,null,null,null,null)
+B.a0z=new A.bx("Select your KeePass file and enter its master password. All entries will be imported and encrypted with your CryptKeep key.",null,B.bQ,null,null,null,null,null,null)
 B.Yt=new A.p(!0,B.S,null,null,null,null,null,B.cV,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0z=new A.bx("Made by EERIE",null,B.Yt,B.d7,null,null,null,null,null)
-B.a0A=new A.bx("Delete Entry",null,null,null,null,null,null,null,null)
-B.a0C=new A.bx("Import from KeePass",null,null,null,null,null,null,null,null)
+B.a0A=new A.bx("Made by EERIE",null,B.Yt,B.d7,null,null,null,null,null)
+B.a0B=new A.bx("Delete Entry",null,null,null,null,null,null,null,null)
+B.a0D=new A.bx("Import from KeePass",null,null,null,null,null,null,null,null)
 B.D7=new A.bx("\u2615 Buy Me a Coffee",null,B.D_,null,null,null,null,null,null)
-B.a0D=new A.bx("Delete Category",null,null,null,null,null,null,null,null)
+B.a0E=new A.bx("Delete Category",null,null,null,null,null,null,null,null)
 B.XM=new A.p(!0,B.S,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.a0E=new A.bx("All",null,B.XM,null,null,null,null,null,null)
-B.a0F=new A.bx("Password",null,B.dT,null,null,null,null,null,null)
-B.a0G=new A.bx("Create your vault",null,B.nr,null,null,null,null,null,null)
+B.a0F=new A.bx("All",null,B.XM,null,null,null,null,null,null)
+B.a0G=new A.bx("Password",null,B.dT,null,null,null,null,null,null)
+B.a0H=new A.bx("Create your vault",null,B.nr,null,null,null,null,null,null)
 B.a0J=new A.bx("Password Generator",null,null,null,null,null,null,null,null)
 B.D8=new A.bx("New Category",null,null,null,null,null,null,null,null)
 B.a0K=new A.bx("Tap + to add your first password.",null,B.bQ,null,null,null,null,null,null)
