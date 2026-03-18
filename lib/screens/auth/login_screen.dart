@@ -7,6 +7,7 @@ import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/crypto_service.dart';
 import '../vault/vault_screen.dart';
+import '../vault/faq_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -119,7 +120,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text("Don't have an account? Create one"),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const FaqScreen()),
+                      ),
+                      icon: const Icon(Icons.help_outline, size: 18, color: Color(0xFF8B5CF6)),
+                      label: const Text('What is CryptKeep?',
+                          style: TextStyle(color: Color(0xFF8B5CF6), fontSize: 13)),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   Center(
                     child: Wrap(
                       alignment: WrapAlignment.center,
