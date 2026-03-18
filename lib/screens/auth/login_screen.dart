@@ -67,7 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: SingleChildScrollView(
             padding: const EdgeInsets.all(28),
             child: Form(
               key: _formKey,
@@ -138,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 4),
                   Center(
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
                       child: const Text('Made by EERIE',
                           style: TextStyle(
@@ -149,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Center(
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
                       child: const Text('☕ Buy Me a Coffee',
                           style: TextStyle(
@@ -161,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
+          ),
           ),
         ),
       ),
