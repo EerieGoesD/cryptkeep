@@ -166,11 +166,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: const Text('Create Vault'),
                                 ),
                           const SizedBox(height: 24),
-                          const Center(
-                            child: Text('Using CryptKeep is 100% free.',
-                                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
-                          ),
-                          const SizedBox(height: 4),
                           Center(
                             child: InkWell(
                               onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),

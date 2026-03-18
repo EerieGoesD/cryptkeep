@@ -87,6 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Text('Sign in to access your vault.',
                               style: TextStyle(color: Color(0xFF94A3B8))),
                           const SizedBox(height: 20),
+                          const Text('CryptKeep is 100% free.',
+                              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                          const SizedBox(height: 4),
                           TextButton.icon(
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) => const FaqScreen()),
@@ -147,11 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          const Center(
-                            child: Text('Using CryptKeep is 100% free.',
-                                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
-                          ),
-                          const SizedBox(height: 4),
                           Center(
                             child: InkWell(
                               onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
