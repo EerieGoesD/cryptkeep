@@ -191,13 +191,42 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: InkWell(
-                onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
-                child: const Text('Privacy Policy',
-                    style: TextStyle(
-                        color: Color(0xFF8B5CF6),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/privacy-policy/cryptkeep/')),
+                    child: const Text('Privacy Policy',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                  ),
+                  InkWell(
+                    onTap: () => launchUrl(Uri.parse('mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Support')),
+                    child: const Text('Need help?',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                  ),
+                  InkWell(
+                    onTap: () => launchUrl(Uri.parse('mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Bug%20Report')),
+                    child: const Text('Report an Issue',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
               ),
             ),
           ],
