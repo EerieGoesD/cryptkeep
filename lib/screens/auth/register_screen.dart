@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
-import '../../providers/app_state.dart';
-import '../../services/crypto_service.dart';
 import '../vault/faq_screen.dart';
-import '../vault/vault_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -37,21 +33,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _loading = true);
 
     try {
-      final response = await supabase.auth.signUp(
+      await supabase.auth.signUp(
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text,
       );
 
-      final userId = response.user!.id;
-      final key = CryptoService.deriveKey(_passwordCtrl.text, userId);
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: const Color(0xFF1A1A2E),
+          title: const Row(
+            children: [
+              Icon(Icons.mark_email_read_outlined, color: Color(0xFF8B5CF6)),
+              SizedBox(width: 12),
+              Text('Check your email'),
+            ],
+          ),
+          content: Text(
+            'We sent a verification link to ${_emailCtrl.text.trim()}.\n\n'
+            'Please confirm your email before signing in.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
 
       if (!mounted) return;
-      context.read<AppState>().unlock(key);
-
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const VaultScreen()),
-        (_) => false,
-      );
+      Navigator.of(context).pop();
     } on AuthException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
