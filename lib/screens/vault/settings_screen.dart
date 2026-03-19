@@ -92,10 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     setState(() => _deleting = true);
     try {
-      final userId = supabase.auth.currentUser!.id;
-      await supabase.from('vault_entries').delete().eq('user_id', userId);
-      await supabase.from('categories').delete().eq('user_id', userId);
-      await supabase.auth.signOut();
+      await supabase.rpc('delete_own_account');
 
       if (!mounted) return;
       context.read<AppState>().lock();
