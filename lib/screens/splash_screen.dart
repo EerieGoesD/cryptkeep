@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     final session = supabase.auth.currentSession;
-    if (session != null) {
+    if (session != null && !session.isExpired) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const UnlockScreen()),
       );

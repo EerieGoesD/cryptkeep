@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -6,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/crypto_service.dart';
+import '../../services/migration_service.dart';
 import '../vault/vault_screen.dart';
 import '../vault/faq_screen.dart';
 import 'register_screen.dart';
@@ -36,13 +39,35 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
 
     try {
-      final response = await supabase.auth.signInWithPassword(
-        email: _emailCtrl.text.trim(),
-        password: _passwordCtrl.text,
-      );
+      final email = _emailCtrl.text.trim();
+      final masterPassword = _passwordCtrl.text;
+      final authPassword = CryptoService.deriveAuthPassword(masterPassword, email);
 
-      final userId = response.user!.id;
-      final key = CryptoService.deriveKey(_passwordCtrl.text, userId);
+      // Try derived auth password first, fall back to legacy raw password
+      bool isLegacy = false;
+      try {
+        await supabase.auth.signInWithPassword(email: email, password: authPassword);
+      } on AuthException {
+        await supabase.auth.signInWithPassword(email: email, password: masterPassword);
+        isLegacy = true;
+      }
+
+      Uint8List key;
+      if (isLegacy || MigrationService.needsMigration()) {
+        // Migrate: re-encrypt all data, update auth password, store new salt
+        key = await MigrationService.migrate(masterPassword, email);
+      } else {
+        key = MigrationService.getKey(masterPassword);
+      }
+
+      if (!MigrationService.verifyPassword(key)) {
+        await supabase.auth.signOut();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Incorrect master password')),
+        );
+        return;
+      }
 
       if (!mounted) return;
       await context.read<AppState>().unlock(key);
@@ -52,10 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (_) => const VaultScreen()),
         (_) => false,
       );
-    } on AuthException catch (e) {
+    } on AuthException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
+        const SnackBar(content: Text('Invalid email or password')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed. Please try again.')),
       );
     } finally {
       if (mounted) setState(() => _loading = false);

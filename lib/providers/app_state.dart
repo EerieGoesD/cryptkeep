@@ -1,3 +1,4 @@
+import 'dart:async';
 
 import 'package:flutter/foundation.dart' hide Category;
 
@@ -6,9 +7,13 @@ import '../services/category_service.dart';
 
 // Holds the derived encryption key and categories in memory for the session.
 // Never persisted to disk — user must re-enter master password on restart.
+// Auto-locks after 5 minutes of inactivity.
 class AppState extends ChangeNotifier {
   Uint8List? _encryptionKey;
   List<Category> _categories = [];
+  Timer? _autoLockTimer;
+
+  static const _autoLockDuration = Duration(minutes: 5);
 
   bool get isUnlocked => _encryptionKey != null;
 
@@ -22,13 +27,28 @@ class AppState extends ChangeNotifier {
   Future<void> unlock(Uint8List key) async {
     _encryptionKey = key;
     await _loadCategories();
+    _resetAutoLock();
     notifyListeners();
   }
 
   void lock() {
+    _autoLockTimer?.cancel();
+    _autoLockTimer = null;
     _encryptionKey = null;
     _categories = [];
     notifyListeners();
+  }
+
+  /// Call this on any user interaction to reset the auto-lock timer.
+  void resetAutoLock() {
+    if (_encryptionKey != null) _resetAutoLock();
+  }
+
+  void _resetAutoLock() {
+    _autoLockTimer?.cancel();
+    _autoLockTimer = Timer(_autoLockDuration, () {
+      lock();
+    });
   }
 
   Future<void> _loadCategories() async {

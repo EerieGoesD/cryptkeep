@@ -47,16 +47,18 @@ class VaultService {
     final plaintext = jsonEncode(entry.toJson());
     final encryptedData = CryptoService.encrypt(plaintext, key);
 
+    final userId = supabase.auth.currentUser!.id;
     await supabase.from(_table).update({
       'encrypted_data': encryptedData,
       'updated_at': entry.updatedAt.toIso8601String(),
-    }).eq('id', entry.id);
+    }).eq('id', entry.id).eq('user_id', userId);
 
     return entry;
   }
 
   // ─── Delete an entry ───
   static Future<void> delete(String id) async {
-    await supabase.from(_table).delete().eq('id', id);
+    final userId = supabase.auth.currentUser!.id;
+    await supabase.from(_table).delete().eq('id', id).eq('user_id', userId);
   }
 }

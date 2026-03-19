@@ -10,9 +10,11 @@ class CategoryService {
   static const _table = 'categories';
 
   static Future<List<Category>> fetchAll(Uint8List key) async {
+    final userId = supabase.auth.currentUser!.id;
     final rows = await supabase
         .from(_table)
         .select()
+        .eq('user_id', userId)
         .order('created_at', ascending: true);
     return rows.map((r) {
       final encryptedName = r['name'] as String;
@@ -41,11 +43,13 @@ class CategoryService {
   }
 
   static Future<void> rename(String id, String newName, Uint8List key) async {
+    final userId = supabase.auth.currentUser!.id;
     final encryptedName = CryptoService.encrypt(newName.trim(), key);
-    await supabase.from(_table).update({'name': encryptedName}).eq('id', id);
+    await supabase.from(_table).update({'name': encryptedName}).eq('id', id).eq('user_id', userId);
   }
 
   static Future<void> delete(String id) async {
-    await supabase.from(_table).delete().eq('id', id);
+    final userId = supabase.auth.currentUser!.id;
+    await supabase.from(_table).delete().eq('id', id).eq('user_id', userId);
   }
 }

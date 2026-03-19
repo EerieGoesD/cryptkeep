@@ -76,7 +76,7 @@ class _ImportScreenState extends State<ImportScreen> {
         context,
         e.toString().contains('invalid')
             ? 'Wrong password or invalid file'
-            : 'Import failed: $e',
+            : 'Import failed. Please check the file and try again.',
       );
     } finally {
       if (mounted) setState(() => _loading = false);
