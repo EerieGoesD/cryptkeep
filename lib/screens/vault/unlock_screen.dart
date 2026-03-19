@@ -48,6 +48,9 @@ class _UnlockScreenState extends State<UnlockScreen> {
     await Future.delayed(const Duration(milliseconds: 50));
 
     try {
+      // Refresh session to get latest metadata (salt, iterations)
+      await supabase.auth.refreshSession();
+
       final masterPassword = _passwordCtrl.text;
       Uint8List key;
 
