@@ -71,8 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       Uint8List key;
-      if (authVersion < 2 || MigrationService.needsMigration() || MigrationService.needsIterationUpdate()) {
-        final result = await MigrationService.migrate(masterPassword, email);
+      final needsFullMigration = authVersion < 2 || MigrationService.needsMigration();
+      if (needsFullMigration || MigrationService.needsIterationUpdate()) {
+        final result = await MigrationService.migrate(
+          masterPassword, email,
+          changeAuthPassword: needsFullMigration,
+        );
         key = result.key;
         if (result.hadFailures && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
