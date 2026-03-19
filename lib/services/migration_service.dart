@@ -32,7 +32,7 @@ class MigrationService {
   /// 5. Update the Supabase auth password to the derived auth password
   ///
   /// Returns MigrationResult with the new key and failure counts.
-  static Future<MigrationResult> migrate(String masterPassword, String email) async {
+  static Future<MigrationResult> migrate(String masterPassword, String email, {bool changeAuthPassword = true}) async {
     final userId = supabase.auth.currentUser!.id;
     final legacyKey = CryptoService.deriveKeyLegacy(masterPassword, userId);
 
@@ -124,16 +124,24 @@ class MigrationService {
       }
     }
 
-    // Update auth password to derived version and store new crypto params
-    final newAuthPassword = CryptoService.deriveAuthPassword(masterPassword, email);
+    // Update metadata first (always works without reauthentication)
     await supabase.auth.updateUser(UserAttributes(
-      password: newAuthPassword,
       data: {
         'crypto_salt': base64.encode(newSalt),
         'key_check': keyCheck,
         'key_iterations': newIterations,
       },
     ));
+
+    // Only change auth password when migrating from legacy/v1
+    if (changeAuthPassword) {
+      try {
+        final newAuthPassword = CryptoService.deriveAuthPassword(masterPassword, email);
+        await supabase.auth.updateUser(UserAttributes(password: newAuthPassword));
+      } catch (_) {
+        // Password change may require reauthentication — metadata is already saved
+      }
+    }
 
     return MigrationResult(
       key: newKey,
