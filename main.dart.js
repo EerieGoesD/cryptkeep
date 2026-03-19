@@ -8544,9 +8544,9 @@ aWG(){var s,r=$.df().gcX().c
 r=r==null?null:r.r
 s=r==null?null:r.c
 return s==null||s.i(0,"crypto_salt")==null},
-nq(a,b,c){return A.bbv(a,b,c)},
-bbv(b6,b7,b8){var s=0,r=A.F(t.or),q,p=2,o=[],n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4,b5
-var $async$nq=A.G(function(c0,c1){if(c0===1){o.push(c1)
+nq(a,b){return A.bbv(a,b)},
+bbv(b6,b7){var s=0,r=A.F(t.or),q,p=2,o=[],n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3,b4,b5
+var $async$nq=A.G(function(b9,c0){if(b9===1){o.push(c0)
 s=p}for(;;)switch(s){case 0:a6=$.df()
 a7=a6.gcX().c
 a8=(a7==null?null:a7.r).a
@@ -8569,14 +8569,14 @@ j=0
 b5=J
 s=3
 return A.r(a6.kP("vault_entries").Am().ia("user_id",a8),$async$nq)
-case 3:a6=b5.bg(c1),a7=t.z
+case 3:a6=b5.bg(c0),a7=t.z
 case 4:if(!a6.A()){s=5
 break}i=a6.gL()
 p=7
 h=A.bj(J.em(i,"encrypted_data"))
 g=null
-try{g=A.oX(h,n)}catch(b9){try{if(m!=null)g=A.oX(h,m)
-else throw b9}catch(b9){g=A.oX(h,l)}}f=A.to(g,l)
+try{g=A.oX(h,n)}catch(b8){try{if(m!=null)g=A.oX(h,m)
+else throw b8}catch(b8){g=A.oX(h,l)}}f=A.to(g,l)
 s=10
 return A.r($.df().kP("vault_entries").cN(A.af(["encrypted_data",f],a7,a7)).ia("id",J.em(i,"id")).ia("user_id",a8),$async$nq)
 case 10:p=2
@@ -8593,14 +8593,14 @@ break
 case 5:b5=J
 s=11
 return A.r($.df().kP("categories").Am().ia("user_id",a8),$async$nq)
-case 11:a6=b5.bg(c1)
+case 11:a6=b5.bg(c0)
 case 12:if(!a6.A()){s=13
 break}e=a6.gL()
 p=15
 d=A.bj(J.em(e,"name"))
 c=null
-try{c=A.oX(d,n)}catch(b9){try{if(m!=null)c=A.oX(d,m)
-else throw b9}catch(b9){try{c=A.oX(d,l)}catch(b9){c=d}}}b=A.to(c,l)
+try{c=A.oX(d,n)}catch(b8){try{if(m!=null)c=A.oX(d,m)
+else throw b8}catch(b8){try{c=A.oX(d,l)}catch(b8){c=d}}}b=A.to(c,l)
 s=18
 return A.r($.df().kP("categories").cN(A.af(["name",b],a7,a7)).ia("id",J.em(e,"id")).ia("user_id",a8),$async$nq)
 case 18:p=2
@@ -8617,22 +8617,20 @@ break
 case 13:a6=$.df()
 s=19
 return A.r(a6.gcX().A0(new A.JF(null,A.af(["crypto_salt",B.bw.gfW().aZ(a3),"key_check",a4,"key_iterations",1e5],t.N,t.K))),$async$nq)
-case 19:s=b8?20:21
-break
-case 20:p=23
+case 19:p=21
 a=A.aPl(b6,b7)
-s=26
+s=24
 return A.r(a6.gcX().A0(new A.JF(a,null)),$async$nq)
-case 26:p=2
-s=25
+case 24:p=2
+s=23
 break
-case 23:p=22
+case 21:p=20
 b4=o.pop()
-s=25
+s=23
 break
-case 22:s=2
+case 20:s=2
 break
-case 25:case 21:q=new A.TJ(l,k,j)
+case 23:q=new A.TJ(l,k,j)
 s=1
 break
 case 1:return A.D(q,r)
@@ -48801,10 +48799,10 @@ break
 case 8:s=5
 break
 case 11:g=null
-s=j<2||A.aWG()?25:27
+s=A.aWG()?25:27
 break
 case 25:s=28
-return A.r(A.nq(k,l,j<2),$async$m_)
+return A.r(A.nq(k,l),$async$m_)
 case 28:f=a7
 g=f.a
 if(f.ga2I()&&m.c!=null)m.c.af(t.Pu).f.l6(A.Ww(null,null,null,null,null,B.R,null,A.bW(""+f.b+" entries and "+f.c+" categories could not be migrated.",null,null,null,null,null,null),null,B.cj,null,null,null,null,null,null,null,null,null,null))
@@ -49887,7 +49885,7 @@ case 8:g=$.df().gcX().c
 e=(g==null?null:g.r).z
 j=e==null?"":e
 s=11
-return A.r(A.nq(l,j,!0),$async$qB)
+return A.r(A.nq(l,j),$async$qB)
 case 11:i=b
 k=i.a
 if(i.ga2I()&&m.c!=null)m.c.af(t.Pu).f.l6(A.Ww(null,null,null,null,null,B.R,null,A.bW(""+i.b+" entries and "+i.c+" categories could not be migrated.",null,null,null,null,null,null),null,B.cj,null,null,null,null,null,null,null,null,null,null))
