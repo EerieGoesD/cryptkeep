@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
+import '../../services/crypto_service.dart';
 import '../vault/faq_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -33,9 +36,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _loading = true);
 
     try {
+      final email = _emailCtrl.text.trim();
+      final masterPassword = _passwordCtrl.text;
+      final authPassword = CryptoService.deriveAuthPassword(masterPassword, email);
+      final salt = CryptoService.generateSalt(16);
+      final key = CryptoService.deriveKey(masterPassword, salt);
+      final keyCheck = CryptoService.createKeyCheck(key);
+
       await supabase.auth.signUp(
-        email: _emailCtrl.text.trim(),
-        password: _passwordCtrl.text,
+        email: email,
+        password: authPassword,
+        data: {
+          'crypto_salt': base64.encode(salt),
+          'key_check': keyCheck,
+        },
       );
 
       if (!mounted) return;

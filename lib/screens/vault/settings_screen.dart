@@ -104,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       setState(() => _deleting = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete account: $e')),
+        const SnackBar(content: Text('Failed to delete account. Please try again.')),
       );
     }
   }

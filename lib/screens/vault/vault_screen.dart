@@ -73,7 +73,7 @@ class _VaultScreenState extends State<VaultScreen> {
       setState(() => _entries = entries);
     } catch (e) {
       if (!mounted) return;
-      _showNotification('Failed to load vault: $e');
+      _showNotification('Failed to load vault. Please try again.');
     } finally {
       if (mounted) setState(() => _loading = false);
     }

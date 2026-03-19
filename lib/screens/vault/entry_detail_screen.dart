@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +20,7 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
   late VaultEntry _entry;
   bool _passwordVisible = false;
   bool _wasModified = false;
+  Timer? _clipboardTimer;
 
   @override
   void initState() {
@@ -25,9 +28,19 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
     _entry = widget.entry;
   }
 
+  @override
+  void dispose() {
+    _clipboardTimer?.cancel();
+    super.dispose();
+  }
+
   void _copy(String value, String label) {
+    _clipboardTimer?.cancel();
     Clipboard.setData(ClipboardData(text: value));
-    showAppNotification(context, '$label copied to clipboard');
+    showAppNotification(context, '$label copied — clipboard clears in 30s');
+    _clipboardTimer = Timer(const Duration(seconds: 30), () {
+      Clipboard.setData(const ClipboardData(text: ''));
+    });
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/crypto_service.dart';
+import '../../services/migration_service.dart';
 import '../auth/login_screen.dart';
 import 'vault_screen.dart';
 
@@ -20,6 +23,8 @@ class _UnlockScreenState extends State<UnlockScreen> {
   final _passwordCtrl = TextEditingController();
   bool _loading = false;
   bool _obscure = true;
+  int _failedAttempts = 0;
+  DateTime? _lockoutUntil;
 
   @override
   void dispose() {
@@ -29,17 +34,53 @@ class _UnlockScreenState extends State<UnlockScreen> {
 
   Future<void> _unlock() async {
     if (!_formKey.currentState!.validate()) return;
+
+    // Rate limiting
+    if (_lockoutUntil != null && DateTime.now().isBefore(_lockoutUntil!)) {
+      final secs = _lockoutUntil!.difference(DateTime.now()).inSeconds;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Too many attempts. Try again in ${secs}s')),
+      );
+      return;
+    }
+
     setState(() => _loading = true);
 
     try {
-      final userId = supabase.auth.currentUser!.id;
-      final key = CryptoService.deriveKey(_passwordCtrl.text, userId);
+      final masterPassword = _passwordCtrl.text;
+      Uint8List key;
 
+      if (MigrationService.needsMigration()) {
+        final email = supabase.auth.currentUser!.email ?? '';
+        key = await MigrationService.migrate(masterPassword, email);
+      } else {
+        key = MigrationService.getKey(masterPassword);
+      }
+
+      if (!MigrationService.verifyPassword(key)) {
+        _failedAttempts++;
+        if (_failedAttempts >= 5) {
+          _lockoutUntil = DateTime.now().add(Duration(seconds: 30 * (_failedAttempts ~/ 5)));
+        }
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Incorrect master password')),
+        );
+        return;
+      }
+
+      _failedAttempts = 0;
+      if (!mounted) return;
       await context.read<AppState>().unlock(key);
 
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const VaultScreen()),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to unlock vault')),
       );
     } finally {
       if (mounted) setState(() => _loading = false);

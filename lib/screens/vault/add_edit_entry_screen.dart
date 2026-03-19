@@ -89,7 +89,7 @@ class _AddEditEntryScreenState extends State<AddEditEntryScreen> {
       Navigator.of(context).pop(saved);
     } catch (e) {
       if (!mounted) return;
-      showAppNotification(context, 'Failed to save: $e');
+      showAppNotification(context, 'Failed to save. Please try again.');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
