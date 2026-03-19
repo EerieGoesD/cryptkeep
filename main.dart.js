@@ -12343,7 +12343,7 @@ case 4:s=l.a
 s===$&&A.b()
 s=A.bN(s,200)
 r=A.bN(A.acK(l,B.rm,B.N0),24)
-q=A.bN(A.acK(l,B.rm,B.NM),32)
+q=A.bN(A.acK(l,B.rm,B.NL),32)
 p=A.bN(l.a,10)
 o=A.bN(l.a,12)
 l.d===$&&A.b()
@@ -12353,8 +12353,8 @@ break
 case 5:s=l.a
 s===$&&A.b()
 s=A.bN(A.G4(s+240),40)
-r=A.bN(A.acK(l,B.ro,B.Ot),24)
-q=A.bN(A.acK(l,B.ro,B.Ou),32)
+r=A.bN(A.acK(l,B.ro,B.Os),24)
+q=A.bN(A.acK(l,B.ro,B.Ot),32)
 p=A.bN(l.a+15,8)
 o=A.bN(l.a+15,12)
 l.d===$&&A.b()
@@ -21589,7 +21589,7 @@ r.toString
 A.fT(r)
 q=a.i(0,"swipeEdge")
 q.toString
-return new A.qz(s,r,B.Nw[A.eG(q)])},
+return new A.qz(s,r,B.Nv[A.eG(q)])},
 IM:function IM(a,b){this.a=a
 this.b=b},
 qz:function qz(a,b,c){this.a=a
@@ -23780,7 +23780,7 @@ if(a.as!==q)return q?-1:1
 return 0},
 b9L(a,b){var s=A.a3(b).h("aa<1,et>")
 s=A.a8(new A.aa(b,new A.aen(),s),s.h("aJ.E"))
-return A.b8s(!0,s,a,B.O5,!0,B.IK,null)},
+return A.b8s(!0,s,a,B.O4,!0,B.IK,null)},
 aPv(a){var s
 try{a.es()}catch(s){a.UX()}a.w=B.a3Y
 try{a.bK(A.bjM())}catch(s){}},
@@ -24351,7 +24351,7 @@ _.as=!0
 _.at=!1
 _.$ti=d},
 Fl(a,b){var s
-if(a.k(0,b))return new A.Qm(B.O6)
+if(a.k(0,b))return new A.Qm(B.O5)
 s=A.a([],t.fJ)
 A.bX()
 a.mK(new A.aid(b,A.aI(t.u),s))
@@ -28132,7 +28132,7 @@ if(!(n===2594363651&&m===3041655655))throw A.i(new A.T_("Unsupported file struct
 s=a.eF(2).getUint16(0,!0)
 r=new A.FB(a.eF(2).getUint16(0,!0),s)
 $.a8b().aT(B.d3,"Reading version: "+r.j(0),null,null)
-q=A.baQ(a,r,B.NA,new A.aiZ(),t.Dj,t.rr)
+q=A.baQ(a,r,B.Nz,new A.aiZ(),t.Dj,t.rr)
 p=a.b
 o=A.a([],t.W1)
 return new A.aiV(n,m,r,q,new A.SN(A.v(t.Dn,t.Qz),o),p)},
@@ -31410,7 +31410,10 @@ aPk(a,b){var s,r=new Uint8Array(A.cw(B.bc.aZ(B.c.di(b).toLowerCase()+":auth-v2")
 p.a=new A.GG(r,1e5,32)
 s=p.hi(q)
 return B.bw.gfW().aZ(s)},
-abq(a,b,c){var s=new Uint8Array(A.cw(B.bc.aZ(a))),r=A.ao3(A.ah8(A.Vx(),64))
+abq(a,b,c){var s,r
+if(c==null)c=1e5
+s=new Uint8Array(A.cw(B.bc.aZ(a)))
+r=A.ao3(A.ah8(A.Vx(),64))
 r.a=new A.GG(b,c,32)
 return r.hi(s)},
 aPl(a){var s,r=$.Pd(),q=J.h0(a,t.S)
@@ -31851,7 +31854,7 @@ ahl(a){var s=a/100
 return(s<=0.0031308?s*12.92:1.055*Math.pow(s,0.4166666666666667)-0.055)*255},
 aPK(a){var s=Math.pow(Math.abs(a),0.42)
 return A.uu(a)*400*s/(s+27.13)},
-aPL(a){var s=A.qc(a,B.Os),r=A.aPK(s[0]),q=A.aPK(s[1]),p=A.aPK(s[2])
+aPL(a){var s=A.qc(a,B.Or),r=A.aPK(s[0]),q=A.aPK(s[1]),p=A.aPK(s[2])
 return Math.atan2((r+q-2*p)/9,(11*r+-12*q+p)/11)},
 bas(a,b){var s,r,q,p,o,n=B.d.az(b,4)<=1?0:100,m=(b&1)===0?0:100
 if(b<4){s=(a-n*0.7152-m*0.0722)/0.2126
@@ -33052,7 +33055,7 @@ A0(){var s=this.Q
 s===$&&A.b()
 return s},
 A1(a,b,c,d){var s,r,q,p
-if(a<0||b<0)return B.O1
+if(a<0||b<0)return B.O0
 s=this.a
 s===$&&A.b()
 s=s.a
@@ -33071,7 +33074,7 @@ l.push(new A.fc(n[0],n[1],n[2],n[3],B.m9[m]))}return l},
 dM(a){var s,r,q=this.a
 q===$&&A.b()
 s=q.a.getGlyphPositionAtCoordinate(a.a,a.b)
-r=B.Ny[J.b0(s.affinity.value)]
+r=B.Nx[J.b0(s.affinity.value)]
 return new A.an(J.b0(s.pos),r)},
 QO(a){var s=this.a
 s===$&&A.b()
@@ -33558,7 +33561,7 @@ A.t4.prototype={
 I(){return"CanvasKitVariant."+this.b}}
 A.afu.prototype={
 goS(){var s=this.b,r=s==null?null:s.canvasKitVariant
-return A.b9W(B.NI,r==null?"auto":r)},
+return A.b9W(B.NH,r==null?"auto":r)},
 gMF(){var s,r=this.b
 if(r==null)s=null
 else{r=r.canvasKitMaximumSurfaces
@@ -37927,7 +37930,7 @@ if(r.f!==B.qB){r.f=B.qB
 r.X9()}}return r.d.a.a7P(a)},
 X9(){var s,r
 for(s=this.w,r=0;r<s.length;++r)s[r].$1(this.f)},
-a7O(a){if(B.b.p(B.NP,a))return this.f===B.iv
+a7O(a){if(B.b.p(B.NO,a))return this.f===B.iv
 return!1}}
 A.aeX.prototype={
 $0(){return new A.cB(Date.now(),0,!1)},
@@ -47991,7 +47994,7 @@ if(r>19)return-1
 q=new Uint8Array(19)
 for(p=0;p<r;++p){o=i.ks(3)
 if(o===-1)return-1
-q[B.Ok[p]]=o}n=A.Sn(q)
+q[B.Oj[p]]=o}n=A.Sn(q)
 m=h+s
 l=new Uint8Array(m)
 k=J.dN(B.f.gaW(l),0,h)
@@ -48008,10 +48011,10 @@ p=s.b++
 q.$flags&2&&A.P(q)
 q[p]=r&255
 continue}o=r-257
-n=B.Ol[o]+k.ks(B.OD[o])
+n=B.Ok[o]+k.ks(B.OD[o])
 m=k.KU(b)
 if(m<0||m>29)return-1
-l=B.On[m]+k.ks(B.Nb[m])
+l=B.Om[m]+k.ks(B.Nb[m])
 for(q=-l;n>l;){s.rZ(s.RP(q))
 n-=l}if(n===l)s.rZ(s.RP(q))
 else s.rZ(s.RQ(q,n-l))}while(s=k.e,s>=8){k.e=s-8
@@ -48894,7 +48897,7 @@ l=B.c.di(m.e.a.a)
 k=m.f.a.a
 j=A.aPk(k,l)
 i=A.aPl(16)
-h=A.abq(k,i,1e5)
+h=A.abq(k,i,null)
 g=A.to("cryptkeep-key-check-v2",h)
 f=t.z
 s=7
@@ -49368,7 +49371,7 @@ A.af7.prototype={
 $0(){return A.fi(A.cj("https://buymeacoffee.com/eeriegoesd",0,null),B.m7)},
 $S:0}
 A.af8.prototype={
-$1(a){var s=B.Nd[a]
+$1(a){var s=B.Ow[a]
 return new A.wj(s.b,s.a,null)},
 $S:292}
 A.wj.prototype={
@@ -50350,7 +50353,7 @@ A.aL9.prototype={
 $1(a){return B.V0},
 $S:337}
 A.aLd.prototype={
-$1(a){return B.Oo},
+$1(a){return B.On},
 $S:146}
 A.aL4.prototype={
 $0(){var s=this.a
@@ -51453,7 +51456,7 @@ q=i.b.x
 q===$&&A.b()
 p=B.e.ii(8*q)
 for(q=i.e,o=8*q,n=i.f,q=q<1,m=i.c,l=0;l<o;++l){k=B.d.az(l-p,8)
-s.r=m.dL(q?147:B.Oi[k]).gn()
+s.r=m.dL(q?147:B.Oh[k]).gn()
 j=s.fb()
 r.drawRRect(A.mC(n),j)
 j.delete()
@@ -51923,7 +51926,7 @@ r=A.jC(B.Rq,B.h,r==null?1:r)
 r.toString
 q=p.ab(q.gn())
 if(q==null)q=1
-return A.aYA(A.aXj(null,B.C,new A.yF(q,B.Nt,new A.d0(B.Ey,this.e)),s,1,B.W3),r)}}
+return A.aYA(A.aXj(null,B.C,new A.yF(q,B.Ns,new A.d0(B.Ey,this.e)),s,1,B.W3),r)}}
 A.Ok.prototype={
 l(){var s=this,r=s.c5$
 if(r!=null)r.K(s.giF())
@@ -55160,7 +55163,7 @@ n=o.e
 o=o.cx
 r=q.ganH()
 q.a.toString
-return new A.JP(p,p,p,new A.aEE(),p,p,p,p,p,n,B.Qz,p,p,p,B.NY,q.ganQ(),o,p,B.ZM,s,p,r,p,p,B.rl,!1,!1,p,p,p,new A.tU(q,t.bT))},
+return new A.JP(p,p,p,new A.aEE(),p,p,p,p,p,n,B.Qz,p,p,p,B.NX,q.ganQ(),o,p,B.ZM,s,p,r,p,p,B.rl,!1,!1,p,p,p,new A.tU(q,t.bT))},
 M(a){var s,r=this.af3(a)
 this.a.toString
 s=this.d
@@ -55473,7 +55476,7 @@ A.AX.prototype={
 I(){return"_CornerId."+this.b}}
 A.oa.prototype={}
 A.yJ.prototype={
-mW(){var s,r,q,p=this,o=A.bhV(B.NK,new A.amD(p,p.b.gbb().R(0,p.a.gbb()))),n=p.a
+mW(){var s,r,q,p=this,o=A.bhV(B.NJ,new A.amD(p,p.b.gbb().R(0,p.a.gbb()))),n=p.a
 n.toString
 s=o.a
 r=p.tB(n,s)
@@ -60535,7 +60538,7 @@ A.aGX.prototype={
 $0(){return A.a([],t.q1)},
 $S:262}
 A.a_2.prototype={
-gHz(){return B.Nj},
+gHz(){return B.Ni},
 MK(a){var s,r=this
 switch(a.a){case 0:s=r.d.ax
 break
@@ -61239,7 +61242,7 @@ return s.b}}
 A.l8.prototype={
 I(){return"_ListTileSlot."+this.b}}
 A.a0P.prototype={
-gHz(){return B.NG},
+gHz(){return B.NF},
 MK(a){var s,r=this
 switch(a.a){case 0:s=r.d
 break
@@ -61562,7 +61565,7 @@ r.f=s.d},
 $S:0}
 A.Tv.prototype={
 M(a){var s=this.c.O(0,new A.k(0,40.95))
-return A.aXj(A.QM(null,B.HZ,!0),B.R,new A.yF(1,B.Od,new A.d0(B.Ew,B.t)),s,1.25,B.W4)}}
+return A.aXj(A.QM(null,B.HZ,!0),B.R,new A.yF(1,B.Oc,new A.d0(B.Ew,B.t)),s,1.25,B.W4)}}
 A.ut.prototype={
 I(){return"MaterialType."+this.b}}
 A.G0.prototype={
@@ -62052,7 +62055,7 @@ gkI(){return A.bkO()},
 MC(a,b,c,d,e,f){return A.b84(a,b,c,d,e,f)}}
 A.Ub.prototype={
 aei(a){var s=t.Tr
-s=A.a8(new A.aa(B.NJ,new A.aoj(a),s),s.h("aJ.E"))
+s=A.a8(new A.aa(B.NI,new A.aoj(a),s),s.h("aJ.E"))
 return s},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
@@ -62221,7 +62224,7 @@ q=this.a
 n=A.x0(new A.e_(new A.ab(0,1/0,48,1/0),new A.bV(B.Jp,new A.fm(B.dk,m,m,q.Q,m),m),m),B.Q,B.S,o)
 return new A.Ga(A.bK(!0,m,A.ec(!1,m,!0,A.bb9(n,B.aA,m,o),m,!0,m,m,m,m,new A.a_y(m,s.y),m,m,m,m,this.gOn(),m,m,m,m,m,m,m),!1,m,!0,m,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,m,B.jq,m,m,m,m,m,m,m,m,m,B.A,m),m)}}
 A.BD.prototype={
-aj(){return new A.M4(B.NV,this.$ti.h("M4<1>"))}}
+aj(){return new A.M4(B.NU,this.$ti.h("M4<1>"))}}
 A.M4.prototype={
 aG(){this.b1()
 this.YV()},
@@ -68978,7 +68981,7 @@ return new A.pT(r.a.dN(s.gkd()),r.b,r.c)},
 dM(a){var s=this.b
 return s.a.c.dM(a.R(0,s.gkd()))},
 uu(){var s,r,q=this.b,p=q.gkd()
-if(!isFinite(p.a)||!isFinite(p.b))return B.O3
+if(!isFinite(p.a)||!isFinite(p.b))return B.O2
 s=q.f
 if(s==null){s=q.a.c.uu()
 q.f=s}if(p.k(0,B.h))r=s
@@ -78273,7 +78276,7 @@ break
 case 1:return A.F(q,r)}})
 return A.G($async$JV,r)},
 aiz(a,b){var s,r,q,p
-if(a===b)return B.O0
+if(a===b)return B.O_
 s=A.a([],t.QP)
 if(a==null)s.push(b)
 else{r=B.b.hd(B.fQ,a)
@@ -80113,7 +80116,7 @@ A.nC.prototype={}
 A.UA.prototype={
 nz(a,b){var s,r,q,p,o,n=$.a4.ai$.d.c
 if(n==null||n.e==null)return!1
-for(s=t.J,r=0;r<2;++r){q=B.NQ[r]
+for(s=t.J,r=0;r<2;++r){q=B.NP[r]
 p=n.e
 p.toString
 o=A.aOR(p,q,s)
@@ -80223,7 +80226,7 @@ this.iG()}}
 A.rj.prototype={
 j(a){return"Entry#"+A.bq(this)+"("+this.d.j(0)+")"}}
 A.CO.prototype={
-aj(){return new A.K8(A.aI(t.me),B.NW,null,null)},
+aj(){return new A.K8(A.aI(t.me),B.NV,null,null)},
 aGh(a,b){return this.w.$2(a,b)},
 aCe(a,b){return this.x.$2(a,b)}}
 A.K8.prototype={
@@ -82647,7 +82650,7 @@ h.M1()
 r=h.gajp()
 q=q.yI
 h.e!==$&&A.aD()
-h.e=new A.VY(s,new A.cE(B.Q8,l),new A.uo(),p,B.cR,0,k,h.galJ(),h.galL(),r,B.cR,0,j,h.galD(),h.galF(),r,i,B.NU,f,g.CW,g.cx,g.cy,o,g,n,m,g.x,q,new A.QT(),new A.QT())
+h.e=new A.VY(s,new A.cE(B.Q8,l),new A.uo(),p,B.cR,0,k,h.galJ(),h.galL(),r,B.cR,0,j,h.galD(),h.galF(),r,i,B.NT,f,g.CW,g.cx,g.cy,o,g,n,m,g.x,q,new A.QT(),new A.QT())
 return h},
 BH(a,b){var s,r,q,p=this,o=p.a.c,n=o.a.a.length
 if(n<a.b||n<a.a)return
@@ -86254,7 +86257,7 @@ k(a,b){var s=this
 if(b==null)return!1
 if(J.Z(b)!==A.x(s))return!1
 return b instanceof A.bS&&b.a===s.a&&b.b==s.b&&b.d===s.d&&A.cV(null,null)},
-gB(a){return A.T(this.a,this.b,null,this.d,A.bU(B.O4),B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a)},
+gB(a){return A.T(this.a,this.b,null,this.d,A.bU(B.O3),B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a)},
 j(a){return"IconData(U+"+B.c.ms(B.d.jm(this.a,16).toUpperCase(),5,"0")+")"}}
 A.u0.prototype={
 d_(a){return!this.w.k(0,a.w)},
@@ -87197,7 +87200,7 @@ b=r?a1:a3.fr
 if(b==null)b=a2.b.c.z
 a3=r?a1:a3.fx
 a2=a3==null?a2.b.c.Q:a3
-a=new A.G7(a4,s,q,p,m,o,n,a5,g===!0,a6,a7,i,h,l,k,j,f,new A.xK(a1),B.NT,e===!0,d,c,b,a2)
+a=new A.G7(a4,s,q,p,m,o,n,a5,g===!0,a6,a7,i,h,l,k,j,f,new A.xK(a1),B.NS,e===!0,d,c,b,a2)
 if(!a.k(0,a0.e))a0.V(new A.aEZ(a0,a))},
 a1F(){if(this.d==null)this.u8()},
 Nr(){this.u8()},
@@ -87567,7 +87570,7 @@ r.N(0,s.a5C(null,l))
 l.a.toString
 q=r.a
 p=0
-for(;!1;++p){o=B.NZ[p]
+for(;!1;++p){o=B.NY[p]
 n=l.c
 n.toString
 m=new A.j8(o.Nb(n),null,!0,B.oc,B.cA,new A.wH(new ($.a86())(B.cA)),B.cA)
@@ -87943,7 +87946,7 @@ M(a){var s,r,q=this,p=null,o=q.galc(),n=A.pO(a),m=q.bS$,l=q.d
 l===$&&A.b()
 s=q.a.ay
 if(l.gP()==null){r=q.gTc()
-r=J.q2(r.slice(0),A.a3(r).c)}else r=B.O_
+r=J.q2(r.slice(0),A.a3(r).c)}else r=B.NZ
 return new A.tY(p,new A.dy(new A.anA(q,a),A.FR(B.cm,new A.Pk(!1,A.aPB(A.lC(!0,p,A.JC(m,new A.yU(r,s,l)),p,p,p,q.y,!1,p,p,p,p,p,!0),n),p),o,q.gaog(),p,p,o),p,t.w3),p)}}
 A.anz.prototype={
 $1(a){var s=this.a.c
@@ -93443,7 +93446,7 @@ r.CY()
 return s.aY()},
 l(){var s,r,q,p,o=this
 for(s=o.b,r=s.length,q=o.gJX(),p=0;p<s.length;s.length===r||(0,A.K)(s),++p)s[p].K(q)
-o.b=B.O2
+o.b=B.O1
 o.y=!1
 o.ea()},
 f5(a,b){return a.pa(b)},
@@ -98423,7 +98426,7 @@ s=1
 break
 case 1:return A.F(q,r)}})
 return A.G($async$B8,r)},
-agv(a){var s,r,q,p,o=a.c,n=o.k(0,B.iB)||o.He(0,B.iB)?a.e.a.i(0,B.qZ).b:a.d.i(0,B.qD).b,m=B.O7[($.i3?new A.kN(n,n.byteLength):new A.fb(n,n.byteLength)).eF(4).getUint32(0,!0)],l=o.k(0,B.iB)||o.He(0,B.iB)?a.e.a.i(0,B.r_).b:a.d.i(0,B.qH).b
+agv(a){var s,r,q,p,o=a.c,n=o.k(0,B.iB)||o.He(0,B.iB)?a.e.a.i(0,B.qZ).b:a.d.i(0,B.qD).b,m=B.O6[($.i3?new A.kN(n,n.byteLength):new A.fb(n,n.byteLength)).eF(4).getUint32(0,!0)],l=o.k(0,B.iB)||o.He(0,B.iB)?a.e.a.i(0,B.r_).b:a.d.i(0,B.qH).b
 if(m===B.Bs){o=B.bH.aZ(l)
 s=A.aXE()
 s.c7(!1,new A.fu($.b3x(),new A.ef(o.a),t.i5))
@@ -99885,7 +99888,7 @@ $idu:1}
 A.at.prototype={
 bs(a,b){var s=this.bq(new A.tk(a,b))
 return s instanceof A.by?-1:s.b},
-gdC(){return B.NX},
+gdC(){return B.NW},
 l0(a,b){},
 j(a){return A.x(this).j(0)}}
 A.Vp.prototype={}
@@ -115807,7 +115810,7 @@ B.X=new A.Xw()
 B.bc=new A.Xx()
 B.kv=new A.axp()
 B.f4=new A.XD(0,0,0,0)
-B.NT=s([],A.as("y<acj>"))
+B.NS=s([],A.as("y<acj>"))
 B.a5j=new A.axO()
 B.bJ={}
 B.mr=new A.bO(B.bJ,[],t.li)
@@ -116554,10 +116557,10 @@ B.rg=new A.uj(3,"center")
 B.M_=new A.uj(4,"bottom")
 B.dD=s([82,9,106,213,48,54,165,56,191,64,163,158,129,243,215,251,124,227,57,130,155,47,255,135,52,142,67,68,196,222,233,203,84,123,148,50,166,194,35,61,238,76,149,11,66,250,195,78,8,46,161,102,40,217,36,178,118,91,162,73,109,139,209,37,114,248,246,100,134,104,152,22,212,164,92,204,93,101,182,146,108,112,72,80,253,237,185,218,94,21,70,87,167,141,157,132,144,216,171,0,140,188,211,10,247,228,88,5,184,179,69,6,208,44,30,143,202,63,15,2,193,175,189,3,1,19,138,107,58,145,17,65,79,103,220,234,151,242,207,206,240,180,230,115,150,172,116,34,231,173,53,133,226,249,55,232,28,117,223,110,71,241,26,113,29,41,197,137,111,183,98,14,170,24,190,27,252,86,62,75,198,210,121,32,154,219,192,254,120,205,90,244,31,221,168,51,136,7,199,49,177,18,16,89,39,128,236,95,96,81,127,169,25,181,74,13,45,229,122,159,147,201,156,239,160,224,59,77,174,42,245,176,200,235,187,60,131,83,153,97,23,43,4,126,186,119,214,38,225,105,20,99,85,33,12,125],t.t)
 B.M1=s([0,0],t.t)
-B.NL=s([1373.2198709594231,-1100.4251190754821,-7.278681089101213],t.n)
-B.Nr=s([-271.815969077903,559.6580465940733,-32.46047482791194],t.n)
+B.NK=s([1373.2198709594231,-1100.4251190754821,-7.278681089101213],t.n)
+B.Nq=s([-271.815969077903,559.6580465940733,-32.46047482791194],t.n)
 B.OG=s([1.9622899599665666,-57.173814538844006,308.7233197812385],t.n)
-B.M3=s([B.NL,B.Nr,B.OG],t.zg)
+B.M3=s([B.NK,B.Nq,B.OG],t.zg)
 B.rh=s(["text","multiline","number","phone","datetime","emailAddress","url","visiblePassword","name","address","none","webSearch","twitter"],t.s)
 B.M4=s([239,191,189],t.t)
 B.h5=new A.k(0,2)
@@ -116567,10 +116570,10 @@ B.Mu=s([4,9,14,19],t.t)
 B.of=new A.MM(0,"named")
 B.DZ=new A.MM(1,"anonymous")
 B.ME=s([B.of,B.DZ],A.as("y<MM>"))
-B.Nv=s([0.41233895,0.35762064,0.18051042],t.n)
+B.Nu=s([0.41233895,0.35762064,0.18051042],t.n)
 B.N2=s([0.2126,0.7152,0.0722],t.n)
 B.Oz=s([0.01932141,0.11916382,0.95034478],t.n)
-B.dE=s([B.Nv,B.N2,B.Oz],t.zg)
+B.dE=s([B.Nu,B.N2,B.Oz],t.zg)
 B.ri=s([0,4,12,1,5,13,3,7,15],t.t)
 B.MI=s([1,2,4,8,16,32,64,128,27,54,108,216,171,77,154,47,94,188,99,198,151,53,106,212,179,125,250,239,197,145],t.t)
 B.MJ=s([65533],t.t)
@@ -116593,18 +116596,18 @@ B.ht=new A.nW(3,"justify")
 B.aG=new A.nW(4,"start")
 B.jz=new A.nW(5,"end")
 B.MS=s([B.dd,B.dY,B.cQ,B.ht,B.aG,B.jz],A.as("y<nW>"))
-B.Ng=s([2,1.13276676],t.n)
+B.Nf=s([2,1.13276676],t.n)
 B.M8=s([2.18349805,1.20311921],t.n)
-B.Oa=s([2.33888662,1.28698796],t.n)
-B.Oc=s([2.48660575,1.36351941],t.n)
+B.O9=s([2.33888662,1.28698796],t.n)
+B.Ob=s([2.48660575,1.36351941],t.n)
 B.MZ=s([2.62226596,1.44717976],t.n)
 B.N5=s([2.7514899,1.53385819],t.n)
-B.NH=s([3.36298265,1.98288283],t.n)
-B.Nk=s([4.08649929,2.23811846],t.n)
-B.Nx=s([4.85481134,2.47563463],t.n)
+B.NG=s([3.36298265,1.98288283],t.n)
+B.Nj=s([4.08649929,2.23811846],t.n)
+B.Nw=s([4.85481134,2.47563463],t.n)
 B.N1=s([5.62945551,2.72948597],t.n)
-B.Nh=s([6.43023796,2.98020421],t.n)
-B.rj=s([B.Ng,B.M8,B.Oa,B.Oc,B.MZ,B.N5,B.NH,B.Nk,B.Nx,B.N1,B.Nh],t.zg)
+B.Ng=s([6.43023796,2.98020421],t.n)
+B.rj=s([B.Nf,B.M8,B.O9,B.Ob,B.MZ,B.N5,B.NG,B.Nj,B.Nw,B.N1,B.Ng],t.zg)
 B.MV=s([5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],t.t)
 B.MX=s([B.kk,B.kl],A.as("y<D0>"))
 B.N0=s([18,15,10,12,15,18,15,12,12],t.n)
@@ -116622,17 +116625,6 @@ B.cx=new A.mm(2,"deleteIcon")
 B.N8=s([B.bG,B.bj,B.cx],A.as("y<mm>"))
 B.Na=s([1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298],t.t)
 B.Nb=s([0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],t.t)
-B.TL=new A.j6("CryptKeep is a zero-knowledge password manager. Your passwords are encrypted on your device before being sent to the server. Only you, with your master password, can ever decrypt and read them.","What is CryptKeep?")
-B.Tm=new A.j6("Every change (add, edit, delete) is saved to the database instantly. When you open the app on any device and unlock the vault, it fetches the latest data automatically. Use the sync button to manually pull the latest from the server if you need to refresh after changes made on another device.","How does sync work?")
-B.TM=new A.j6("Yes. Every action (adding, editing, or deleting an entry) is saved to the database instantly. There is no save button to press and no manual upload needed.","Are my changes saved automatically?")
-B.Ti=new A.j6("No. Your master password never leaves your device and is never stored anywhere. It is used to derive an encryption key in memory, which is discarded when you lock the vault or close the app.","Is my master password stored anywhere?")
-B.TE=new A.j6("AES-256-GCM with authenticated encryption and a random nonce per entry. The encryption key is derived from your master password using PBKDF2-SHA256 with 100,000 iterations and a cryptographically random salt.","What encryption does CryptKeep use?")
-B.Th=new A.j6('1. Open the menu and tap "Import KeePass (.kdbx)".\n2. Select your .kdbx file.\n3. Enter the master password for that KeePass database.\n4. Tap Import. All entries will be imported and re-encrypted with your CryptKeep key.',"How do I import from KeePass?")
-B.TN=new A.j6('Long-press any entry to enter selection mode. Tap entries to select them, tap "All" to select everything, then tap the delete icon in the top bar.',"How do I bulk delete entries?")
-B.TD=new A.j6("There is no recovery option. Your master password is never stored anywhere. If you lose it, your vault cannot be decrypted. Keep your master password in a safe place.","What happens if I forget my master password?")
-B.Tg=new A.j6("Yes. Install the app on any device, log in with the same account and master password, and your vault will be available instantly.","Can I use CryptKeep on multiple devices?")
-B.Td=new A.j6('Yes. Go to Settings and tap "Delete Account." This will permanently remove your account and all vault data from the server. This action cannot be undone.',"Can I permanently delete my account?")
-B.Nd=s([B.TL,B.Tm,B.TM,B.Ti,B.TE,B.Th,B.TN,B.TD,B.Tg,B.Td],A.as("y<+a,q(h,h)>"))
 B.Eg=new A.iw("",6,"userDeleted")
 B.rk=s([B.ea,B.ff,B.dn,B.eb,B.fg,B.km,B.Eg,B.ot],A.as("y<iw>"))
 B.I=s([1353184337,1399144830,3282310938,2522752826,3412831035,4047871263,2874735276,2466505547,1442459680,4134368941,2440481928,625738485,4242007375,3620416197,2151953702,2409849525,1230680542,1729870373,2551114309,3787521629,41234371,317738113,2744600205,3338261355,3881799427,2510066197,3950669247,3663286933,763608788,3542185048,694804553,1154009486,1787413109,2021232372,1799248025,3715217703,3058688446,397248752,1722556617,3023752829,407560035,2184256229,1613975959,1165972322,3765920945,2226023355,480281086,2485848313,1483229296,436028815,2272059028,3086515026,601060267,3791801202,1468997603,715871590,120122290,63092015,2591802758,2768779219,4068943920,2997206819,3127509762,1552029421,723308426,2461301159,4042393587,2715969870,3455375973,3586000134,526529745,2331944644,2639474228,2689987490,853641733,1978398372,971801355,2867814464,111112542,1360031421,4186579262,1023860118,2919579357,1186850381,3045938321,90031217,1876166148,4279586912,620468249,2548678102,3426959497,2006899047,3175278768,2290845959,945494503,3689859193,1191869601,3910091388,3374220536,0,2206629897,1223502642,2893025566,1316117100,4227796733,1446544655,517320253,658058550,1691946762,564550760,3511966619,976107044,2976320012,266819475,3533106868,2660342555,1338359936,2720062561,1766553434,370807324,179999714,3844776128,1138762300,488053522,185403662,2915535858,3114841645,3366526484,2233069911,1275557295,3151862254,4250959779,2670068215,3170202204,3309004356,880737115,1982415755,3703972811,1761406390,1676797112,3403428311,277177154,1076008723,538035844,2099530373,4164795346,288553390,1839278535,1261411869,4080055004,3964831245,3504587127,1813426987,2579067049,4199060497,577038663,3297574056,440397984,3626794326,4019204898,3343796615,3251714265,4272081548,906744984,3481400742,685669029,646887386,2764025151,3835509292,227702864,2613862250,1648787028,3256061430,3904428176,1593260334,4121936770,3196083615,2090061929,2838353263,3004310991,999926984,2809993232,1852021992,2075868123,158869197,4095236462,28809964,2828685187,1701746150,2129067946,147831841,3873969647,3650873274,3459673930,3557400554,3598495785,2947720241,824393514,815048134,3227951669,935087732,2798289660,2966458592,366520115,1251476721,4158319681,240176511,804688151,2379631990,1303441219,1414376140,3741619940,3820343710,461924940,3089050817,2136040774,82468509,1563790337,1937016826,776014843,1511876531,1389550482,861278441,323475053,2355222426,2047648055,2383738969,2302415851,3995576782,902390199,3991215329,1018251130,1507840668,1064563285,2043548696,3208103795,3939366739,1537932639,342834655,2262516856,2180231114,1053059257,741614648,1598071746,1925389590,203809468,2336832552,1100287487,1895934009,3736275976,2632234200,2428589668,1636092795,1890988757,1952214088,1113045200],t.t)
@@ -116647,7 +116639,7 @@ B.ba=new A.fP(7,"suffixIcon")
 B.cc=new A.fP(8,"helperError")
 B.cd=new A.fP(9,"counter")
 B.dg=new A.fP(10,"container")
-B.Nj=s([B.b5,B.bk,B.ai,B.br,B.bs,B.bt,B.ap,B.ba,B.cc,B.cd,B.dg],A.as("y<fP>"))
+B.Ni=s([B.b5,B.bk,B.ai,B.br,B.bs,B.bt,B.ap,B.ba,B.cc,B.cd,B.dg],A.as("y<fP>"))
 B.OH=new A.uk("en",null,"US")
 B.rl=s([B.OH],t.ss)
 B.rm=s([0,41,61,101,131,181,251,301,360],t.n)
@@ -116663,13 +116655,13 @@ B.Ev=new A.Q6(2,"outer")
 B.ps=new A.O(0.09803921568627451,0,0,0,B.i)
 B.h=new A.k(0,0)
 B.F9=new A.bI(0.2,B.Ev,B.ps,B.h,11)
-B.Nt=s([B.F9],t.E)
+B.Ns=s([B.F9],t.E)
 B.rp=s([1,2,3,4,0],t.t)
 B.CS=new A.IM(0,"left")
 B.CT=new A.IM(1,"right")
-B.Nw=s([B.CS,B.CT],A.as("y<IM>"))
+B.Nv=s([B.CS,B.CT],A.as("y<IM>"))
 B.ao=new A.IZ(0,"upstream")
-B.Ny=s([B.ao,B.l],A.as("y<IZ>"))
+B.Nx=s([B.ao,B.l],A.as("y<IZ>"))
 B.al=new A.J2(0,"rtl")
 B.a3=new A.J2(1,"ltr")
 B.m9=s([B.al,B.a3],A.as("y<J2>"))
@@ -116677,18 +116669,18 @@ B.bI=s([99,124,119,123,242,107,111,197,48,1,103,43,254,215,171,118,202,130,201,1
 B.Kb=new A.fp(0,"EndOfHeader")
 B.Kc=new A.fp(1,"Comment")
 B.Kd=new A.fp(12,"PublicCustomData")
-B.NA=s([B.Kb,B.Kc,B.iy,B.qF,B.lX,B.qG,B.lY,B.iz,B.qH,B.qI,B.qD,B.qE,B.Kd],A.as("y<fp>"))
+B.Nz=s([B.Kb,B.Kc,B.iy,B.qF,B.lX,B.qG,B.lY,B.iz,B.qH,B.qI,B.qD,B.qE,B.Kd],A.as("y<fp>"))
 B.dh=new A.l8(0,"leading")
 B.bX=new A.l8(1,"title")
 B.di=new A.l8(2,"subtitle")
 B.fa=new A.l8(3,"trailing")
-B.NG=s([B.dh,B.bX,B.di,B.fa],A.as("y<l8>"))
+B.NF=s([B.dh,B.bX,B.di,B.fa],A.as("y<l8>"))
 B.GQ=new A.t4(0,"auto")
 B.GR=new A.t4(1,"full")
 B.GS=new A.t4(2,"chromium")
-B.NI=s([B.GQ,B.GR,B.GS,B.cZ],A.as("y<t4>"))
+B.NH=s([B.GQ,B.GR,B.GS,B.cZ],A.as("y<t4>"))
 B.bD=new A.hn(1,"fuchsia")
-B.NJ=s([B.an,B.bD,B.U,B.bE,B.b3,B.bF],A.as("y<hn>"))
+B.NI=s([B.an,B.bD,B.U,B.bE,B.b3,B.bF],A.as("y<hn>"))
 B.DI=new A.AX(0,"topLeft")
 B.DL=new A.AX(3,"bottomRight")
 B.a3U=new A.oa(B.DI,B.DL)
@@ -116697,9 +116689,9 @@ B.DJ=new A.AX(1,"topRight")
 B.DK=new A.AX(2,"bottomLeft")
 B.a3V=new A.oa(B.DJ,B.DK)
 B.a3W=new A.oa(B.DK,B.DJ)
-B.NK=s([B.a3U,B.a3X,B.a3V,B.a3W],A.as("y<oa>"))
-B.TC=new A.ad(0.01339448,0.05994973)
-B.TB=new A.ad(0.13664115,0.13592082)
+B.NJ=s([B.a3U,B.a3X,B.a3V,B.a3W],A.as("y<oa>"))
+B.TD=new A.ad(0.01339448,0.05994973)
+B.TC=new A.ad(0.13664115,0.13592082)
 B.To=new A.ad(0.24545546,0.14099516)
 B.Tr=new A.ad(0.32353151,0.12808021)
 B.TA=new A.ad(0.39093068,0.11726264)
@@ -116712,50 +116704,50 @@ B.TG=new A.ad(0.63903989,0.07759639)
 B.Tk=new A.ad(0.66416338,0.0734653)
 B.Te=new A.ad(0.68675338,0.06974996)
 B.Ty=new A.ad(0.70678034,0.06529512)
-B.rq=s([B.TC,B.TB,B.To,B.Tr,B.TA,B.Tc,B.Tl,B.Tp,B.Tj,B.Tx,B.TG,B.Tk,B.Te,B.Ty],A.as("y<+(S,S)>"))
-B.NM=s([35,30,20,25,30,35,30,25,25],t.n)
-B.NP=s(["click","scroll"],t.s)
+B.rq=s([B.TD,B.TC,B.To,B.Tr,B.TA,B.Tc,B.Tl,B.Tp,B.Tj,B.Tx,B.TG,B.Tk,B.Te,B.Ty],A.as("y<+(S,S)>"))
+B.NL=s([35,30,20,25,30,35,30,25,25],t.n)
+B.NO=s(["click","scroll"],t.s)
 B.FC=new A.ox()
 B.he=new A.VO(1,"page")
 B.jg=new A.fw(B.aT,B.he)
-B.NQ=s([B.FC,B.jg],A.as("y<bb>"))
+B.NP=s([B.FC,B.jg],A.as("y<bb>"))
 B.J=s([2774754246,2222750968,2574743534,2373680118,234025727,3177933782,2976870366,1422247313,1345335392,50397442,2842126286,2099981142,436141799,1658312629,3870010189,2591454956,1170918031,2642575903,1086966153,2273148410,368769775,3948501426,3376891790,200339707,3970805057,1742001331,4255294047,3937382213,3214711843,4154762323,2524082916,1539358875,3266819957,486407649,2928907069,1780885068,1513502316,1094664062,49805301,1338821763,1546925160,4104496465,887481809,150073849,2473685474,1943591083,1395732834,1058346282,201589768,1388824469,1696801606,1589887901,672667696,2711000631,251987210,3046808111,151455502,907153956,2608889883,1038279391,652995533,1764173646,3451040383,2675275242,453576978,2659418909,1949051992,773462580,756751158,2993581788,3998898868,4221608027,4132590244,1295727478,1641469623,3467883389,2066295122,1055122397,1898917726,2542044179,4115878822,1758581177,0,753790401,1612718144,536673507,3367088505,3982187446,3194645204,1187761037,3653156455,1262041458,3729410708,3561770136,3898103984,1255133061,1808847035,720367557,3853167183,385612781,3309519750,3612167578,1429418854,2491778321,3477423498,284817897,100794884,2172616702,4031795360,1144798328,3131023141,3819481163,4082192802,4272137053,3225436288,2324664069,2912064063,3164445985,1211644016,83228145,3753688163,3249976951,1977277103,1663115586,806359072,452984805,250868733,1842533055,1288555905,336333848,890442534,804056259,3781124030,2727843637,3427026056,957814574,1472513171,4071073621,2189328124,1195195770,2892260552,3881655738,723065138,2507371494,2690670784,2558624025,3511635870,2145180835,1713513028,2116692564,2878378043,2206763019,3393603212,703524551,3552098411,1007948840,2044649127,3797835452,487262998,1994120109,1004593371,1446130276,1312438900,503974420,3679013266,168166924,1814307912,3831258296,1573044895,1859376061,4021070915,2791465668,2828112185,2761266481,937747667,2339994098,854058965,1137232011,1496790894,3077402074,2358086913,1691735473,3528347292,3769215305,3027004632,4199962284,133494003,636152527,2942657994,2390391540,3920539207,403179536,3585784431,2289596656,1864705354,1915629148,605822008,4054230615,3350508659,1371981463,602466507,2094914977,2624877800,555687742,3712699286,3703422305,2257292045,2240449039,2423288032,1111375484,3300242801,2858837708,3628615824,84083462,32962295,302911004,2741068226,1597322602,4183250862,3501832553,2441512471,1489093017,656219450,3114180135,954327513,335083755,3013122091,856756514,3144247762,1893325225,2307821063,2811532339,3063651117,572399164,2458355477,552200649,1238290055,4283782570,2015897680,2061492133,2408352771,4171342169,2156497161,386731290,3669999461,837215959,3326231172,3093850320,3275833730,2962856233,1999449434,286199582,3417354363,4233385128,3602627437,974525996],t.t)
-B.O0=s([],t.QP)
+B.O_=s([],t.QP)
 B.rs=s([],t.E)
-B.NV=s([],t.Ug)
+B.NU=s([],t.Ug)
 B.rt=s([],A.as("y<bmc>"))
-B.O5=s([],t.D)
-B.O6=s([],t.fJ)
-B.O3=s([],t.ER)
+B.O4=s([],t.D)
+B.O5=s([],t.fJ)
+B.O2=s([],t.ER)
 B.a5t=s([],t.ss)
-B.NY=s([],t.tc)
+B.NX=s([],t.tc)
 B.iH=s([],t.jl)
-B.O_=s([],t.wi)
-B.NZ=s([],A.as("y<aWV<@>>"))
-B.NX=s([],t.Vz)
+B.NZ=s([],t.wi)
+B.NY=s([],A.as("y<aWV<@>>"))
+B.NW=s([],t.Vz)
 B.mb=s([],t.AO)
-B.O2=s([],t.D1)
+B.O1=s([],t.D1)
 B.ma=s([],t.QF)
-B.O1=s([],t.Lx)
-B.NU=s([],t.AS)
-B.NW=s([],t.p)
+B.O0=s([],t.Lx)
+B.NT=s([],t.AS)
+B.NV=s([],t.p)
 B.c7=s([],A.as("y<jR>"))
 B.bR=s([],t.ov)
 B.rr=s([],t.t)
 B.w=s([],t.ee)
-B.O4=s([],t.XS)
+B.O3=s([],t.XS)
 B.T4=new A.v5(0,"plainText")
 B.T5=new A.v5(1,"arc4variant")
 B.Bs=new A.v5(2,"salsa20")
 B.Bt=new A.v5(3,"chaCha20")
-B.O7=s([B.T4,B.T5,B.Bs,B.Bt],A.as("y<v5>"))
+B.O6=s([B.T4,B.T5,B.Bs,B.Bt],A.as("y<v5>"))
 B.F7=new A.bI(0.75,B.a_,B.ps,B.h5,1.5)
-B.Od=s([B.F7],t.E)
-B.Oi=s([47,47,47,47,72,97,122,147],t.t)
-B.Ok=s([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15],t.t)
+B.Oc=s([B.F7],t.E)
+B.Oh=s([47,47,47,47,72,97,122,147],t.t)
+B.Oj=s([16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15],t.t)
 B.fQ=s([B.dm,B.cY,B.hF,B.hG,B.kj],t.QP)
-B.Ol=s([3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],t.t)
-B.On=s([1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],t.t)
+B.Ok=s([3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],t.t)
+B.Om=s([1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],t.t)
 B.K=new A.qb(0,"start")
 B.KN=new A.cf(B.qR,18,null,null,null)
 B.jw=new A.da(10,null,null,null)
@@ -116765,8 +116757,8 @@ B.TX=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.MQ,null)
 B.T0=new A.nA("import",B.TX,null,t.wI)
 B.KM=new A.cf(B.m1,18,null,null,null)
 B.Di=new A.aY("Manage Categories",null,null,null,null,null,null,null,null)
-B.Nu=s([B.KM,B.jw,B.Di],t.p)
-B.TW=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Nu,null)
+B.Nt=s([B.KM,B.jw,B.Di],t.p)
+B.TW=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Nt,null)
 B.T_=new A.nA("categories",B.TW,null,t.wI)
 B.SW=new A.GK(null)
 B.KB=new A.bS(62318,"MaterialIcons",!1)
@@ -116775,13 +116767,13 @@ B.Dj=new A.aY("Settings",null,null,null,null,null,null,null,null)
 B.N9=s([B.La,B.jw,B.Dj],t.p)
 B.TZ=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.N9,null)
 B.SX=new A.nA("settings",B.TZ,null,t.wI)
-B.Oo=s([B.T0,B.T_,B.SW,B.SX],t.Do)
+B.On=s([B.T0,B.T_,B.SW,B.SX],t.Do)
 B.ML=s([0.001200833568784504,0.002389694492170889,0.0002795742885861124],t.n)
-B.NR=s([0.0005891086651375999,0.0029785502573438758,0.0003270666104008398],t.n)
+B.NQ=s([0.0005891086651375999,0.0029785502573438758,0.0003270666104008398],t.n)
 B.N_=s([0.00010146692491640572,0.0005364214359186694,0.0032979401770712076],t.n)
-B.Os=s([B.ML,B.NR,B.N_],t.zg)
-B.Ot=s([45,95,45,20,45,90,45,45,45],t.n)
-B.Ou=s([120,120,20,45,20,15,20,120,120],t.n)
+B.Or=s([B.ML,B.NQ,B.N_],t.zg)
+B.Os=s([45,95,45,20,45,90,45,45,45],t.n)
+B.Ot=s([120,120,20,45,20,15,20,120,120],t.n)
 B.eC=new A.iN(0,"controlModifier")
 B.eD=new A.iN(1,"shiftModifier")
 B.eE=new A.iN(2,"altModifier")
@@ -116792,6 +116784,17 @@ B.mw=new A.iN(6,"scrollLockModifier")
 B.mx=new A.iN(7,"functionModifier")
 B.xy=new A.iN(8,"symbolModifier")
 B.ru=s([B.eC,B.eD,B.eE,B.eF,B.mu,B.mv,B.mw,B.mx,B.xy],A.as("y<iN>"))
+B.TL=new A.j6("CryptKeep is a zero-knowledge password manager. Your passwords are encrypted on your device before being sent to the server. Only you, with your master password, can ever decrypt and read them.","What is CryptKeep?")
+B.Tm=new A.j6("Every change (add, edit, delete) is saved to the database instantly. When you open the app on any device and unlock the vault, it fetches the latest data automatically. Use the sync button to manually pull the latest from the server if you need to refresh after changes made on another device.","How does sync work?")
+B.TM=new A.j6("Yes. Every action (adding, editing, or deleting an entry) is saved to the database instantly. There is no save button to press and no manual upload needed.","Are my changes saved automatically?")
+B.Ti=new A.j6("No. Your master password never leaves your device and is never stored anywhere. It is used to derive an encryption key in memory, which is discarded when you lock the vault or close the app.","Is my master password stored anywhere?")
+B.TB=new A.j6("AES-256-GCM with authenticated encryption and a random nonce per entry. The encryption key is derived from your master password using PBKDF2-SHA256 with up to 600,000 iterations and a cryptographically random salt.","What encryption does CryptKeep use?")
+B.Th=new A.j6('1. Open the menu and tap "Import KeePass (.kdbx)".\n2. Select your .kdbx file.\n3. Enter the master password for that KeePass database.\n4. Tap Import. All entries will be imported and re-encrypted with your CryptKeep key.',"How do I import from KeePass?")
+B.TN=new A.j6('Long-press any entry to enter selection mode. Tap entries to select them, tap "All" to select everything, then tap the delete icon in the top bar.',"How do I bulk delete entries?")
+B.TE=new A.j6("There is no recovery option. Your master password is never stored anywhere. If you lose it, your vault cannot be decrypted. Keep your master password in a safe place.","What happens if I forget my master password?")
+B.Tg=new A.j6("Yes. Install the app on any device, log in with the same account and master password, and your vault will be available instantly.","Can I use CryptKeep on multiple devices?")
+B.Td=new A.j6('Yes. Go to Settings and tap "Delete Account." This will permanently remove your account and all vault data from the server. This action cannot be undone.',"Can I permanently delete my account?")
+B.Ow=s([B.TL,B.Tm,B.TM,B.Ti,B.TB,B.Th,B.TN,B.TE,B.Tg,B.Td],A.as("y<+a,q(h,h)>"))
 B.mc=s([!0,!1],t.HZ)
 B.Hl=new A.O(0.14901960784313725,0,0,0,B.i)
 B.d7=new A.k(0,3)
@@ -116856,7 +116859,7 @@ B.ch=new A.O(0.1411764705882353,0,0,0,B.i)
 B.cs=new A.k(0,1)
 B.EY=new A.bI(0,B.a_,B.ch,B.cs,1)
 B.F5=new A.bI(0,B.a_,B.c3,B.cs,3)
-B.Om=s([B.F6,B.EY,B.F5],t.E)
+B.Ol=s([B.F6,B.EY,B.F5],t.E)
 B.F4=new A.bI(-2,B.a_,B.cg,B.d7,1)
 B.Fi=new A.bI(0,B.a_,B.ch,B.h5,2)
 B.F_=new A.bI(0,B.a_,B.c3,B.cs,5)
@@ -116864,7 +116867,7 @@ B.MT=s([B.F4,B.Fi,B.F_],t.E)
 B.EZ=new A.bI(-2,B.a_,B.cg,B.d7,3)
 B.F1=new A.bI(0,B.a_,B.ch,B.d7,4)
 B.Fs=new A.bI(0,B.a_,B.c3,B.cs,8)
-B.Oe=s([B.EZ,B.F1,B.Fs],t.E)
+B.Od=s([B.EZ,B.F1,B.Fs],t.E)
 B.F3=new A.bI(-1,B.a_,B.cg,B.h5,4)
 B.xC=new A.k(0,4)
 B.Fd=new A.bI(0,B.a_,B.ch,B.xC,5)
@@ -116891,19 +116894,19 @@ B.Fe=new A.bI(-4,B.a_,B.cg,B.Rr,8)
 B.Rm=new A.k(0,12)
 B.Fa=new A.bI(2,B.a_,B.ch,B.Rm,17)
 B.Fp=new A.bI(4,B.a_,B.c3,B.mz,22)
-B.Nf=s([B.Fe,B.Fa,B.Fp],t.E)
+B.Ne=s([B.Fe,B.Fa,B.Fp],t.E)
 B.Fo=new A.bI(-5,B.a_,B.cg,B.mA,10)
 B.Rn=new A.k(0,16)
 B.Fg=new A.bI(2,B.a_,B.ch,B.Rn,24)
 B.Fu=new A.bI(5,B.a_,B.c3,B.xD,30)
-B.Ne=s([B.Fo,B.Fg,B.Fu],t.E)
+B.Nd=s([B.Fo,B.Fg,B.Fu],t.E)
 B.Rl=new A.k(0,11)
 B.F2=new A.bI(-7,B.a_,B.cg,B.Rl,15)
 B.Rp=new A.k(0,24)
 B.Fn=new A.bI(3,B.a_,B.ch,B.Rp,38)
 B.Ff=new A.bI(8,B.a_,B.c3,B.xE,46)
-B.Ns=s([B.F2,B.Fn,B.Ff],t.E)
-B.Qa=new A.cP([0,B.rs,1,B.Om,2,B.MT,3,B.Oe,4,B.M7,6,B.N3,8,B.Mt,9,B.MH,12,B.Nf,16,B.Ne,24,B.Ns],A.as("cP<m,q<bI>>"))
+B.Nr=s([B.F2,B.Fn,B.Ff],t.E)
+B.Qa=new A.cP([0,B.rs,1,B.Ol,2,B.MT,3,B.Od,4,B.M7,6,B.N3,8,B.Mt,9,B.MH,12,B.Ne,16,B.Nd,24,B.Nr],A.as("cP<m,q<bI>>"))
 B.cp=new A.l(4294968065)
 B.n5=new A.ak(B.cp,!1,!1,!0,!1,B.o)
 B.c8=new A.l(4294968066)
@@ -117439,57 +117442,57 @@ B.Mz=s([54,null,null,8589935158],t.Z)
 B.MA=s([55,null,null,8589935159],t.Z)
 B.MB=s([56,null,null,8589935160],t.Z)
 B.MD=s([57,null,null,8589935161],t.Z)
-B.NB=s([8589934852,8589934852,8589934853,null],t.Z)
+B.NA=s([8589934852,8589934852,8589934853,null],t.Z)
 B.Mb=s([4294967555,null,4294967555,null],t.Z)
 B.Mc=s([4294968065,null,null,8589935154],t.Z)
 B.Md=s([4294968066,null,null,8589935156],t.Z)
 B.Me=s([4294968067,null,null,8589935158],t.Z)
 B.Mf=s([4294968068,null,null,8589935160],t.Z)
 B.Mk=s([4294968321,null,null,8589935157],t.Z)
-B.NC=s([8589934848,8589934848,8589934849,null],t.Z)
+B.NB=s([8589934848,8589934848,8589934849,null],t.Z)
 B.Ma=s([4294967423,null,null,8589935150],t.Z)
 B.Mg=s([4294968069,null,null,8589935153],t.Z)
 B.M9=s([4294967309,null,null,8589935117],t.Z)
 B.Mh=s([4294968070,null,null,8589935159],t.Z)
 B.Ml=s([4294968327,null,null,8589935152],t.Z)
-B.ND=s([8589934854,8589934854,8589934855,null],t.Z)
+B.NC=s([8589934854,8589934854,8589934855,null],t.Z)
 B.Mi=s([4294968071,null,null,8589935155],t.Z)
 B.Mj=s([4294968072,null,null,8589935161],t.Z)
-B.NE=s([8589934850,8589934850,8589934851,null],t.Z)
-B.xv=new A.cP(["*",B.Mm,"+",B.Mn,"-",B.Mo,".",B.Mp,"/",B.Mq,"0",B.Mr,"1",B.Ms,"2",B.Mv,"3",B.Mw,"4",B.Mx,"5",B.My,"6",B.Mz,"7",B.MA,"8",B.MB,"9",B.MD,"Alt",B.NB,"AltGraph",B.Mb,"ArrowDown",B.Mc,"ArrowLeft",B.Md,"ArrowRight",B.Me,"ArrowUp",B.Mf,"Clear",B.Mk,"Control",B.NC,"Delete",B.Ma,"End",B.Mg,"Enter",B.M9,"Home",B.Mh,"Insert",B.Ml,"Meta",B.ND,"PageDown",B.Mi,"PageUp",B.Mj,"Shift",B.NE],A.as("cP<h,q<m?>>"))
+B.ND=s([8589934850,8589934850,8589934851,null],t.Z)
+B.xv=new A.cP(["*",B.Mm,"+",B.Mn,"-",B.Mo,".",B.Mp,"/",B.Mq,"0",B.Mr,"1",B.Ms,"2",B.Mv,"3",B.Mw,"4",B.Mx,"5",B.My,"6",B.Mz,"7",B.MA,"8",B.MB,"9",B.MD,"Alt",B.NA,"AltGraph",B.Mb,"ArrowDown",B.Mc,"ArrowLeft",B.Md,"ArrowRight",B.Me,"ArrowUp",B.Mf,"Clear",B.Mk,"Control",B.NB,"Delete",B.Ma,"End",B.Mg,"Enter",B.M9,"Home",B.Mh,"Insert",B.Ml,"Meta",B.NC,"PageDown",B.Mi,"PageUp",B.Mj,"Shift",B.ND],A.as("cP<h,q<m?>>"))
 B.MC=s([B.rC,null,null,B.xi],t.L)
-B.O8=s([B.x4,null,null,B.xj],t.L)
+B.O7=s([B.x4,null,null,B.xj],t.L)
 B.Nc=s([B.x5,null,null,B.xk],t.L)
-B.NF=s([B.x6,null,null,B.dI],t.L)
+B.NE=s([B.x6,null,null,B.dI],t.L)
 B.M0=s([B.x7,null,null,B.xl],t.L)
-B.Oq=s([B.x8,null,null,B.mm],t.L)
-B.Oj=s([B.x9,null,null,B.h_],t.L)
+B.Op=s([B.x8,null,null,B.mm],t.L)
+B.Oi=s([B.x9,null,null,B.h_],t.L)
 B.MK=s([B.xa,null,null,B.dJ],t.L)
 B.Ox=s([B.xb,null,null,B.h0],t.L)
-B.Oh=s([B.xc,null,null,B.dK],t.L)
+B.Og=s([B.xc,null,null,B.dK],t.L)
 B.MG=s([B.xd,null,null,B.mn],t.L)
 B.M5=s([B.xe,null,null,B.dL],t.L)
 B.MW=s([B.xf,null,null,B.h1],t.L)
-B.O9=s([B.xg,null,null,B.dM],t.L)
-B.Ob=s([B.xh,null,null,B.h2],t.L)
+B.O8=s([B.xg,null,null,B.dM],t.L)
+B.Oa=s([B.xh,null,null,B.h2],t.L)
 B.MM=s([B.fY,B.fY,B.iO,null],t.L)
-B.Or=s([B.iK,null,B.iK,null],t.L)
-B.Nl=s([B.cp,null,null,B.dJ],t.L)
-B.Nm=s([B.c8,null,null,B.dK],t.L)
-B.Nn=s([B.c9,null,null,B.dL],t.L)
-B.Ow=s([B.cq,null,null,B.dM],t.L)
-B.Of=s([B.mg,null,null,B.mn],t.L)
+B.Oq=s([B.iK,null,B.iK,null],t.L)
+B.Nk=s([B.cp,null,null,B.dJ],t.L)
+B.Nl=s([B.c8,null,null,B.dK],t.L)
+B.Nm=s([B.c9,null,null,B.dL],t.L)
+B.Ov=s([B.cq,null,null,B.dM],t.L)
+B.Oe=s([B.mg,null,null,B.mn],t.L)
 B.MN=s([B.fX,B.fX,B.iN,null],t.L)
-B.NN=s([B.bf,null,null,B.dI],t.L)
-B.No=s([B.dF,null,null,B.h_],t.L)
+B.NM=s([B.bf,null,null,B.dI],t.L)
+B.Nn=s([B.dF,null,null,B.h_],t.L)
 B.MF=s([B.iJ,null,null,B.ml],t.L)
-B.Np=s([B.dG,null,null,B.h1],t.L)
-B.Og=s([B.fW,null,null,B.mm],t.L)
+B.No=s([B.dG,null,null,B.h1],t.L)
+B.Of=s([B.fW,null,null,B.mm],t.L)
 B.MO=s([B.fZ,B.fZ,B.iP,null],t.L)
-B.Nq=s([B.fU,null,null,B.h0],t.L)
-B.NS=s([B.fV,null,null,B.h2],t.L)
+B.Np=s([B.fU,null,null,B.h0],t.L)
+B.NR=s([B.fV,null,null,B.h2],t.L)
 B.MP=s([B.d4,B.d4,B.dH,null],t.L)
-B.QA=new A.cP(["*",B.MC,"+",B.O8,"-",B.Nc,".",B.NF,"/",B.M0,"0",B.Oq,"1",B.Oj,"2",B.MK,"3",B.Ox,"4",B.Oh,"5",B.MG,"6",B.M5,"7",B.MW,"8",B.O9,"9",B.Ob,"Alt",B.MM,"AltGraph",B.Or,"ArrowDown",B.Nl,"ArrowLeft",B.Nm,"ArrowRight",B.Nn,"ArrowUp",B.Ow,"Clear",B.Of,"Control",B.MN,"Delete",B.NN,"End",B.No,"Enter",B.MF,"Home",B.Np,"Insert",B.Og,"Meta",B.MO,"PageDown",B.Nq,"PageUp",B.NS,"Shift",B.MP],A.as("cP<h,q<l?>>"))
+B.QA=new A.cP(["*",B.MC,"+",B.O7,"-",B.Nc,".",B.NE,"/",B.M0,"0",B.Op,"1",B.Oi,"2",B.MK,"3",B.Ox,"4",B.Og,"5",B.MG,"6",B.M5,"7",B.MW,"8",B.O8,"9",B.Oa,"Alt",B.MM,"AltGraph",B.Oq,"ArrowDown",B.Nk,"ArrowLeft",B.Nl,"ArrowRight",B.Nm,"ArrowUp",B.Ov,"Clear",B.Oe,"Control",B.MN,"Delete",B.NM,"End",B.Nn,"Enter",B.MF,"Home",B.No,"Insert",B.Of,"Meta",B.MO,"PageDown",B.Np,"PageUp",B.NR,"Shift",B.MP],A.as("cP<h,q<l?>>"))
 B.I9=new A.kj(0,"none")
 B.QB=new A.cP([B.I9,0,B.kR,1],A.as("cP<kj,m>"))
 B.Rb={KeyA:0,KeyB:1,KeyC:2,KeyD:3,KeyE:4,KeyF:5,KeyG:6,KeyH:7,KeyI:8,KeyJ:9,KeyK:10,KeyL:11,KeyM:12,KeyN:13,KeyO:14,KeyP:15,KeyQ:16,KeyR:17,KeyS:18,KeyT:19,KeyU:20,KeyV:21,KeyW:22,KeyX:23,KeyY:24,KeyZ:25,Digit1:26,Digit2:27,Digit3:28,Digit4:29,Digit5:30,Digit6:31,Digit7:32,Digit8:33,Digit9:34,Digit0:35,Minus:36,Equal:37,BracketLeft:38,BracketRight:39,Backslash:40,Semicolon:41,Quote:42,Backquote:43,Comma:44,Period:45,Slash:46}
@@ -117991,14 +117994,14 @@ B.L6=new A.cf(B.KD,18,B.O,null,null)
 B.YT=new A.p(!0,B.au,null,null,null,null,12.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.a1f=new A.aY("If you lose your master password, your vault cannot be recovered.",null,B.YT,null,null,null,null,null,null)
 B.JQ=new A.EJ(1,B.lR,B.a1f,null)
-B.Op=s([B.L6,B.jw,B.JQ],t.p)
-B.TV=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Op,null)
+B.Oo=s([B.L6,B.jw,B.JQ],t.p)
+B.TV=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Oo,null)
 B.Kz=new A.bS(61877,"MaterialIcons",!1)
 B.Lb=new A.cf(B.Kz,null,B.O,null,null)
 B.CD=new A.da(12,null,null,null)
 B.a11=new A.aY("Check your email",null,null,null,null,null,null,null,null)
-B.Nz=s([B.Lb,B.CD,B.a11],t.p)
-B.TY=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Nz,null)
+B.Ny=s([B.Lb,B.CD,B.a11],t.p)
+B.TY=new A.nK(B.ax,B.K,B.T,B.N,null,B.bq,null,0,B.Ny,null)
 B.U_=new A.HH(1333)
 B.mN=new A.HH(2222)
 B.U0=new A.Vz(null,null)
@@ -118006,8 +118009,8 @@ B.U1=new A.vo(null,B.eh,null,null)
 B.KJ=new A.cf(B.m_,64,B.O,null,null)
 B.ZC=new A.p(!0,B.cC,null,null,null,null,28,B.b1,null,1.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.a1R=new A.aY("CryptKeep",null,B.ZC,null,null,null,null,null,null)
-B.Ov=s([B.KJ,B.db,B.a1R],t.p)
-B.I7=new A.xv(B.af,B.cI,B.T,B.N,null,B.bq,null,0,B.Ov,null)
+B.Ou=s([B.KJ,B.db,B.a1R],t.p)
+B.I7=new A.xv(B.af,B.cI,B.T,B.N,null,B.bq,null,0,B.Ou,null)
 B.GX=new A.kg(B.a9,null,null,B.I7,null)
 B.U2=new A.vo(null,B.GX,null,null)
 B.dU=new A.vp(0,"idle")
@@ -118151,9 +118154,9 @@ B.C5=new A.eb([B.aL,B.bh,B.cu,B.bo,B.bK],t.Lu)
 B.V0=new A.vF(null)
 B.HP=new A.O(0.23529411764705882,0,0,0,B.i)
 B.Ft=new A.bI(0.5,B.a_,B.HP,B.xC,10)
-B.NO=s([B.Ft],t.E)
+B.NN=s([B.Ft],t.E)
 B.TU=new A.m0(B.ko,B.t)
-B.V1=new A.ic(null,null,null,B.NO,B.TU)
+B.V1=new A.ic(null,null,null,B.NN,B.TU)
 B.n1=new A.qZ(0,"onlyForDiscrete")
 B.C6=new A.qZ(1,"onlyForContinuous")
 B.C7=new A.qZ(2,"always")
@@ -118700,9 +118703,9 @@ B.a15=new A.aY("Create Account",null,null,null,null,null,null,null,null)
 B.a16=new A.aY("Buy Me a Coffee",null,null,null,null,null,null,null,null)
 B.Zj=new A.p(!0,B.O,null,null,null,null,null,B.cF,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.Xm=new A.eD("EERIE",null,null,B.aK,null,null,null,null,null,null,B.Zj)
-B.Ni=s([B.Xm],t.VO)
+B.Nh=s([B.Xm],t.VO)
 B.a_H=new A.p(!0,B.au,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
-B.Xn=new A.eD("Made by ",B.Ni,null,B.aK,null,null,null,null,null,null,B.a_H)
+B.Xn=new A.eD("Made by ",B.Nh,null,B.aK,null,null,null,null,null,null,B.a_H)
 B.a18=new A.aY(null,B.Xn,null,B.cQ,null,null,null,null,null)
 B.nx=new A.p(!0,null,null,null,null,null,26,B.b1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.a19=new A.aY("Welcome back",null,B.nx,null,null,null,null,null,null)
