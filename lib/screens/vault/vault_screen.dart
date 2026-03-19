@@ -14,6 +14,7 @@ import 'entry_detail_screen.dart';
 import 'import_screen.dart';
 import 'faq_screen.dart';
 import 'manage_categories_screen.dart';
+import 'settings_screen.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({super.key});
@@ -370,8 +371,10 @@ class _VaultScreenState extends State<VaultScreen> {
                     builder: (_) => const ManageCategoriesScreen()),
               );
               setState(() {});
-            } else if (value == 'signout') {
-              await _signOut();
+            } else if (value == 'settings') {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
             }
           },
           itemBuilder: (_) => const [
@@ -391,11 +394,11 @@ class _VaultScreenState extends State<VaultScreen> {
                 ])),
             PopupMenuDivider(),
             PopupMenuItem(
-                value: 'signout',
+                value: 'settings',
                 child: Row(children: [
-                  Icon(Icons.logout, size: 18),
+                  Icon(Icons.settings_outlined, size: 18),
                   SizedBox(width: 10),
-                  Text('Sign out'),
+                  Text('Settings'),
                 ])),
           ],
         ),
