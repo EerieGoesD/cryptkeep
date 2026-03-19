@@ -73,11 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       Uint8List key;
-      if (authVersion < 2 || MigrationService.needsMigration()) {
-        final result = await MigrationService.migrate(
-          masterPassword, email,
-          changeAuthPassword: authVersion < 2,
-        );
+      if (MigrationService.needsMigration()) {
+        // Only run full migration when there's NO crypto_salt at all
+        final result = await MigrationService.migrate(masterPassword, email);
         key = result.key;
         if (result.hadFailures && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -87,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } else {
+        // Already migrated — use existing key from metadata
         key = MigrationService.getKey(masterPassword);
       }
 
