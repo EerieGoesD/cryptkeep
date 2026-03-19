@@ -45,6 +45,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
     }
 
     setState(() => _loading = true);
+    await Future.delayed(const Duration(milliseconds: 50));
 
     try {
       final masterPassword = _passwordCtrl.text;
