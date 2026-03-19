@@ -48,6 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() => _loading = true);
+    // Yield to let the UI render the loading spinner before heavy crypto
+    await Future.delayed(const Duration(milliseconds: 50));
 
     try {
       final email = _emailCtrl.text.trim();
