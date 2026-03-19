@@ -27,12 +27,15 @@ class CryptoService {
   }
 
   // ───────────────────────────────────────────────────────
-  // Key Derivation — PBKDF2-SHA256, 600,000 iterations
+  // Key Derivation — PBKDF2-SHA256
   // Salt = cryptographically random 16 bytes
+  // Iterations configurable (stored in user metadata)
   // ───────────────────────────────────────────────────────
-  static Uint8List deriveKey(String masterPassword, Uint8List salt) {
+  static const int defaultKeyIterations = 100000;
+
+  static Uint8List deriveKey(String masterPassword, Uint8List salt, {int iterations = defaultKeyIterations}) {
     final password = Uint8List.fromList(utf8.encode(masterPassword));
-    final params = Pbkdf2Parameters(salt, 600000, 32);
+    final params = Pbkdf2Parameters(salt, iterations, 32);
     final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64))..init(params);
     return pbkdf2.process(password);
   }

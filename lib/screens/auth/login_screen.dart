@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       Uint8List key;
-      if (authVersion < 2 || MigrationService.needsMigration()) {
+      if (authVersion < 2 || MigrationService.needsMigration() || MigrationService.needsIterationUpdate()) {
         final result = await MigrationService.migrate(masterPassword, email);
         key = result.key;
         if (result.hadFailures && mounted) {

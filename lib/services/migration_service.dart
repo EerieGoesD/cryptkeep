@@ -36,9 +36,19 @@ class MigrationService {
     final userId = supabase.auth.currentUser!.id;
     final legacyKey = CryptoService.deriveKeyLegacy(masterPassword, userId);
 
-    // Generate new crypto params
+    // Also try existing migrated key (if partially migrated with old 600k iterations)
+    final existingMeta = supabase.auth.currentUser?.userMetadata;
+    Uint8List? existingKey;
+    if (existingMeta != null && existingMeta['crypto_salt'] != null) {
+      final existingSalt = base64.decode(existingMeta['crypto_salt'] as String);
+      final existingIterations = existingMeta['key_iterations'] as int? ?? 600000;
+      existingKey = CryptoService.deriveKey(masterPassword, existingSalt, iterations: existingIterations);
+    }
+
+    // Generate new crypto params with default iterations
     final newSalt = CryptoService.generateSalt(16);
-    final newKey = CryptoService.deriveKey(masterPassword, newSalt);
+    final newIterations = CryptoService.defaultKeyIterations;
+    final newKey = CryptoService.deriveKey(masterPassword, newSalt, iterations: newIterations);
     final keyCheck = CryptoService.createKeyCheck(newKey);
 
     int failedEntries = 0;
@@ -52,13 +62,20 @@ class MigrationService {
 
     for (final row in vaultRows) {
       try {
-        // Try decrypting with legacy key first, then new key (already migrated)
+        final data = row['encrypted_data'] as String;
         String plaintext;
         try {
-          plaintext = CryptoService.decrypt(row['encrypted_data'] as String, legacyKey);
+          plaintext = CryptoService.decrypt(data, legacyKey);
         } catch (_) {
-          // May already be encrypted with new key (partial migration retry)
-          plaintext = CryptoService.decrypt(row['encrypted_data'] as String, newKey);
+          try {
+            if (existingKey != null) {
+              plaintext = CryptoService.decrypt(data, existingKey);
+            } else {
+              rethrow;
+            }
+          } catch (_) {
+            plaintext = CryptoService.decrypt(data, newKey);
+          }
         }
         final reEncrypted = CryptoService.encrypt(plaintext, newKey);
         await supabase.from('vault_entries').update({
@@ -84,10 +101,17 @@ class MigrationService {
           plainName = CryptoService.decrypt(name, legacyKey);
         } catch (_) {
           try {
-            plainName = CryptoService.decrypt(name, newKey);
+            if (existingKey != null) {
+              plainName = CryptoService.decrypt(name, existingKey);
+            } else {
+              rethrow;
+            }
           } catch (_) {
-            // Was stored as plaintext (pre-encryption era)
-            plainName = name;
+            try {
+              plainName = CryptoService.decrypt(name, newKey);
+            } catch (_) {
+              plainName = name;
+            }
           }
         }
         final reEncrypted = CryptoService.encrypt(plainName, newKey);
@@ -107,6 +131,7 @@ class MigrationService {
       data: {
         'crypto_salt': base64.encode(newSalt),
         'key_check': keyCheck,
+        'key_iterations': newIterations,
       },
     ));
 
@@ -121,7 +146,16 @@ class MigrationService {
   static Uint8List getKey(String masterPassword) {
     final meta = supabase.auth.currentUser!.userMetadata!;
     final salt = base64.decode(meta['crypto_salt'] as String);
-    return CryptoService.deriveKey(masterPassword, salt);
+    final iterations = meta['key_iterations'] as int? ?? 600000;
+    return CryptoService.deriveKey(masterPassword, salt, iterations: iterations);
+  }
+
+  /// Check if user needs re-migration to lower iterations (e.g. 600k → 100k).
+  static bool needsIterationUpdate() {
+    final meta = supabase.auth.currentUser?.userMetadata;
+    if (meta == null || meta['crypto_salt'] == null) return false;
+    final iterations = meta['key_iterations'] as int? ?? 600000;
+    return iterations != CryptoService.defaultKeyIterations;
   }
 
   /// Verify master password against stored key check.

@@ -49,6 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         data: {
           'crypto_salt': base64.encode(salt),
           'key_check': keyCheck,
+          'key_iterations': CryptoService.defaultKeyIterations,
         },
       );
 
