@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -103,7 +104,10 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
                         : () {
                             Clipboard.setData(
                                 ClipboardData(text: _password));
-                            showAppNotification(context, 'Copied to clipboard');
+                            showAppNotification(context, 'Copied — clipboard clears in 30s');
+                            Timer(const Duration(seconds: 30), () {
+                              Clipboard.setData(const ClipboardData(text: ''));
+                            });
                           },
                   ),
                 ],

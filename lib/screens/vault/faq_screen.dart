@@ -36,9 +36,9 @@ class FaqScreen extends StatelessWidget {
     ),
     (
       q: 'What encryption does CryptKeep use?',
-      a: 'AES-256-CBC with a random IV per entry. '
+      a: 'AES-256-GCM with authenticated encryption and a random nonce per entry. '
           'The encryption key is derived from your master password using '
-          'PBKDF2-SHA256 with 100,000 iterations.',
+          'PBKDF2-SHA256 with 600,000 iterations and a cryptographically random salt.',
     ),
     (
       q: 'How do I import from KeePass?',
