@@ -396,6 +396,8 @@ class _VaultScreenState extends State<VaultScreen> {
               await Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const SettingsScreen()),
               );
+            } else if (value == 'signout') {
+              await _signOut();
             }
           },
           itemBuilder: (_) => const [
@@ -420,6 +422,14 @@ class _VaultScreenState extends State<VaultScreen> {
                   Icon(Icons.settings_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Settings'),
+                ])),
+            PopupMenuDivider(),
+            PopupMenuItem(
+                value: 'signout',
+                child: Row(children: [
+                  Icon(Icons.logout, size: 18),
+                  SizedBox(width: 10),
+                  Text('Sign out'),
                 ])),
           ],
         ),
