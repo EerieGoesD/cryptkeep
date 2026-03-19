@@ -137,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             validator: (v) {
                               if (v == null || v.isEmpty) return 'Enter a master password';
-                              if (v.length < 8) return 'Must be at least 8 characters';
+                              if (v.length < 12) return 'Must be at least 12 characters';
                               return null;
                             },
                           ),

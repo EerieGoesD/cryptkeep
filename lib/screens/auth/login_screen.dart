@@ -26,6 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordCtrl = TextEditingController();
   bool _loading = false;
   bool _obscure = true;
+  int _failedAttempts = 0;
+  DateTime? _lockoutUntil;
 
   @override
   void dispose() {
@@ -36,26 +38,49 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (_lockoutUntil != null && DateTime.now().isBefore(_lockoutUntil!)) {
+      final secs = _lockoutUntil!.difference(DateTime.now()).inSeconds;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Too many attempts. Try again in ${secs}s')),
+      );
+      return;
+    }
+
     setState(() => _loading = true);
 
     try {
       final email = _emailCtrl.text.trim();
       final masterPassword = _passwordCtrl.text;
-      final authPassword = CryptoService.deriveAuthPassword(masterPassword, email);
 
-      // Try derived auth password first, fall back to legacy raw password
-      bool isLegacy = false;
+      // Try v2 (PBKDF2) → v1 (SHA-256) → raw legacy password
+      int authVersion = 2;
       try {
-        await supabase.auth.signInWithPassword(email: email, password: authPassword);
+        final authV2 = CryptoService.deriveAuthPassword(masterPassword, email);
+        await supabase.auth.signInWithPassword(email: email, password: authV2);
       } on AuthException {
-        await supabase.auth.signInWithPassword(email: email, password: masterPassword);
-        isLegacy = true;
+        try {
+          final authV1 = CryptoService.deriveAuthPasswordLegacy(masterPassword, email);
+          await supabase.auth.signInWithPassword(email: email, password: authV1);
+          authVersion = 1;
+        } on AuthException {
+          // Last resort: raw master password (pre-migration users only)
+          await supabase.auth.signInWithPassword(email: email, password: masterPassword);
+          authVersion = 0;
+        }
       }
 
       Uint8List key;
-      if (isLegacy || MigrationService.needsMigration()) {
-        // Migrate: re-encrypt all data, update auth password, store new salt
-        key = await MigrationService.migrate(masterPassword, email);
+      if (authVersion < 2 || MigrationService.needsMigration()) {
+        final result = await MigrationService.migrate(masterPassword, email);
+        key = result.key;
+        if (result.hadFailures && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(
+              '${result.failedEntries} entries and ${result.failedCategories} categories could not be migrated.',
+            )),
+          );
+        }
       } else {
         key = MigrationService.getKey(masterPassword);
       }
@@ -63,12 +88,17 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!MigrationService.verifyPassword(key)) {
         await supabase.auth.signOut();
         if (!mounted) return;
+        _failedAttempts++;
+        if (_failedAttempts >= 5) {
+          _lockoutUntil = DateTime.now().add(Duration(seconds: 30 * (_failedAttempts ~/ 5)));
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Incorrect master password')),
         );
         return;
       }
 
+      _failedAttempts = 0;
       if (!mounted) return;
       await context.read<AppState>().unlock(key);
 
@@ -79,6 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } on AuthException {
       if (!mounted) return;
+      _failedAttempts++;
+      if (_failedAttempts >= 5) {
+        _lockoutUntil = DateTime.now().add(Duration(seconds: 30 * (_failedAttempts ~/ 5)));
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Invalid email or password')),
       );

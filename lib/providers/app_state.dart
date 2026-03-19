@@ -34,6 +34,10 @@ class AppState extends ChangeNotifier {
   void lock() {
     _autoLockTimer?.cancel();
     _autoLockTimer = null;
+    // Best-effort key zeroing before releasing reference
+    if (_encryptionKey != null) {
+      _encryptionKey!.fillRange(0, _encryptionKey!.length, 0);
+    }
     _encryptionKey = null;
     _categories = [];
     notifyListeners();

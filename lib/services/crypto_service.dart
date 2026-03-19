@@ -12,6 +12,15 @@ class CryptoService {
   // master password never leaves the device.
   // ───────────────────────────────────────────────────────
   static String deriveAuthPassword(String masterPassword, String email) {
+    final salt = Uint8List.fromList(utf8.encode('${email.trim().toLowerCase()}:auth-v2'));
+    final password = Uint8List.fromList(utf8.encode(masterPassword.trim()));
+    final params = Pbkdf2Parameters(salt, 100000, 32);
+    final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64))..init(params);
+    return base64.encode(pbkdf2.process(password));
+  }
+
+  // Legacy auth password (single SHA-256) for migration from v1
+  static String deriveAuthPasswordLegacy(String masterPassword, String email) {
     final input = utf8.encode('${masterPassword.trim()}:${email.trim().toLowerCase()}:auth');
     final digest = SHA256Digest().process(Uint8List.fromList(input));
     return base64.encode(digest);

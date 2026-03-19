@@ -52,7 +52,15 @@ class _UnlockScreenState extends State<UnlockScreen> {
 
       if (MigrationService.needsMigration()) {
         final email = supabase.auth.currentUser!.email ?? '';
-        key = await MigrationService.migrate(masterPassword, email);
+        final result = await MigrationService.migrate(masterPassword, email);
+        key = result.key;
+        if (result.hadFailures && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(
+              '${result.failedEntries} entries and ${result.failedCategories} categories could not be migrated.',
+            )),
+          );
+        }
       } else {
         key = MigrationService.getKey(masterPassword);
       }

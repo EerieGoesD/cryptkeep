@@ -15,6 +15,7 @@ import 'import_screen.dart';
 import 'faq_screen.dart';
 import 'manage_categories_screen.dart';
 import 'settings_screen.dart';
+import 'unlock_screen.dart';
 
 class VaultScreen extends StatefulWidget {
   const VaultScreen({super.key});
@@ -241,7 +242,26 @@ class _VaultScreenState extends State<VaultScreen> {
     final filtered = _filtered;
     final groups = _buildGroups(filtered, categories);
 
-    return Scaffold(
+    final appState = context.read<AppState>();
+
+    // Auto-lock: if the vault was locked by the timer, navigate to unlock
+    if (!appState.isUnlocked) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const UnlockScreen()),
+            (_) => false,
+          );
+        }
+      });
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => appState.resetAutoLock(),
+      onPanDown: (_) => appState.resetAutoLock(),
+      child: Scaffold(
       appBar: _selectionMode ? _buildSelectionAppBar() : _buildNormalAppBar(),
       body: Column(
         children: [
@@ -301,6 +321,7 @@ class _VaultScreenState extends State<VaultScreen> {
               },
               child: const Icon(Icons.add),
             ),
+    ),
     );
   }
 
