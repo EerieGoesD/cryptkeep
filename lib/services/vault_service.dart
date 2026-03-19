@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import '../app.dart';
 import '../models/vault_entry.dart';
 import '../services/crypto_service.dart';
@@ -18,11 +20,18 @@ class VaultService {
         .eq('user_id', userId)
         .order('created_at', ascending: false);
 
-    return rows.map((row) {
-      final plaintext = CryptoService.decrypt(row['encrypted_data'] as String, key);
-      final json = jsonDecode(plaintext) as Map<String, dynamic>;
-      return VaultEntry.fromJson(json);
-    }).toList();
+    final entries = <VaultEntry>[];
+    for (final row in rows) {
+      try {
+        final plaintext = CryptoService.decrypt(row['encrypted_data'] as String, key);
+        final json = jsonDecode(plaintext) as Map<String, dynamic>;
+        entries.add(VaultEntry.fromJson(json));
+      } catch (e) {
+        if (kDebugMode) debugPrint('Failed to decrypt entry ${row['id']}: $e');
+        // Skip entries that can't be decrypted (wrong key from migration)
+      }
+    }
+    return entries;
   }
 
   // ─── Create a new entry ───
