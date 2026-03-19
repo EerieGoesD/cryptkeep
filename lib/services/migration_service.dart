@@ -158,14 +158,6 @@ class MigrationService {
     return CryptoService.deriveKey(masterPassword, salt, iterations: iterations);
   }
 
-  /// Check if user needs re-migration to lower iterations (e.g. 600k → 100k).
-  static bool needsIterationUpdate() {
-    final meta = supabase.auth.currentUser?.userMetadata;
-    if (meta == null || meta['crypto_salt'] == null) return false;
-    final iterations = meta['key_iterations'] as int? ?? 600000;
-    return iterations != CryptoService.defaultKeyIterations;
-  }
-
   /// Verify master password against stored key check.
   static bool verifyPassword(Uint8List key) {
     final meta = supabase.auth.currentUser?.userMetadata;

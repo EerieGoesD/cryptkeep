@@ -51,12 +51,10 @@ class _UnlockScreenState extends State<UnlockScreen> {
       final masterPassword = _passwordCtrl.text;
       Uint8List key;
 
-      final needsFullMigration = MigrationService.needsMigration();
-      if (needsFullMigration || MigrationService.needsIterationUpdate()) {
+      if (MigrationService.needsMigration()) {
         final email = supabase.auth.currentUser!.email ?? '';
         final result = await MigrationService.migrate(
           masterPassword, email,
-          changeAuthPassword: needsFullMigration,
         );
         key = result.key;
         if (result.hadFailures && mounted) {
