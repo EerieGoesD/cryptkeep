@@ -32,7 +32,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> _loadCategories() async {
-    _categories = await CategoryService.fetchAll();
+    _categories = await CategoryService.fetchAll(_encryptionKey!);
   }
 
   Future<void> reloadCategories() async {
@@ -41,7 +41,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<Category> addCategory(String name) async {
-    final cat = await CategoryService.create(name);
+    final cat = await CategoryService.create(name, _encryptionKey!);
     _categories = [..._categories, cat]
       ..sort((a, b) => a.name.compareTo(b.name));
     notifyListeners();
@@ -49,7 +49,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> renameCategory(String id, String newName) async {
-    await CategoryService.rename(id, newName);
+    await CategoryService.rename(id, newName, _encryptionKey!);
     _categories = _categories
         .map((c) => c.id == id ? Category(id: id, name: newName) : c)
         .toList()
