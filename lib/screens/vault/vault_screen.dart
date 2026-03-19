@@ -93,6 +93,7 @@ class _VaultScreenState extends State<VaultScreen> {
     }
     setState(() => _syncing = true);
     try {
+      await supabase.auth.refreshSession();
       await context.read<AppState>().reloadCategories();
       await _load();
       _lastSync = DateTime.now();
