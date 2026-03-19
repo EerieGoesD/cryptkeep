@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' as enc;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:pointycastle/export.dart';
 
 class CryptoService {
@@ -31,9 +32,10 @@ class CryptoService {
   // Salt = cryptographically random 16 bytes
   // Iterations configurable (stored in user metadata)
   // ───────────────────────────────────────────────────────
-  static const int defaultKeyIterations = 100000;
+  static int get defaultKeyIterations => kIsWeb ? 100000 : 600000;
 
-  static Uint8List deriveKey(String masterPassword, Uint8List salt, {int iterations = defaultKeyIterations}) {
+  static Uint8List deriveKey(String masterPassword, Uint8List salt, {int? iterations}) {
+    iterations ??= defaultKeyIterations;
     final password = Uint8List.fromList(utf8.encode(masterPassword));
     final params = Pbkdf2Parameters(salt, iterations, 32);
     final pbkdf2 = PBKDF2KeyDerivator(HMac(SHA256Digest(), 64))..init(params);
