@@ -257,6 +257,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontSize: 13,
                             fontWeight: FontWeight.w600)),
                   ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                  ),
+                  InkWell(
+                    onTap: () => launchUrl(Uri.parse('https://github.com/EerieGoesD/cryptkeep/discussions')),
+                    child: const Text('Feedback',
+                        style: TextStyle(
+                            color: Color(0xFF8B5CF6),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
                 ],
               ),
             ),

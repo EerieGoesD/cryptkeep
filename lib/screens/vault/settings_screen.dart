@@ -190,6 +190,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
+                _tile(
+                  icon: Icons.feedback_outlined,
+                  title: 'Feedback',
+                  onTap: () => launchUrl(
+                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/discussions'),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                ),
                 const SizedBox(height: 28),
                 const Text(
                   'DANGER ZONE',
