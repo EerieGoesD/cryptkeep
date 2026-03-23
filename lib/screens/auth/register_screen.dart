@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../services/crypto_service.dart';
-import '../vault/faq_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -81,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
       Navigator.of(context).pop();
-    } on AuthException catch (e) {
+    } on AuthException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration failed. Please try again.')),
