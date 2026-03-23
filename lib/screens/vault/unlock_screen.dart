@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../providers/app_state.dart';
-import '../../services/crypto_service.dart';
 import '../../services/migration_service.dart';
 import '../auth/login_screen.dart';
 import 'vault_screen.dart';

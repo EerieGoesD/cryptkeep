@@ -56,7 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
       final masterPassword = _passwordCtrl.text;
 
       // Try v2 (PBKDF2) → v1 (SHA-256) → raw legacy password
-      int authVersion = 2;
       try {
         final authV2 = CryptoService.deriveAuthPassword(masterPassword, email);
         await supabase.auth.signInWithPassword(email: email, password: authV2);
@@ -64,11 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           final authV1 = CryptoService.deriveAuthPasswordLegacy(masterPassword, email);
           await supabase.auth.signInWithPassword(email: email, password: authV1);
-          authVersion = 1;
         } on AuthException {
           // Last resort: raw master password (pre-migration users only)
           await supabase.auth.signInWithPassword(email: email, password: masterPassword);
-          authVersion = 0;
         }
       }
 
