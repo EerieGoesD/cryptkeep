@@ -6,9 +6,11 @@ You log in once with your master password, and everything is decrypted locally. 
 
 Built with Flutter and Supabase.
 
-- AES-256-CBC encryption with PBKDF2-SHA256 key derivation
-- Import from KeePass (.kdbx)
+- AES-256-GCM encryption with PBKDF2-SHA256 key derivation
+- Two-factor authentication (TOTP)
+- Import and export KeePass (.kdbx)
+- Password health dashboard and breach monitoring (Pro)
 - Categories, search, and bulk delete
-- macOS, Windows, iOS, Android
+- Web, Windows, macOS, iOS, Android
 
-Coming soon on the App Store, Microsoft Store and Google Play.
+Available on the [Microsoft Store](https://apps.microsoft.com/detail/20715EerieGoesD.CryptKeep) and [web](https://eeriegoesd.com/cryptkeep/). Coming soon on the App Store and Google Play.

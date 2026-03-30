@@ -1,7 +1,7 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
@@ -82,6 +82,18 @@ class _UnlockScreenState extends State<UnlockScreen> {
         return;
       }
 
+      // Check if user has 2FA enabled
+      final factors = await supabase.auth.mfa.listFactors();
+      final hasMfa = factors.totp.any((f) => f.status == FactorStatus.verified);
+
+      if (hasMfa) {
+        if (!mounted) return;
+        final verified = await _promptMfaCode(factors.totp.firstWhere(
+          (f) => f.status == FactorStatus.verified,
+        ));
+        if (!verified) return;
+      }
+
       _failedAttempts = 0;
       if (!mounted) return;
       await context.read<AppState>().unlock(key);
@@ -98,6 +110,89 @@ class _UnlockScreenState extends State<UnlockScreen> {
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  Future<bool> _promptMfaCode(Factor factor) async {
+    final codeCtrl = TextEditingController();
+    var failed = 0;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) {
+          Future<void> verify() async {
+            final code = codeCtrl.text.trim();
+            if (code.length != 6) return;
+
+            try {
+              final challenge = await supabase.auth.mfa.challenge(
+                factorId: factor.id,
+              );
+              await supabase.auth.mfa.verify(
+                factorId: factor.id,
+                challengeId: challenge.id,
+                code: code,
+              );
+              if (ctx.mounted) Navigator.pop(ctx, true);
+            } on AuthException {
+              failed++;
+              codeCtrl.clear();
+              if (failed >= 5) {
+                if (ctx.mounted) Navigator.pop(ctx, false);
+                return;
+              }
+              if (ctx.mounted) {
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  const SnackBar(content: Text('Invalid code. Try again.')),
+                );
+              }
+            }
+          }
+
+          return AlertDialog(
+            backgroundColor: const Color(0xFF1A1A2E),
+            title: const Text('Two-factor verification'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Enter the 6-digit code from your authenticator app.',
+                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: codeCtrl,
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  autofocus: true,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 24, letterSpacing: 8),
+                  decoration: const InputDecoration(
+                    counterText: '',
+                    hintText: '000000',
+                  ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (value) {
+                    if (value.length == 6) verify();
+                  },
+                  onSubmitted: (_) => verify(),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    codeCtrl.dispose();
+    return result == true;
   }
 
   Future<void> _signOut() async {

@@ -4,8 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../providers/app_state.dart';
+import '../../services/migration_service.dart';
 import '../auth/login_screen.dart';
 import 'faq_screen.dart';
+import 'mfa_setup_screen.dart';
+import 'premium_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -51,7 +54,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
     if (confirmed != true || !mounted) return;
 
-    final email = supabase.auth.currentUser?.email ?? '';
     final controller = TextEditingController();
     final finalConfirmed = await showDialog<bool>(
       context: context,
@@ -62,11 +64,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Type "$email" to confirm.'),
+            const Text('Enter your master password to confirm.'),
             const SizedBox(height: 12),
             TextField(
               controller: controller,
-              decoration: const InputDecoration(hintText: 'Enter your email'),
+              obscureText: true,
+              decoration: const InputDecoration(hintText: 'Master password'),
             ),
           ],
         ),
@@ -77,8 +80,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              if (controller.text.trim().toLowerCase() == email.toLowerCase()) {
+              final key = MigrationService.getKey(controller.text);
+              if (MigrationService.verifyPassword(key)) {
                 Navigator.pop(ctx, true);
+              } else {
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  const SnackBar(content: Text('Incorrect master password')),
+                );
               }
             },
             child: const Text('Delete my account',
@@ -148,6 +156,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.logout,
                   title: 'Sign out',
                   onTap: _signOut,
+                ),
+                const SizedBox(height: 28),
+                const Text(
+                  'SUBSCRIPTION',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFFD700),
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _tile(
+                  icon: Icons.workspace_premium,
+                  title: 'CryptKeep Pro',
+                  subtitle: 'Manage your subscription',
+                  titleColor: const Color(0xFFFFD700),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                const Text(
+                  'SECURITY',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF94A3B8),
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _tile(
+                  icon: Icons.security,
+                  title: 'Two-Factor Authentication',
+                  subtitle: 'Authenticator app (TOTP)',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const MfaSetupScreen()),
+                  ),
                 ),
                 const SizedBox(height: 28),
                 const Text(

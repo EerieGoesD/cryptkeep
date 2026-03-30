@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../utils/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +8,8 @@ import '../../app.dart';
 import '../../models/category.dart';
 import '../../models/vault_entry.dart';
 import '../../providers/app_state.dart';
+import '../../services/kdbx_export_service.dart';
+import '../../services/premium_service.dart';
 import '../../services/vault_service.dart';
 import '../auth/login_screen.dart';
 import 'add_edit_entry_screen.dart';
@@ -14,6 +17,8 @@ import 'entry_detail_screen.dart';
 import 'import_screen.dart';
 import 'faq_screen.dart';
 import 'manage_categories_screen.dart';
+import 'password_health_screen.dart';
+import 'premium_screen.dart';
 import 'settings_screen.dart';
 import 'unlock_screen.dart';
 
@@ -116,6 +121,102 @@ class _VaultScreenState extends State<VaultScreen> {
           _selectedCategoryId == null || e.category == _selectedCategoryId;
       return matchesSearch && matchesCategory;
     }).toList();
+  }
+
+  Future<void> _exportKdbx() async {
+    if (_entries.isEmpty) {
+      _showNotification('No entries to export');
+      return;
+    }
+
+    final passwordCtrl = TextEditingController();
+    final confirmCtrl = TextEditingController();
+    bool obscure = true;
+
+    final exportPassword = await showDialog<String>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF1A1A2E),
+          title: const Text('Export Vault'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Set a password to protect the exported .kdbx file.',
+                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordCtrl,
+                obscureText: obscure,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      obscure ? Icons.visibility_off : Icons.visibility,
+                      color: const Color(0xFF94A3B8),
+                    ),
+                    onPressed: () => setDialogState(() => obscure = !obscure),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: confirmCtrl,
+                obscureText: obscure,
+                decoration: const InputDecoration(labelText: 'Confirm Password'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final pw = passwordCtrl.text;
+                if (pw.isEmpty) return;
+                if (pw != confirmCtrl.text) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    const SnackBar(content: Text('Passwords do not match')),
+                  );
+                  return;
+                }
+                Navigator.pop(ctx, pw);
+              },
+              child: const Text('Export'),
+            ),
+          ],
+        ),
+      ),
+    );
+    passwordCtrl.dispose();
+    confirmCtrl.dispose();
+    if (exportPassword == null || !mounted) return;
+
+    _showNotification('Exporting...');
+    try {
+      final categories = context.read<AppState>().categories;
+      final bytes = await KdbxExportService.export(
+        entries: _entries,
+        categories: categories,
+        password: exportPassword,
+      );
+
+      final saved = await saveFileBytes('cryptkeep_export.kdbx', bytes);
+
+      if (!mounted) return;
+      if (saved) {
+        _showNotification('Exported ${_entries.length} entries');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      debugPrint('Export error: $e');
+      _showNotification('Export failed');
+    }
   }
 
   Future<void> _signOut() async {
@@ -389,6 +490,24 @@ class _VaultScreenState extends State<VaultScreen> {
                 if (!mounted) return;
                 _showNotification('Imported $count entries');
               }
+            } else if (value == 'export') {
+              await _exportKdbx();
+            } else if (value == 'health') {
+              if (PremiumService.isPremium()) {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => PasswordHealthScreen(entries: _entries),
+                  ),
+                );
+              } else {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                );
+              }
+            } else if (value == 'premium') {
+              await Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PremiumScreen()),
+              );
             } else if (value == 'categories') {
               await Navigator.of(context).push(
                 MaterialPageRoute(
@@ -412,11 +531,39 @@ class _VaultScreenState extends State<VaultScreen> {
                   Text('Import KeePass (.kdbx)'),
                 ])),
             PopupMenuItem(
+                value: 'export',
+                child: Row(children: [
+                  Icon(Icons.upload_outlined, size: 18),
+                  SizedBox(width: 10),
+                  Text('Export KeePass (.kdbx)'),
+                ])),
+            PopupMenuItem(
                 value: 'categories',
                 child: Row(children: [
                   Icon(Icons.folder_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Manage Categories'),
+                ])),
+            PopupMenuDivider(),
+            PopupMenuItem(
+                value: 'health',
+                child: Row(children: [
+                  Icon(Icons.shield_outlined, size: 18),
+                  SizedBox(width: 10),
+                  Text('Password Health'),
+                  SizedBox(width: 6),
+                  Text('PRO', style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFFD700),
+                  )),
+                ])),
+            PopupMenuItem(
+                value: 'premium',
+                child: Row(children: [
+                  Icon(Icons.workspace_premium, size: 18, color: Color(0xFFFFD700)),
+                  SizedBox(width: 10),
+                  Text('CryptKeep Pro'),
                 ])),
             PopupMenuDivider(),
             PopupMenuItem(
@@ -572,24 +719,7 @@ class _VaultScreenState extends State<VaultScreen> {
                 side: const BorderSide(color: Color(0xFF94A3B8)),
               )
             else
-              Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF2A2A3E),
-                  shape: BoxShape.circle,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  entry.title.isNotEmpty
-                      ? entry.title[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(
-                      color: Color(0xFF8B5CF6),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13),
-                ),
-              ),
+              _buildAvatar(entry),
             const SizedBox(width: 12),
             // Title + username
             Expanded(
@@ -672,6 +802,54 @@ class _VaultScreenState extends State<VaultScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildAvatar(VaultEntry entry) {
+    final domain = _extractDomain(entry.url);
+    final isPremium = PremiumService.isPremium();
+
+    if (isPremium && domain != null) {
+      return ClipOval(
+        child: Image.network(
+          'https://www.google.com/s2/favicons?domain=$domain&sz=32',
+          width: 32,
+          height: 32,
+          errorBuilder: (_, _, _) => _letterAvatar(entry.title),
+        ),
+      );
+    }
+    return _letterAvatar(entry.title);
+  }
+
+  Widget _letterAvatar(String title) {
+    return Container(
+      width: 32,
+      height: 32,
+      decoration: const BoxDecoration(
+        color: Color(0xFF2A2A3E),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        title.isNotEmpty ? title[0].toUpperCase() : '?',
+        style: const TextStyle(
+            color: Color(0xFF8B5CF6),
+            fontWeight: FontWeight.bold,
+            fontSize: 13),
+      ),
+    );
+  }
+
+  String? _extractDomain(String url) {
+    if (url.isEmpty) return null;
+    try {
+      var u = url;
+      if (!u.contains('://')) u = 'https://$u';
+      final host = Uri.parse(u).host;
+      return host.isEmpty ? null : host;
+    } catch (_) {
+      return null;
+    }
   }
 
   Widget _buildEmpty() {
