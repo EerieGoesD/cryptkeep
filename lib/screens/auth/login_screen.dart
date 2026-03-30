@@ -11,6 +11,7 @@ import '../../services/crypto_service.dart';
 import '../../services/migration_service.dart';
 import '../vault/vault_screen.dart';
 import '../vault/faq_screen.dart';
+import 'mfa_verify_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -69,6 +70,22 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
 
+      // Check if MFA is required before proceeding
+      final aal = supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aal.currentLevel == AuthenticatorAssuranceLevels.aal1 &&
+          aal.nextLevel == AuthenticatorAssuranceLevels.aal2) {
+        if (!mounted) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => MfaVerifyScreen(
+              email: email,
+              masterPassword: masterPassword,
+            ),
+          ),
+        );
+        return;
+      }
+
       Uint8List key;
       if (MigrationService.needsMigration()) {
         // Only run full migration when there's NO crypto_salt at all
@@ -82,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         }
       } else {
-        // Already migrated — use existing key from metadata
+        // Already migrated - use existing key from metadata
         key = MigrationService.getKey(masterPassword);
       }
 
@@ -146,15 +163,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           const Icon(Icons.lock_outline, size: 48, color: Color(0xFF8B5CF6)),
                           const SizedBox(height: 20),
-                          const Text('Welcome back',
+                          const Text('Welcome to CryptKeep',
                               style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 6),
                           const Text('Sign in to access your vault.',
                               style: TextStyle(color: Color(0xFF94A3B8))),
                           const SizedBox(height: 20),
-                          const Text('CryptKeep is 100% free.',
-                              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
-                          const SizedBox(height: 4),
                           TextButton.icon(
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) => const FaqScreen()),

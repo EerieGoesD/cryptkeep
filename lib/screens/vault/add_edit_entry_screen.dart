@@ -197,8 +197,6 @@ class _AddEditEntryScreenState extends State<AddEditEntryScreen> {
                               () => _obscurePassword = !_obscurePassword),
                         ),
                       ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Password is required' : null,
                     ),
                   ),
                   const SizedBox(width: 8),

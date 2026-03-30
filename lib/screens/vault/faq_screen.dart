@@ -49,6 +49,24 @@ class FaqScreen extends StatelessWidget {
           'with your CryptKeep key.',
     ),
     (
+      q: 'How do I export my vault?',
+      a: '1. Open the menu and tap "Export KeePass (.kdbx)".\n'
+          '2. Choose a password to protect the exported file.\n'
+          '3. Pick a location to save it.\n\n'
+          'The exported .kdbx file can be opened in KeePass, KeePassXC, '
+          'or any compatible password manager.',
+    ),
+    (
+      q: 'How do I enable Two-Factor Authentication?',
+      a: '1. Go to Settings > Two-Factor Authentication.\n'
+          '2. Tap "Enable 2FA".\n'
+          '3. Scan the QR code with your authenticator app '
+          '(Google Authenticator, Authy, etc.).\n'
+          '4. Enter the 6-digit code to verify.\n\n'
+          'Once enabled, you will need to enter a code from your authenticator app '
+          'each time you sign in. You can disable 2FA from the same settings page.',
+    ),
+    (
       q: 'How do I bulk delete entries?',
       a: 'Long-press any entry to enter selection mode. '
           'Tap entries to select them, tap "All" to select everything, '
