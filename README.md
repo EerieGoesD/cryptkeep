@@ -13,4 +13,4 @@ Built with Flutter and Supabase.
 - Categories, search, and bulk delete
 - Web, Windows, macOS, iOS, Android
 
-Available on the [Microsoft Store](https://apps.microsoft.com/detail/20715EerieGoesD.CryptKeep) and [web](https://eeriegoesd.com/cryptkeep/). Coming soon on the App Store and Google Play.
+Available on the [Microsoft Store](https://apps.microsoft.com/detail/9PJQ65R1WBT2) and [web](https://eeriegoesd.com/cryptkeep/). Coming soon on the App Store and Google Play.
