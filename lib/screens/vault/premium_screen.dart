@@ -14,6 +14,7 @@ class PremiumScreen extends StatefulWidget {
 class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserver {
   bool _isPremium = false;
   bool _checking = false;
+  bool _openingPortal = false;
 
   static const _features = [
     (
@@ -189,8 +190,13 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
               if (_isPremium) ...[
                 ElevatedButton.icon(
                   onPressed: () async {
+                    if (_openingPortal) return;
+                    setState(() => _openingPortal = true);
                     final email = supabase.auth.currentUser?.email;
-                    if (email == null) return;
+                    if (email == null) {
+                      setState(() => _openingPortal = false);
+                      return;
+                    }
                     try {
                       final response = await supabase.functions.invoke(
                         'manage-subscription',
@@ -203,9 +209,12 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                     } catch (e) {
                       debugPrint('Manage subscription error: $e');
                     }
+                    if (mounted) setState(() => _openingPortal = false);
                   },
-                  icon: const Icon(Icons.settings, size: 18),
-                  label: const Text('Manage Subscription'),
+                  icon: _openingPortal
+                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      : const Icon(Icons.settings, size: 18),
+                  label: Text(_openingPortal ? 'Opening...' : 'Manage Subscription'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2A2A3E),
                     foregroundColor: Colors.white,
