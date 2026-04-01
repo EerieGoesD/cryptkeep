@@ -186,6 +186,39 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                 );
               }),
               const SizedBox(height: 24),
+              if (_isPremium) ...[
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final email = supabase.auth.currentUser?.email;
+                    if (email == null) return;
+                    try {
+                      final response = await supabase.functions.invoke(
+                        'manage-subscription',
+                        body: {'email': email},
+                      );
+                      final url = response.data['url'];
+                      if (url != null) {
+                        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                      }
+                    } catch (e) {
+                      debugPrint('Manage subscription error: $e');
+                    }
+                  },
+                  icon: const Icon(Icons.settings, size: 18),
+                  label: const Text('Manage Subscription'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2A2A3E),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Cancel, resume, or update payment method',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                ),
+              ],
               if (!_isPremium) ...[
                 const Text(
                   '\$3 / month',
