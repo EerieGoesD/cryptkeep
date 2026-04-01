@@ -70,9 +70,18 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
 
   void _startPolling() {
     setState(() => _checking = true);
+    int attempts = 0;
+    const maxAttempts = 60;
     Future.doWhile(() async {
       await Future.delayed(const Duration(seconds: 1));
+      attempts++;
       if (!mounted || _isPremium) return false;
+      if (attempts >= maxAttempts) {
+        if (mounted) {
+          setState(() => _checking = false);
+        }
+        return false;
+      }
       try {
         await supabase.auth.refreshSession();
         if (!mounted) return false;
