@@ -1,9 +1,8 @@
-import "@supabase/functions-js/edge-runtime.d.ts";
 import Stripe from "https://esm.sh/stripe@14.14.0?target=deno";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, content-type",
+  "Access-Control-Allow-Headers": "authorization, content-type, x-client-info, apikey",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -19,7 +18,7 @@ Deno.serve(async (req) => {
     });
 
     const body = await req.json();
-    const email: string | null = body.email || null;
+    const email = body.email || null;
 
     if (!email) {
       return new Response(
@@ -35,15 +34,13 @@ Deno.serve(async (req) => {
 
     if (customers.data.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No subscription found for this email" }),
+        JSON.stringify({ error: "No subscription found" }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const customer = customers.data[0];
-
     const session = await stripe.billingPortal.sessions.create({
-      customer: customer.id,
+      customer: customers.data[0].id,
       return_url: "https://eeriegoesd.com/cryptkeep/",
     });
 
@@ -52,7 +49,6 @@ Deno.serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
-    console.error("Manage subscription error:", err);
     return new Response(
       JSON.stringify({ error: String(err) }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
