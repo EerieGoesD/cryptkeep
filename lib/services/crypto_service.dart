@@ -3,7 +3,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:encrypt/encrypt.dart' as enc;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart';
 
 class CryptoService {
@@ -117,5 +117,31 @@ class CryptoService {
     final key = enc.Key(keyBytes);
     final encrypter = enc.Encrypter(enc.AES(key, mode: enc.AESMode.cbc));
     return encrypter.decrypt(encrypted, iv: iv);
+  }
+
+  // ───────────────────────────────────────────────────────
+  // Async versions - run heavy crypto off the UI thread
+  // Uses compute() on native, synchronous on web
+  // ───────────────────────────────────────────────────────
+  static Future<String> deriveAuthPasswordAsync(String masterPassword, String email) async {
+    if (kIsWeb) return deriveAuthPassword(masterPassword, email);
+    return compute(_deriveAuthPasswordIsolate, [masterPassword, email]);
+  }
+
+  static Future<Uint8List> deriveKeyAsync(String masterPassword, Uint8List salt, {int? iterations}) async {
+    iterations ??= defaultKeyIterations;
+    if (kIsWeb) return deriveKey(masterPassword, salt, iterations: iterations);
+    return compute(_deriveKeyIsolate, [masterPassword, base64.encode(salt), iterations]);
+  }
+
+  static String _deriveAuthPasswordIsolate(List<String> args) {
+    return deriveAuthPassword(args[0], args[1]);
+  }
+
+  static Uint8List _deriveKeyIsolate(List<dynamic> args) {
+    final masterPassword = args[0] as String;
+    final salt = base64.decode(args[1] as String);
+    final iterations = args[2] as int;
+    return deriveKey(masterPassword, salt, iterations: iterations);
   }
 }
