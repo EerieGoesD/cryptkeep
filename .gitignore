@@ -48,3 +48,6 @@ app.*.map.json
 .env
 *.env
 lib/secrets.dart
+android/key.properties
+android/upload-keystore.jks
+*.jks

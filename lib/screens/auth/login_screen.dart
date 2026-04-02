@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool _loading = false;
+  String _loadingStatus = '';
   bool _obscure = true;
   int _failedAttempts = 0;
   DateTime? _lockoutUntil;
@@ -48,17 +49,16 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    setState(() => _loading = true);
-    // Yield to let the UI render the loading spinner before heavy crypto
+    setState(() { _loading = true; _loadingStatus = 'Verifying account'; });
     await Future.delayed(const Duration(milliseconds: 50));
 
     try {
       final email = _emailCtrl.text.trim();
       final masterPassword = _passwordCtrl.text;
 
-      // Try v2 (PBKDF2) → v1 (SHA-256) → raw legacy password
+      // Try v2 (PBKDF2) -> v1 (SHA-256) -> raw legacy password
       try {
-        final authV2 = CryptoService.deriveAuthPassword(masterPassword, email);
+        final authV2 = await CryptoService.deriveAuthPasswordAsync(masterPassword, email);
         await supabase.auth.signInWithPassword(email: email, password: authV2);
       } on AuthException {
         try {
@@ -85,6 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         return;
       }
+
+      if (mounted) setState(() { _loadingStatus = 'Loading vault'; });
 
       Uint8List key;
       if (MigrationService.needsMigration()) {
@@ -203,7 +205,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           const SizedBox(height: 28),
                           _loading
-                              ? const Center(child: CircularProgressIndicator())
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(
+                                        width: 18, height: 18,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(_loadingStatus,
+                                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+                                    ],
+                                  ),
+                                )
                               : ElevatedButton(
                                   onPressed: _login,
                                   child: const Text('Sign In'),

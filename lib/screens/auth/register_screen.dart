@@ -20,6 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
   bool _loading = false;
+  String _loadingStatus = '';
   bool _obscure = true;
 
   @override
@@ -32,14 +33,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _loading = true);
+    setState(() { _loading = true; _loadingStatus = 'Creating vault'; });
 
     try {
       final email = _emailCtrl.text.trim();
       final masterPassword = _passwordCtrl.text;
-      final authPassword = CryptoService.deriveAuthPassword(masterPassword, email);
+      final authPassword = await CryptoService.deriveAuthPasswordAsync(masterPassword, email);
       final salt = CryptoService.generateSalt(16);
-      final key = CryptoService.deriveKey(masterPassword, salt);
+      final key = await CryptoService.deriveKeyAsync(masterPassword, salt);
       final keyCheck = CryptoService.createKeyCheck(key);
 
       await supabase.auth.signUp(
@@ -174,7 +175,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           const SizedBox(height: 28),
                           _loading
-                              ? const Center(child: CircularProgressIndicator())
+                              ? Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(
+                                        width: 18, height: 18,
+                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(_loadingStatus,
+                                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+                                    ],
+                                  ),
+                                )
                               : ElevatedButton(
                                   onPressed: _register,
                                   child: const Text('Create Vault'),
