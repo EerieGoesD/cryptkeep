@@ -23,6 +23,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _loadingStatus = '';
   bool _obscure = true;
 
+  String get _password => _passwordCtrl.text;
+  String get _confirm => _confirmCtrl.text;
+
+  bool get _hasMinLength => _password.length >= 12;
+  bool get _hasUppercase => _password.contains(RegExp(r'[A-Z]'));
+  bool get _hasLowercase => _password.contains(RegExp(r'[a-z]'));
+  bool get _hasDigit => _password.contains(RegExp(r'[0-9]'));
+  bool get _hasSpecial => _password.contains(RegExp(r'[^A-Za-z0-9]'));
+  bool get _passwordsMatch => _password.isNotEmpty && _confirm.isNotEmpty && _password == _confirm;
+
+  bool get _allRequirementsMet =>
+      _hasMinLength && _hasUppercase && _hasLowercase && _hasDigit && _hasSpecial && _passwordsMatch;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordCtrl.addListener(() => setState(() {}));
+    _confirmCtrl.addListener(() => setState(() {}));
+  }
+
   @override
   void dispose() {
     _emailCtrl.dispose();
@@ -91,6 +111,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  Widget _buildRequirement(String label, bool met) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Icon(
+            met ? Icons.check_circle : Icons.cancel,
+            size: 16,
+            color: met ? Colors.green : Colors.red,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.5,
+              color: met ? Colors.green : Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,6 +193,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (v) =>
                                 v != _passwordCtrl.text ? 'Passwords do not match' : null,
                           ),
+                          if (_password.isNotEmpty || _confirm.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            _buildRequirement('At least 12 characters', _hasMinLength),
+                            _buildRequirement('1 uppercase letter', _hasUppercase),
+                            _buildRequirement('1 lowercase letter', _hasLowercase),
+                            _buildRequirement('1 digit', _hasDigit),
+                            _buildRequirement('1 special character', _hasSpecial),
+                            _buildRequirement('Passwords match', _passwordsMatch),
+                          ],
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.all(12),
@@ -175,7 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           const SizedBox(height: 28),
                           ElevatedButton(
-                            onPressed: _loading ? null : _register,
+                            onPressed: _loading || !_allRequirementsMet ? null : _register,
                             child: _loading
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
