@@ -204,25 +204,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 (v == null || v.isEmpty) ? 'Enter your master password' : null,
                           ),
                           const SizedBox(height: 28),
-                          _loading
-                              ? Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          ElevatedButton(
+                            onPressed: _loading ? null : _login,
+                            child: _loading
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const SizedBox(
-                                        width: 18, height: 18,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                        width: 16, height: 16,
+                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                       ),
-                                      const SizedBox(width: 12),
-                                      Text(_loadingStatus,
-                                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+                                      const SizedBox(width: 10),
+                                      Text(_loadingStatus),
                                     ],
-                                  ),
-                                )
-                              : ElevatedButton(
-                                  onPressed: _login,
-                                  child: const Text('Sign In'),
-                                ),
+                                  )
+                                : const Text('Sign In'),
+                          ),
                           const SizedBox(height: 16),
                           Center(
                             child: Row(

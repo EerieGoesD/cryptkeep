@@ -174,25 +174,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           const SizedBox(height: 28),
-                          _loading
-                              ? Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                          ElevatedButton(
+                            onPressed: _loading ? null : _register,
+                            child: _loading
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const SizedBox(
-                                        width: 18, height: 18,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                        width: 16, height: 16,
+                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                       ),
-                                      const SizedBox(width: 12),
-                                      Text(_loadingStatus,
-                                        style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14)),
+                                      const SizedBox(width: 10),
+                                      Text(_loadingStatus),
                                     ],
-                                  ),
-                                )
-                              : ElevatedButton(
-                                  onPressed: _register,
-                                  child: const Text('Create Vault'),
-                                ),
+                                  )
+                                : const Text('Create Vault'),
+                          ),
                           const SizedBox(height: 24),
                           Center(
                             child: InkWell(

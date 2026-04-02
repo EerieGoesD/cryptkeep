@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart';
+import 'package:webcrypto/webcrypto.dart';
 
 class CryptoService {
   // ───────────────────────────────────────────────────────
@@ -120,28 +121,30 @@ class CryptoService {
   }
 
   // ───────────────────────────────────────────────────────
-  // Async versions - run heavy crypto off the UI thread
-  // Uses compute() on native, synchronous on web
+  // Async versions - non-blocking on ALL platforms
+  // Uses webcrypto package (native BoringSSL + browser WebCrypto)
   // ───────────────────────────────────────────────────────
   static Future<String> deriveAuthPasswordAsync(String masterPassword, String email) async {
-    if (kIsWeb) return deriveAuthPassword(masterPassword, email);
-    return compute(_deriveAuthPasswordIsolate, [masterPassword, email]);
+    final salt = Uint8List.fromList(utf8.encode('${email.trim().toLowerCase()}:auth-v2'));
+    final result = await _pbkdf2Async(masterPassword, salt, 100000);
+    return base64.encode(result);
   }
 
   static Future<Uint8List> deriveKeyAsync(String masterPassword, Uint8List salt, {int? iterations}) async {
     iterations ??= defaultKeyIterations;
-    if (kIsWeb) return deriveKey(masterPassword, salt, iterations: iterations);
-    return compute(_deriveKeyIsolate, [masterPassword, base64.encode(salt), iterations]);
+    return _pbkdf2Async(masterPassword, salt, iterations);
   }
 
-  static String _deriveAuthPasswordIsolate(List<String> args) {
-    return deriveAuthPassword(args[0], args[1]);
-  }
-
-  static Uint8List _deriveKeyIsolate(List<dynamic> args) {
-    final masterPassword = args[0] as String;
-    final salt = base64.decode(args[1] as String);
-    final iterations = args[2] as int;
-    return deriveKey(masterPassword, salt, iterations: iterations);
+  static Future<Uint8List> _pbkdf2Async(String password, Uint8List salt, int iterations) async {
+    final wc = await Pbkdf2SecretKey.importRawKey(
+      Uint8List.fromList(utf8.encode(password)),
+    );
+    final derived = await wc.deriveBits(
+      256,
+      Hash.sha256,
+      salt,
+      iterations,
+    );
+    return Uint8List.fromList(derived);
   }
 }
