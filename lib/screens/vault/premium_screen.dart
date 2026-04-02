@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
@@ -246,13 +248,24 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final email = supabase.auth.currentUser?.email ?? '';
-                    final url = Uri.parse(
+                    final url =
                       'https://buy.stripe.com/14A3cwgAc0Jc96K8X2cQU00'
-                      '?prefilled_email=${Uri.encodeComponent(email)}',
-                    );
-                    launchUrl(url, mode: LaunchMode.externalApplication);
+                      '?prefilled_email=${Uri.encodeComponent(email)}';
+
+                    if (!kIsWeb && Theme.of(context).platform == TargetPlatform.android) {
+                      // Use Google Play External Offers API on Android
+                      try {
+                        const channel = MethodChannel('com.eerie.cryptkeep/external_offers');
+                        await channel.invokeMethod('launchExternalOffer', {'url': url});
+                      } catch (_) {
+                        // Fallback to direct URL if external offers unavailable
+                        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                      }
+                    } else {
+                      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                    }
                     _startPolling();
                   },
                   child: const Text('Subscribe'),

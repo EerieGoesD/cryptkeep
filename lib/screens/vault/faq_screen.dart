@@ -113,21 +113,28 @@ class FaqScreen extends StatelessWidget {
             style: TextStyle(color: Color(0xFF94A3B8)),
           ),
           const SizedBox(height: 4),
-          const Text.rich(
-            TextSpan(
-              text: 'Made by ',
-              style: TextStyle(color: Color(0xFF94A3B8), letterSpacing: 1),
-              children: [
+          Center(
+            child: InkWell(
+              onTap: () => launchUrl(
+                Uri.parse('https://eeriegoesd.com/'),
+                mode: LaunchMode.externalApplication,
+              ),
+              child: const Text.rich(
                 TextSpan(
-                  text: 'EERIE',
-                  style: TextStyle(
-                    color: Color(0xFF8B5CF6),
-                    fontWeight: FontWeight.w600,
-                  ),
+                  text: 'Made by ',
+                  style: TextStyle(color: Color(0xFF94A3B8), letterSpacing: 1),
+                  children: [
+                    TextSpan(
+                      text: 'EERIE',
+                      style: TextStyle(
+                        color: Color(0xFF8B5CF6),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
 
