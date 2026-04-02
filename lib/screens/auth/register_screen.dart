@@ -193,15 +193,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (v) =>
                                 v != _passwordCtrl.text ? 'Passwords do not match' : null,
                           ),
-                          if (_password.isNotEmpty || _confirm.isNotEmpty) ...[
-                            const SizedBox(height: 16),
+                          const SizedBox(height: 16),
                             _buildRequirement('At least 12 characters', _hasMinLength),
                             _buildRequirement('1 uppercase letter', _hasUppercase),
                             _buildRequirement('1 lowercase letter', _hasLowercase),
                             _buildRequirement('1 digit', _hasDigit),
                             _buildRequirement('1 special character', _hasSpecial),
                             _buildRequirement('Passwords match', _passwordsMatch),
-                          ],
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.all(12),
