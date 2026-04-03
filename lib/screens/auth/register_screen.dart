@@ -130,26 +130,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return 'Excellent';
   }
 
-  Widget _buildRequirement(String label, bool met) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            met ? Icons.check_circle : Icons.circle_outlined,
-            size: 14,
-            color: met ? Colors.green : const Color(0xFF64748B),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11.5,
-              color: met ? Colors.green : const Color(0xFF64748B),
-            ),
-          ),
-        ],
+  TextSpan _requirementSpan(String label, bool met) {
+    return TextSpan(
+      text: '${met ? '✓' : '✗'}  $label\n',
+      style: TextStyle(
+        fontSize: 12.5,
+        color: met ? Colors.green : Colors.red,
+        height: 1.6,
       ),
     );
   }
@@ -194,10 +181,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             enableInteractiveSelection: false,
                             decoration: InputDecoration(
                               labelText: 'Master Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility,
-                                    color: const Color(0xFF94A3B8)),
-                                onPressed: () => setState(() => _obscure = !_obscure),
+                              suffixIcon: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Tooltip(
+                                    richMessage: TextSpan(
+                                      children: [
+                                        const TextSpan(
+                                          text: 'Password requirements:\n',
+                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                        ),
+                                        _requirementSpan('At least 12 characters', _hasMinLength),
+                                        _requirementSpan('1 uppercase letter', _hasUppercase),
+                                        _requirementSpan('1 lowercase letter', _hasLowercase),
+                                        _requirementSpan('1 digit', _hasDigit),
+                                        _requirementSpan('1 special character', _hasSpecial),
+                                        _requirementSpan('Passwords match', _passwordsMatch),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF1A1A2E),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: const Color(0xFF8B5CF6), width: 1),
+                                    ),
+                                    padding: const EdgeInsets.all(12),
+                                    showDuration: const Duration(seconds: 5),
+                                    child: const Icon(Icons.info_outline, color: Color(0xFF94A3B8), size: 20),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility,
+                                        color: const Color(0xFF94A3B8)),
+                                    onPressed: () => setState(() => _obscure = !_obscure),
+                                  ),
+                                ],
                               ),
                             ),
                             validator: (v) {
@@ -227,18 +243,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 16,
-                            runSpacing: 0,
-                            children: [
-                              _buildRequirement('12+ chars', _hasMinLength),
-                              _buildRequirement('Uppercase', _hasUppercase),
-                              _buildRequirement('Lowercase', _hasLowercase),
-                              _buildRequirement('Digit', _hasDigit),
-                              _buildRequirement('Special', _hasSpecial),
-                            ],
-                          ),
                           const SizedBox(height: 14),
                           TextFormField(
                             controller: _confirmCtrl,
@@ -248,8 +252,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (v) =>
                                 v != _passwordCtrl.text ? 'Passwords do not match' : null,
                           ),
-                          const SizedBox(height: 6),
-                          _buildRequirement('Passwords match', _passwordsMatch),
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.all(12),
