@@ -17481,8 +17481,8 @@ aS7:function aS7(a){this.a=a},
 aVT:function aVT(a){this.a=a},
 aUY:function aUY(){},
 Rj:function Rj(){},
-m4(a,b,c,d,e,f,g,h){var s=null,r=b.a.a
-return new A.Ll(b,new A.aCW(c,s,s,B.bv,s,s,d,s,s,s,B.ar,s,s,B.cc,a,s,s,!1,s,"\u2022",f,!0,s,s,!0,s,e,s,!1,s,s,!1,s,s,s,g,s,s,s,2,s,s,s,s,B.bc,s,s,s,s,s,s,s,s,!0,s,A.bwo(),s,s,s,s,s,s,s,B.a5,s,B.y,!0,!0,!0,s),s,h,r,!0,B.id,s,s)},
+m4(a,b,c,d,e,f,g,h,i){var s=null,r=b.a.a
+return new A.Ll(b,new A.aCW(c,s,s,B.bv,s,s,e,s,s,s,B.ar,s,s,B.cc,a,s,s,!1,s,"\u2022",g,!0,s,s,!0,s,f,s,!1,s,s,!1,s,s,s,h,s,s,s,2,s,s,s,s,B.bc,s,s,d,s,s,s,s,s,!0,s,A.bwo(),s,s,s,s,s,s,s,B.a5,s,B.y,!0,!0,!0,s),s,i,r,!0,B.id,s,s)},
 boC(a,b){var s
 if(!b.a.x){s=b.c
 s.toString
@@ -54103,8 +54103,8 @@ break
 case 7:case 1:return A.v(q,r)
 case 2:return A.u(o.at(-1),r)}})
 return A.w($async$lM,r)},
-M(a){var s,r,q,p=this,o=null,n=A.b6R(B.NC,B.aar,new A.aLI(a),A.aCR(o,o,o,o,o,o,o,o,o,o,o,o,B.aE,o,o,o,o,o,o,o)),m=A.m4(!1,p.e,B.tr,B.oC,1,!1,o,new A.aLJ()),l=p.x
-l=A.m4(!1,p.f,A.A_(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"Master Password",!0,!0,!1,o,o,o,o,o,o,o,o,A.eE(o,o,o,A.h2(l?B.e3:B.e2,B.ai,o,o),o,o,new A.aLK(p),o,o,o,o),o,o,o,o,o),o,1,l,o,new A.aLL())
+M(a){var s,r,q,p=this,o=null,n=A.b6R(B.NC,B.aar,new A.aLI(a),A.aCR(o,o,o,o,o,o,o,o,o,o,o,o,B.aE,o,o,o,o,o,o,o)),m=A.m4(!1,p.e,B.tr,o,B.oC,1,!1,o,new A.aLJ()),l=p.x
+l=A.m4(!1,p.f,A.A_(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"Master Password",!0,!0,!1,o,o,o,o,o,o,o,o,A.eE(o,o,o,A.h2(l?B.e3:B.e2,B.ai,o,o),o,o,new A.aLK(p),o,o,o,o),o,o,o,o,o),o,o,1,l,o,new A.aLL())
 s=p.r
 r=s?o:p.gasc()
 q=t.p
@@ -54395,12 +54395,12 @@ return"Excellent"},
 ug(a,b){var s=null,r=b?B.t3:B.No
 r=A.h2(r,b?B.nk:B.r4,s,14)
 return new A.c2(B.ru,A.d6(A.a([r,B.oj,A.br(a,s,s,s,A.hd(s,s,b?B.nk:B.r4,s,s,s,s,s,s,s,s,11.5,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.C,B.p,B.b1,0),s)},
-M(a){var s,r,q,p,o,n,m,l,k=this,j=null,i="[^A-Za-z0-9]",h=A.lm(j,j,B.a9M),g=A.m4(!1,k.e,B.tr,B.oC,1,!1,j,new A.aOI()),f=k.f,e=k.y
-e=A.m4(!1,f,A.A_(j,j,j,j,j,j,j,j,!0,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,"Master Password",!0,!0,!1,j,j,j,j,j,j,j,j,A.eE(j,j,j,A.h2(e?B.e3:B.e2,B.ai,j,j),j,j,new A.aOJ(k),j,j,j,j),j,j,j,j,j),j,1,e,j,new A.aOK())
+M(a){var s,r,q,p,o,n,m,l,k=this,j=null,i="[^A-Za-z0-9]",h=A.lm(j,j,B.a9M),g=A.m4(!1,k.e,B.tr,j,B.oC,1,!1,j,new A.aOI()),f=k.f,e=k.y
+e=A.m4(!1,f,A.A_(j,j,j,j,j,j,j,j,!0,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,"Master Password",!0,!0,!1,j,j,j,j,j,j,j,j,A.eE(j,j,j,A.h2(e?B.e3:B.e2,B.ai,j,j),j,j,new A.aOJ(k),j,j,j,j),j,j,j,j,j),!1,j,1,e,j,new A.aOK())
 s=t.p
 r=A.d6(A.a([A.hI(A.agk(A.dY(4),new A.HV(4,k.gnJ()/5,B.d1,j,new A.pY(k.ga1b(),t.Jn),j,j,j),B.c4)),B.ca,A.br(k.gaxF(),j,j,j,A.hd(j,j,k.ga1b(),j,j,j,j,j,j,j,j,11.5,j,j,B.cD,j,j,!0,j,j,j,j,j,j,j,j),j,j)],s),B.C,B.p,B.F,0)
 q=A.b7v(A.a([k.ug("12+ chars",f.a.a.length>=12),k.ug("Uppercase",B.d.p(f.a.a,A.by("[A-Z]",!0,!1,!1))),k.ug("Lowercase",B.d.p(f.a.a,A.by("[a-z]",!0,!1,!1))),k.ug("Digit",B.d.p(f.a.a,A.by("[0-9]",!0,!1,!1))),k.ug("Special",B.d.p(f.a.a,A.by(i,!0,!1,!1)))],s),0,16)
-p=A.m4(!1,k.r,B.tq,j,1,k.y,j,new A.aOL(k))
+p=A.m4(!1,k.r,B.tq,!1,j,1,k.y,j,new A.aOL(k))
 o=k.ug("Passwords match",k.ga_m())
 n=A.dY(10)
 n=A.eP(j,B.a1g,B.B,j,j,new A.d2(B.ab,j,A.aY3(B.N,1),n,j,j,B.au),j,j,j,B.rx,j,j,j)
@@ -54652,20 +54652,20 @@ M(a){var s,r,q,p,o,n,m=this,l=null,k=A.kH(A.h7(a,!0,t.c).b,t.oo),j=B.b.fS(k,new 
 i=A.lm(A.a([h],g),l,i)
 h=m.e
 h===$&&A.b()
-h=A.m4(!1,h,B.OI,l,1,!1,l,new A.aFX())
+h=A.m4(!1,h,B.OI,l,l,1,!1,l,new A.aFX())
 s=m.f
 s===$&&A.b()
-s=A.m4(!1,s,B.OE,l,1,!1,l,l)
+s=A.m4(!1,s,B.OE,l,l,1,!1,l,l)
 r=m.r
 r===$&&A.b()
 q=m.Q
-r=A.d6(A.a([A.hI(A.m4(!1,r,A.A_(l,l,l,l,l,l,l,l,!0,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,"Password",!0,!0,!1,l,B.tk,l,l,l,l,l,l,A.eE(l,l,l,A.h2(q?B.e3:B.e2,B.ai,l,l),l,l,new A.aFY(m),l,l,l,l),l,l,l,l,l),l,1,q,l,l)),B.kc,A.aZW(A.eE(l,l,l,B.NP,l,l,new A.aFZ(m,a),l,l,l,l),"Generate password")],g),B.am,B.p,B.F,0)
+r=A.d6(A.a([A.hI(A.m4(!1,r,A.A_(l,l,l,l,l,l,l,l,!0,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,"Password",!0,!0,!1,l,B.tk,l,l,l,l,l,l,A.eE(l,l,l,A.h2(q?B.e3:B.e2,B.ai,l,l),l,l,new A.aFY(m),l,l,l,l),l,l,l,l,l),l,l,1,q,l,l)),B.kc,A.aZW(A.eE(l,l,l,B.NP,l,l,new A.aFZ(m,a),l,l,l,l),"Generate password")],g),B.am,B.p,B.F,0)
 q=m.w
 q===$&&A.b()
-q=A.m4(!1,q,B.OH,B.EL,1,!1,l,l)
+q=A.m4(!1,q,B.OH,l,B.EL,1,!1,l,l)
 p=m.x
 p===$&&A.b()
-p=A.m4(!1,p,B.OD,l,4,!1,l,l)
+p=A.m4(!1,p,B.OD,l,l,4,!1,l,l)
 o=j.length===0?l:j
 n=A.a([B.LQ],t.FG)
 B.b.N(n,new A.a9(k,new A.aG_(),A.a3(k).h("a9<1,kw<f>>")))
@@ -54955,7 +54955,7 @@ s.toString}else s="Tap to select .kdbx file"
 r=t.p
 n=A.mR(p,A.eP(p,A.dG(A.a([k,B.dc,A.br(s,p,p,p,A.hd(p,p,m?B.d2:B.ai,p,p,p,p,p,p,p,p,p,p,p,p,p,p,!0,p,p,p,p,p,p,p,p),p,p)],r),B.C,B.p,B.F),B.B,p,p,new A.d2(B.ab,p,l,n,p,p,B.au),p,p,p,B.bc,p,p,1/0),B.a5,!1,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,q.gauH(),p,p,p,p,p,p)
 l=q.e
-m=A.m4(!1,q.d,A.A_(p,p,p,p,p,p,p,p,!0,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,"KeePass Master Password",!0,!0,!1,p,B.tk,p,p,p,p,p,p,A.eE(p,p,p,A.h2(l?B.e3:B.e2,B.ai,p,p),p,p,new A.aKH(q),p,p,p,p),p,p,p,p,p),p,1,l,p,p)
+m=A.m4(!1,q.d,A.A_(p,p,p,p,p,p,p,p,!0,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,p,"KeePass Master Password",!0,!0,!1,p,B.tk,p,p,p,p,p,p,A.eE(p,p,p,A.h2(l?B.e3:B.e2,B.ai,p,p),p,p,new A.aKH(q),p,p,p,p),p,p,p,p,p),p,p,1,l,p,p)
 return A.k0(o,A.dj(new A.dH(B.fF,A.xh(A.dG(A.a([B.abc,B.be,B.aaJ,B.hV,n,B.cb,m,B.hV,q.f?B.dl:A.b3I(B.NE,B.aa3,q.garj(),p)],r),B.am,B.p,B.F),B.iQ),p),p,p),p)}}
 A.aKF.prototype={
 $0(){var s=this.a,r=this.b.a,q=J.cd(r)
@@ -55971,7 +55971,7 @@ m=m==null?n:m.r
 s=m==null?n:m.z
 m=A.br("Signed in as "+(s==null?"":s),n,n,n,B.bW,n,n)
 r=o.r
-r=A.m4(!0,o.e,A.A_(n,n,n,n,n,n,n,n,!0,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,"Master Password",!0,!0,!1,n,n,n,n,n,n,n,n,A.eE(n,n,n,A.h2(r?B.e3:B.e2,B.ai,n,n),n,n,new A.aT4(o),n,n,n,n),n,n,n,n,n),n,1,r,new A.aT5(o),new A.aT6())
+r=A.m4(!0,o.e,A.A_(n,n,n,n,n,n,n,n,!0,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,"Master Password",!0,!0,!1,n,n,n,n,n,n,n,n,A.eE(n,n,n,A.h2(r?B.e3:B.e2,B.ai,n,n),n,n,new A.aT4(o),n,n,n,n),n,n,n,n,n),n,n,1,r,new A.aT5(o),new A.aT6())
 q=o.f?B.dl:A.r9(B.aa0,o.gayz(),n)
 p=t.p
 return A.k0(n,A.tj(!0,A.dG(A.a([A.hI(A.dj(new A.dH(B.fF,A.xh(A.alk(A.dG(A.a([B.tl,B.cb,B.aan,B.hW,m,B.ok,r,B.cR,q,B.bt,A.dj(A.dC(B.F0,o.gayA(),n),n,n),B.dd,A.dj(A.e_(!1,n,!0,B.oM,n,!0,n,n,n,n,n,n,n,n,n,new A.aT7(),n,n,n,n,n,n,n),n,n),B.bt,A.dj(A.e_(!1,n,!0,B.oO,n,!0,n,n,n,n,n,n,n,n,n,new A.aT8(),n,n,n,n,n,n,n),n,n)],p),B.am,B.cK,B.F),o.d),B.iR),n),n,n)),new A.c2(B.iP,A.d6(A.a([A.e_(!1,n,!0,B.oL,n,!0,n,n,n,n,n,n,n,n,n,new A.aT9(),n,n,n,n,n,n,n),B.cP,A.e_(!1,n,!0,B.oN,n,!0,n,n,n,n,n,n,n,n,n,new A.aTa(),n,n,n,n,n,n,n),B.cP,A.e_(!1,n,!0,B.oK,n,!0,n,n,n,n,n,n,n,n,n,new A.aTb(),n,n,n,n,n,n,n),B.cP,A.e_(!1,n,!0,B.oJ,n,!0,n,n,n,n,n,n,n,n,n,new A.aTc(),n,n,n,n,n,n,n)],p),B.C,B.cK,B.F,0),n)],p),B.C,B.p,B.F),B.aE,!0),n)}}
@@ -73301,7 +73301,7 @@ n=o?B.ol:B.om
 m=i.fr
 m=o?B.on:B.oo
 l=i.b_
-l=!o||!p
+if(l==null)l=!o||!p
 k=A.b3E()
 j=A.b3F()
 return A.LU(s,A.nr(i.dx,i.V,i.ax,i.R,i.bT,i.ao,i.cd,i.G,q,i.x1,i.x2,i.ry,i.c5,i.to,i.rx,r,i.bh,i.X,l,i.fx,!0,i.k1,i.f,i.d,i.bL,i.RG,i.p4,i.y2,i.r,i.an,i.k2,i.fy,i.go,i.id,i.am,o,i.cy,i.aR,new A.aCX(a,i.c),i.p2,i.p3,i.k3,i.k4,i.ok,i.p1,p,i.e,i.cP,i.W,i.xr,i.y1,i.aM,i.q,k,j,i.cx,n,m,i.J,i.ay,i.y,i.x,i.bu,i.z,i.Q,i.at,i.as,i.w,i.ch,i.ad))},
