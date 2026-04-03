@@ -191,6 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           TextFormField(
                             controller: _passwordCtrl,
                             obscureText: _obscure,
+                            enableInteractiveSelection: false,
                             decoration: InputDecoration(
                               labelText: 'Master Password',
                               suffixIcon: IconButton(
@@ -242,6 +243,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           TextFormField(
                             controller: _confirmCtrl,
                             obscureText: _obscure,
+                            enableInteractiveSelection: false,
                             decoration: const InputDecoration(labelText: 'Confirm Password'),
                             validator: (v) =>
                                 v != _passwordCtrl.text ? 'Passwords do not match' : null,
