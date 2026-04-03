@@ -36,6 +36,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool get _allRequirementsMet =>
       _hasMinLength && _hasUppercase && _hasLowercase && _hasDigit && _hasSpecial && _passwordsMatch;
 
+  int get _strengthCount =>
+      [_hasMinLength, _hasUppercase, _hasLowercase, _hasDigit, _hasSpecial].where((e) => e).length;
+
   @override
   void initState() {
     super.initState();
@@ -111,22 +114,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  Color get _strengthColor {
+    if (_strengthCount <= 1) return Colors.red;
+    if (_strengthCount <= 2) return Colors.orange;
+    if (_strengthCount <= 3) return Colors.amber;
+    if (_strengthCount <= 4) return Colors.lightGreen;
+    return Colors.green;
+  }
+
+  String get _strengthLabel {
+    if (_strengthCount <= 1) return 'Weak';
+    if (_strengthCount <= 2) return 'Fair';
+    if (_strengthCount <= 3) return 'Good';
+    if (_strengthCount <= 4) return 'Strong';
+    return 'Excellent';
+  }
+
   Widget _buildRequirement(String label, bool met) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: 2),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            met ? Icons.check_circle : Icons.cancel,
-            size: 16,
-            color: met ? Colors.green : Colors.red,
+            met ? Icons.check_circle : Icons.circle_outlined,
+            size: 14,
+            color: met ? Colors.green : const Color(0xFF64748B),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.5,
-              color: met ? Colors.green : Colors.red,
+              fontSize: 11.5,
+              color: met ? Colors.green : const Color(0xFF64748B),
             ),
           ),
         ],
@@ -143,173 +163,171 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             Expanded(
               child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(28),
-                  child: Form(
-                    key: _formKey,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final wide = constraints.maxWidth >= 600;
-                        final passwordFields = ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 400),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('Create your vault',
-                                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 6),
-                              const Text(
-                                'Your master password encrypts everything locally.\nWe never see your passwords.',
-                                style: TextStyle(color: Color(0xFF94A3B8)),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 400),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(28),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Create your vault',
+                              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Your master password encrypts everything locally.\nWe never see your passwords.',
+                            style: TextStyle(color: Color(0xFF94A3B8)),
+                          ),
+                          const SizedBox(height: 36),
+                          TextFormField(
+                            controller: _emailCtrl,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(labelText: 'Email'),
+                            validator: (v) =>
+                                (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
+                          ),
+                          const SizedBox(height: 14),
+                          TextFormField(
+                            controller: _passwordCtrl,
+                            obscureText: _obscure,
+                            decoration: InputDecoration(
+                              labelText: 'Master Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility,
+                                    color: const Color(0xFF94A3B8)),
+                                onPressed: () => setState(() => _obscure = !_obscure),
                               ),
-                              const SizedBox(height: 36),
-                              TextFormField(
-                                controller: _emailCtrl,
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: const InputDecoration(labelText: 'Email'),
-                                validator: (v) =>
-                                    (v == null || !v.contains('@')) ? 'Enter a valid email' : null,
-                              ),
-                              const SizedBox(height: 14),
-                              TextFormField(
-                                controller: _passwordCtrl,
-                                obscureText: _obscure,
-                                decoration: InputDecoration(
-                                  labelText: 'Master Password',
-                                  suffixIcon: IconButton(
-                                    icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility,
-                                        color: const Color(0xFF94A3B8)),
-                                    onPressed: () => setState(() => _obscure = !_obscure),
+                            ),
+                            validator: (v) {
+                              if (v == null || v.isEmpty) return 'Enter a master password';
+                              if (v.length < 12) return 'Must be at least 12 characters';
+                              return null;
+                            },
+                          ),
+                          // Strength bar + requirements
+                          if (_password.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: LinearProgressIndicator(
+                                      value: _strengthCount / 5,
+                                      minHeight: 4,
+                                      backgroundColor: const Color(0xFF2A2A3E),
+                                      valueColor: AlwaysStoppedAnimation(_strengthColor),
+                                    ),
                                   ),
                                 ),
-                                validator: (v) {
-                                  if (v == null || v.isEmpty) return 'Enter a master password';
-                                  if (v.length < 12) return 'Must be at least 12 characters';
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 14),
-                              TextFormField(
-                                controller: _confirmCtrl,
-                                obscureText: _obscure,
-                                decoration: const InputDecoration(labelText: 'Confirm Password'),
-                                validator: (v) =>
-                                    v != _passwordCtrl.text ? 'Passwords do not match' : null,
-                              ),
-                            ],
+                                const SizedBox(width: 10),
+                                Text(
+                                  _strengthLabel,
+                                  style: TextStyle(fontSize: 11.5, color: _strengthColor, fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 16,
+                              runSpacing: 0,
+                              children: [
+                                _buildRequirement('12+ chars', _hasMinLength),
+                                _buildRequirement('Uppercase', _hasUppercase),
+                                _buildRequirement('Lowercase', _hasLowercase),
+                                _buildRequirement('Digit', _hasDigit),
+                                _buildRequirement('Special', _hasSpecial),
+                              ],
+                            ),
+                          ],
+                          const SizedBox(height: 14),
+                          TextFormField(
+                            controller: _confirmCtrl,
+                            obscureText: _obscure,
+                            decoration: const InputDecoration(labelText: 'Confirm Password'),
+                            validator: (v) =>
+                                v != _passwordCtrl.text ? 'Passwords do not match' : null,
                           ),
-                        );
-
-                        final requirements = Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (wide) const SizedBox(height: 120),
-                            _buildRequirement('At least 12 characters', _hasMinLength),
-                            _buildRequirement('1 uppercase letter', _hasUppercase),
-                            _buildRequirement('1 lowercase letter', _hasLowercase),
-                            _buildRequirement('1 digit', _hasDigit),
-                            _buildRequirement('1 special character', _hasSpecial),
+                          if (_confirm.isNotEmpty) ...[
+                            const SizedBox(height: 6),
                             _buildRequirement('Passwords match', _passwordsMatch),
                           ],
-                        );
-
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: wide ? 700 : 400),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (wide)
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Flexible(child: passwordFields),
-                                    const SizedBox(width: 32),
-                                    requirements,
-                                  ],
-                                )
-                              else ...[
-                                passwordFields,
-                                const SizedBox(height: 16),
-                                ...requirements.children,
-                              ],
-                              const SizedBox(height: 12),
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF1A1A2E),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: const Color(0xFF8B5CF6), width: 1),
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1A2E),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: const Color(0xFF8B5CF6), width: 1),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.warning_amber_rounded,
+                                    color: Color(0xFF8B5CF6), size: 18),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'If you lose your master password, your vault cannot be recovered.',
+                                    style: TextStyle(
+                                        color: Color(0xFF94A3B8), fontSize: 12.5),
+                                  ),
                                 ),
-                                child: const Row(
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          ElevatedButton(
+                            onPressed: _loading || !_allRequirementsMet ? null : _register,
+                            child: _loading
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const SizedBox(
+                                        width: 16, height: 16,
+                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(_loadingStatus),
+                                    ],
+                                  )
+                                : const Text('Create Vault'),
+                          ),
+                          const SizedBox(height: 24),
+                          Center(
+                            child: InkWell(
+                              onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
+                              child: const Text.rich(
+                                TextSpan(
+                                  text: 'Made by ',
+                                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
                                   children: [
-                                    Icon(Icons.warning_amber_rounded,
-                                        color: Color(0xFF8B5CF6), size: 18),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        'If you lose your master password, your vault cannot be recovered.',
-                                        style: TextStyle(
-                                            color: Color(0xFF94A3B8), fontSize: 12.5),
+                                    TextSpan(
+                                      text: 'EERIE',
+                                      style: TextStyle(
+                                        color: Color(0xFF8B5CF6),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 28),
-                              ElevatedButton(
-                                onPressed: _loading || !_allRequirementsMet ? null : _register,
-                                child: _loading
-                                    ? Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            width: 16, height: 16,
-                                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(_loadingStatus),
-                                        ],
-                                      )
-                                    : const Text('Create Vault'),
-                              ),
-                              const SizedBox(height: 24),
-                              Center(
-                                child: InkWell(
-                                  onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
-                                  child: const Text.rich(
-                                    TextSpan(
-                                      text: 'Made by ',
-                                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
-                                      children: [
-                                        TextSpan(
-                                          text: 'EERIE',
-                                          style: TextStyle(
-                                            color: Color(0xFF8B5CF6),
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Center(
-                                child: InkWell(
-                                  onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
-                                  child: const Text('☕ Buy Me a Coffee',
-                                      style: TextStyle(
-                                          color: Color(0xFF8B5CF6),
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        );
-                      },
+                          const SizedBox(height: 16),
+                          Center(
+                            child: InkWell(
+                              onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
+                              child: const Text('☕ Buy Me a Coffee',
+                                  style: TextStyle(
+                                      color: Color(0xFF8B5CF6),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
