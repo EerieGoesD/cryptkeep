@@ -205,42 +205,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               return null;
                             },
                           ),
-                          // Strength bar + requirements
-                          if (_password.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: LinearProgressIndicator(
-                                      value: _strengthCount / 5,
-                                      minHeight: 4,
-                                      backgroundColor: const Color(0xFF2A2A3E),
-                                      valueColor: AlwaysStoppedAnimation(_strengthColor),
-                                    ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: LinearProgressIndicator(
+                                    value: _strengthCount / 5,
+                                    minHeight: 4,
+                                    backgroundColor: const Color(0xFF2A2A3E),
+                                    valueColor: AlwaysStoppedAnimation(_strengthColor),
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  _strengthLabel,
-                                  style: TextStyle(fontSize: 11.5, color: _strengthColor, fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 16,
-                              runSpacing: 0,
-                              children: [
-                                _buildRequirement('12+ chars', _hasMinLength),
-                                _buildRequirement('Uppercase', _hasUppercase),
-                                _buildRequirement('Lowercase', _hasLowercase),
-                                _buildRequirement('Digit', _hasDigit),
-                                _buildRequirement('Special', _hasSpecial),
-                              ],
-                            ),
-                          ],
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                _strengthLabel,
+                                style: TextStyle(fontSize: 11.5, color: _strengthColor, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 0,
+                            children: [
+                              _buildRequirement('12+ chars', _hasMinLength),
+                              _buildRequirement('Uppercase', _hasUppercase),
+                              _buildRequirement('Lowercase', _hasLowercase),
+                              _buildRequirement('Digit', _hasDigit),
+                              _buildRequirement('Special', _hasSpecial),
+                            ],
+                          ),
                           const SizedBox(height: 14),
                           TextFormField(
                             controller: _confirmCtrl,
@@ -249,10 +246,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (v) =>
                                 v != _passwordCtrl.text ? 'Passwords do not match' : null,
                           ),
-                          if (_confirm.isNotEmpty) ...[
-                            const SizedBox(height: 6),
-                            _buildRequirement('Passwords match', _passwordsMatch),
-                          ],
+                          const SizedBox(height: 6),
+                          _buildRequirement('Passwords match', _passwordsMatch),
                           const SizedBox(height: 12),
                           Container(
                             padding: const EdgeInsets.all(12),
@@ -295,35 +290,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           const SizedBox(height: 24),
                           Center(
-                            child: InkWell(
-                              onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
-                              child: const Text.rich(
-                                TextSpan(
-                                  text: 'Made by ',
-                                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
-                                  children: [
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                InkWell(
+                                  onTap: () => launchUrl(Uri.parse('https://eeriegoesd.com/')),
+                                  child: const Text.rich(
                                     TextSpan(
-                                      text: 'EERIE',
-                                      style: TextStyle(
-                                        color: Color(0xFF8B5CF6),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      text: 'Made by ',
+                                      style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                                      children: [
+                                        TextSpan(
+                                          text: 'EERIE',
+                                          style: TextStyle(
+                                            color: Color(0xFF8B5CF6),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Center(
-                            child: InkWell(
-                              onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
-                              child: const Text('☕ Buy Me a Coffee',
-                                  style: TextStyle(
-                                      color: Color(0xFF8B5CF6),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600)),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                                ),
+                                InkWell(
+                                  onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
+                                  child: const Text('☕ Buy Me a Coffee',
+                                      style: TextStyle(
+                                          color: Color(0xFF8B5CF6),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                              ],
                             ),
                           ),
                         ],
