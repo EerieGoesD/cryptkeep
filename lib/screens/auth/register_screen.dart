@@ -66,6 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final key = await CryptoService.deriveKeyAsync(masterPassword, salt);
       final keyCheck = CryptoService.createKeyCheck(key);
 
+      debugPrint('[CryptKeep] Attempting signup for: $email');
+      debugPrint('[CryptKeep] Auth password length: ${authPassword.length}');
       await supabase.auth.signUp(
         email: email,
         password: authPassword,
@@ -104,10 +106,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (!mounted) return;
       Navigator.of(context).pop();
-    } on AuthException {
+    } on AuthException catch (e) {
+      debugPrint('[CryptKeep] AuthException: ${e.message} (status: ${e.statusCode})');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration failed. Please try again.')),
+        SnackBar(content: Text('Registration failed: ${e.message}')),
+      );
+    } catch (e, st) {
+      debugPrint('[CryptKeep] Unexpected signup error: $e');
+      debugPrint('[CryptKeep] Stack trace: $st');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed: $e')),
       );
     } finally {
       if (mounted) setState(() => _loading = false);
