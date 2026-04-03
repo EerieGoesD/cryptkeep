@@ -115,7 +115,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Color get _strengthColor {
-    if (_strengthCount <= 1) return Colors.red;
+    if (!_hasMinLength) {
+      if (_strengthCount <= 1) return Colors.red;
+      return Colors.orange;
+    }
     if (_strengthCount <= 2) return Colors.orange;
     if (_strengthCount <= 3) return Colors.amber;
     if (_strengthCount <= 4) return Colors.lightGreen;
@@ -123,7 +126,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String get _strengthLabel {
-    if (_strengthCount <= 1) return 'Weak';
+    if (!_hasMinLength) {
+      if (_strengthCount <= 1) return 'Weak';
+      return 'Too short';
+    }
     if (_strengthCount <= 2) return 'Fair';
     if (_strengthCount <= 3) return 'Good';
     if (_strengthCount <= 4) return 'Strong';
@@ -189,7 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       children: [
                                         const TextSpan(
                                           text: 'Password requirements:\n',
-                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.white),
                                         ),
                                         _requirementSpan('At least 12 characters', _hasMinLength),
                                         _requirementSpan('1 uppercase letter', _hasUppercase),
