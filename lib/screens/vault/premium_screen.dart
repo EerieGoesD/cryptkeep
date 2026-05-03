@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
+import '../../config.dart';
 import '../../services/premium_service.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -124,9 +125,11 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
               ),
               const SizedBox(height: 8),
               Text(
-                _isPremium
-                    ? 'You have an active Pro subscription.'
-                    : 'Unlock premium features to keep your vault secure.',
+                kProIncluded
+                    ? 'Pro is included with your Microsoft Store purchase.'
+                    : _isPremium
+                        ? 'You have an active Pro subscription.'
+                        : 'Unlock premium features to keep your vault secure.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Color(0xFF94A3B8)),
               ),
@@ -189,7 +192,7 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                 );
               }),
               const SizedBox(height: 24),
-              if (_isPremium) ...[
+              if (_isPremium && !kProIncluded) ...[
                 ElevatedButton.icon(
                   onPressed: () async {
                     if (_openingPortal) return;
@@ -230,7 +233,7 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                   style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
                 ),
               ],
-              if (!_isPremium) ...[
+              if (!_isPremium && !kProIncluded) ...[
                 const Text(
                   '\$3 / month',
                   textAlign: TextAlign.center,
