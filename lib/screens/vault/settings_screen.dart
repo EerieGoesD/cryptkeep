@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
+import '../../config.dart';
 import '../../providers/app_state.dart';
 import '../../services/migration_service.dart';
 import '../auth/login_screen.dart';
@@ -157,26 +158,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: 'Sign out',
                   onTap: _signOut,
                 ),
-                const SizedBox(height: 28),
-                const Text(
-                  'SUBSCRIPTION',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFFD700),
-                    letterSpacing: 1,
+                if (!kProIncluded) ...[
+                  const SizedBox(height: 28),
+                  const Text(
+                    'SUBSCRIPTION',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFFD700),
+                      letterSpacing: 1,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                _tile(
-                  icon: Icons.workspace_premium,
-                  title: 'CryptKeep Pro',
-                  subtitle: 'Manage your subscription',
-                  titleColor: const Color(0xFFFFD700),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                  const SizedBox(height: 8),
+                  _tile(
+                    icon: Icons.workspace_premium,
+                    title: 'CryptKeep Pro',
+                    subtitle: 'Manage your subscription',
+                    titleColor: const Color(0xFFFFD700),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const PremiumScreen()),
+                    ),
                   ),
-                ),
+                ],
                 const SizedBox(height: 28),
                 const Text(
                   'SECURITY',

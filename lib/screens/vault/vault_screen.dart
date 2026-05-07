@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app.dart';
+import '../../config.dart';
 import '../../models/category.dart';
 import '../../models/vault_entry.dart';
 import '../../providers/app_state.dart';
@@ -522,59 +523,62 @@ class _VaultScreenState extends State<VaultScreen> {
               await _signOut();
             }
           },
-          itemBuilder: (_) => const [
-            PopupMenuItem(
+          itemBuilder: (_) => [
+            const PopupMenuItem(
                 value: 'import',
                 child: Row(children: [
                   Icon(Icons.download_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Import KeePass (.kdbx)'),
                 ])),
-            PopupMenuItem(
+            const PopupMenuItem(
                 value: 'export',
                 child: Row(children: [
                   Icon(Icons.upload_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Export KeePass (.kdbx)'),
                 ])),
-            PopupMenuItem(
+            const PopupMenuItem(
                 value: 'categories',
                 child: Row(children: [
                   Icon(Icons.folder_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Manage Categories'),
                 ])),
-            PopupMenuDivider(),
+            const PopupMenuDivider(),
             PopupMenuItem(
                 value: 'health',
                 child: Row(children: [
-                  Icon(Icons.shield_outlined, size: 18),
-                  SizedBox(width: 10),
-                  Text('Password Health'),
-                  SizedBox(width: 6),
-                  Text('PRO', style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFFD700),
-                  )),
+                  const Icon(Icons.shield_outlined, size: 18),
+                  const SizedBox(width: 10),
+                  const Text('Password Health'),
+                  if (!kProIncluded) ...[
+                    const SizedBox(width: 6),
+                    const Text('PRO', style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFFFD700),
+                    )),
+                  ],
                 ])),
-            PopupMenuItem(
-                value: 'premium',
-                child: Row(children: [
-                  Icon(Icons.workspace_premium, size: 18, color: Color(0xFFFFD700)),
-                  SizedBox(width: 10),
-                  Text('CryptKeep Pro'),
-                ])),
-            PopupMenuDivider(),
-            PopupMenuItem(
+            if (!kProIncluded)
+              const PopupMenuItem(
+                  value: 'premium',
+                  child: Row(children: [
+                    Icon(Icons.workspace_premium, size: 18, color: Color(0xFFFFD700)),
+                    SizedBox(width: 10),
+                    Text('CryptKeep Pro'),
+                  ])),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
                 value: 'settings',
                 child: Row(children: [
                   Icon(Icons.settings_outlined, size: 18),
                   SizedBox(width: 10),
                   Text('Settings'),
                 ])),
-            PopupMenuDivider(),
-            PopupMenuItem(
+            const PopupMenuDivider(),
+            const PopupMenuItem(
                 value: 'signout',
                 child: Row(children: [
                   Icon(Icons.logout, size: 18),

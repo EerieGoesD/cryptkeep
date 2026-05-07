@@ -27,12 +27,14 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
   static const _lower = 'abcdefghijklmnopqrstuvwxyz';
   static const _digits = '0123456789';
   static const _symbols = '!@#\$%^&*()-_=+[]{}|;:,.<>?';
+  static const _ambiguous = 'Il1O0';
 
   int _length = 20;
   bool _useUpper = true;
   bool _useLower = true;
   bool _useDigits = true;
   bool _useSymbols = true;
+  bool _excludeAmbiguous = false;
   String _password = '';
 
   @override
@@ -42,12 +44,16 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
   }
 
   void _generate() {
-    final charset = [
+    var charset = [
       if (_useUpper) _upper,
       if (_useLower) _lower,
       if (_useDigits) _digits,
       if (_useSymbols) _symbols,
     ].join();
+
+    if (_excludeAmbiguous) {
+      charset = charset.split('').where((c) => !_ambiguous.contains(c)).join();
+    }
 
     if (charset.isEmpty) {
       setState(() => _password = '');
@@ -155,6 +161,10 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
             }),
             _toggle('Symbols (!@#…)', _useSymbols, (v) {
               setState(() => _useSymbols = v);
+              _generate();
+            }),
+            _toggle('Exclude ambiguous (I, l, 1, O, 0)', _excludeAmbiguous, (v) {
+              setState(() => _excludeAmbiguous = v);
               _generate();
             }),
           ],
