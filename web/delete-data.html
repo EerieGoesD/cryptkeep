@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="CryptKeep account deletion instructions and zero-knowledge data handling details.">
-  <title>CryptKeep Account Deletion</title>
+  <meta name="description" content="CryptKeep data deletion instructions for vault entries, categories, and zero-knowledge encrypted data.">
+  <title>CryptKeep Data Deletion</title>
   <style>
     :root {
       color-scheme: dark;
@@ -13,7 +13,6 @@
       --card: #1A1A2E;
       --line: #2A2A3E;
       --primary: #8B5CF6;
-      --primary-strong: #6D28D9;
       --text: #E2E8F0;
       --muted: #94A3B8;
       --danger: #F87171;
@@ -106,14 +105,14 @@
 
     h1 {
       margin: 0;
-      max-width: 720px;
+      max-width: 760px;
       font-size: 44px;
       line-height: 1.08;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 720px;
+      max-width: 760px;
       margin: 18px 0 0;
       color: var(--muted);
       font-size: 17px;
@@ -278,77 +277,97 @@
       </a>
       <nav class="nav" aria-label="Support links">
         <a href="/cryptkeep/">App</a>
-        <a href="/cryptkeep/delete-data.html">Data deletion</a>
+        <a href="/cryptkeep/delete-account.html">Account deletion</a>
         <a href="https://eeriegoesd.com/privacy-policy/cryptkeep/">Privacy Policy</a>
-        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Account%20Deletion">Contact</a>
+        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Data%20Deletion">Contact</a>
       </nav>
     </header>
 
     <section class="hero">
       <div>
-        <p class="eyebrow">Account deletion</p>
-        <h1>Delete your CryptKeep account and encrypted vault data.</h1>
+        <p class="eyebrow">Data deletion</p>
+        <h1>Delete selected CryptKeep vault data without deleting your account.</h1>
         <p class="lead">
-          CryptKeep is built as a zero-knowledge password manager. Your vault entries
-          are encrypted on your device before they are stored or synced. CryptKeep
-          cannot read, recover, inspect, or export the plaintext contents of your vault.
+          CryptKeep lets you delete individual vault entries and categories while
+          keeping your account active. Vault data is encrypted on your device before
+          sync, so CryptKeep cannot read the plaintext contents of deleted or active
+          vault records.
         </p>
       </div>
 
-      <aside class="status-card" aria-label="Security summary">
-        <p class="status-row"><span class="dot"></span><span>Vault entries are encrypted client-side before sync.</span></p>
-        <p class="status-row"><span class="dot"></span><span>The master password is not sent to CryptKeep.</span></p>
-        <p class="status-row"><span class="dot purple"></span><span>Account deletion removes the account and encrypted vault records.</span></p>
+      <aside class="status-card" aria-label="Data deletion summary">
+        <p class="status-row"><span class="dot"></span><span>Entries can be deleted individually or in bulk.</span></p>
+        <p class="status-row"><span class="dot"></span><span>Categories can be deleted separately from entries.</span></p>
+        <p class="status-row"><span class="dot purple"></span><span>Your account remains active unless you request account deletion.</span></p>
       </aside>
     </section>
 
     <section class="section">
-      <h2>Delete your account in CryptKeep</h2>
+      <h2>Delete vault entries in the app</h2>
       <ol>
         <li>Open CryptKeep and sign in.</li>
-        <li>Go to <strong>Settings</strong>.</li>
-        <li>Select <strong>Delete account</strong> in the Danger Zone section.</li>
-        <li>Confirm the deletion with your master password.</li>
+        <li>Open your vault.</li>
+        <li>To delete one entry, open the entry menu and choose <strong>Delete</strong>.</li>
+        <li>To delete multiple entries, long-press an entry to enter selection mode, select the entries, then use the delete icon.</li>
       </ol>
       <div class="callout danger">
-        <strong>This action is permanent.</strong> After deletion, your CryptKeep account
-        and encrypted vault records cannot be restored by CryptKeep.
+        Deleted vault entries cannot be restored by CryptKeep.
       </div>
     </section>
 
     <section class="section">
-      <h2>If you cannot access the app</h2>
+      <h2>Delete categories in the app</h2>
+      <ol>
+        <li>Open CryptKeep and sign in.</li>
+        <li>Open the vault menu and choose <strong>Manage Categories</strong>.</li>
+        <li>Select the delete icon next to the category you want to remove.</li>
+      </ol>
       <p>
-        Send an account deletion request to
-        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Account%20Deletion">eeriegoesd@gmail.com</a>
-        from the email address connected to your CryptKeep account. Include
-        <strong>CryptKeep account deletion</strong> in the subject or message.
-      </p>
-      <p>
-        Email deletion requests are used as a backup path for users who cannot open
-        the app or reach the in-app deletion control.
+        Deleting a category does not delete the entries in that category. The entries
+        remain in your vault and become uncategorized.
       </p>
     </section>
 
     <section class="section">
-      <h2>What CryptKeep deletes</h2>
+      <h2>Request data deletion by email</h2>
+      <p>
+        If you cannot access the app, send a data deletion request to
+        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Data%20Deletion">eeriegoesd@gmail.com</a>
+        from the email address connected to your CryptKeep account. Include
+        <strong>CryptKeep data deletion</strong> in the subject or message.
+      </p>
+      <p>
+        Because vault records are zero-knowledge encrypted, CryptKeep cannot inspect
+        readable entry names, usernames, passwords, notes, or categories on your
+        behalf. For specific item deletion, the in-app controls are the most precise
+        method. By email, you can request deletion of broad data groups such as all
+        encrypted vault entries, all encrypted categories, or your full account.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What can be deleted without deleting the account</h2>
       <div class="grid">
         <div class="panel">
-          <h3>Account data</h3>
+          <h3>Encrypted vault entries</h3>
           <p>
-            Your CryptKeep account is deleted, including the account identity used
-            to sign in to the app.
+            Saved passwords, usernames, URLs, notes, and related entry fields are
+            stored as encrypted vault records and can be deleted from the vault.
           </p>
         </div>
         <div class="panel">
-          <h3>Encrypted vault records</h3>
+          <h3>Encrypted categories</h3>
           <p>
-            Saved vault entries and categories stored by CryptKeep are deleted from
-            the server. These records are stored as encrypted data, not readable
-            plaintext.
+            Category names are encrypted before storage and can be deleted separately
+            from the entries assigned to them.
           </p>
         </div>
       </div>
+      <p class="callout">
+        Partial data deletion does not delete your CryptKeep account, sign-in identity,
+        or subscription status. To delete the account and associated vault data, use
+        the <a href="/cryptkeep/delete-account.html">account deletion page</a>.
+      </p>
     </section>
 
     <section class="section">
@@ -362,22 +381,21 @@
         <li>CryptKeep derives a separate authentication password for sign-in, so the master password itself is not transmitted.</li>
         <li>Your vault encryption key is derived locally with PBKDF2-SHA256 and a cryptographically random salt.</li>
         <li>Vault entries are encrypted before storage using AES-256-GCM with a random nonce.</li>
-        <li>Category names are also encrypted before they are stored.</li>
+        <li>Category names are encrypted before they are stored.</li>
       </ul>
       <div class="callout">
-        Because CryptKeep does not have your master password or vault encryption key,
-        it cannot decrypt your saved passwords, notes, usernames, categories, or
-        other vault fields.
+        CryptKeep cannot decrypt or read your saved passwords, notes, usernames,
+        categories, or other vault fields.
       </div>
     </section>
 
     <section class="section">
       <h2>Records outside the encrypted vault</h2>
       <p>
-        Account deletion is for your CryptKeep account and encrypted vault data.
-        Some non-vault operational records can exist outside the encrypted vault,
-        such as support emails you send, authentication/security logs, and
-        subscription or payment records handled by an app store or payment provider.
+        Partial data deletion is for encrypted vault entries and categories. Some
+        non-vault operational records can exist outside the encrypted vault, such as
+        support emails you send, authentication/security logs, and subscription or
+        payment records handled by an app store or payment provider.
       </p>
       <p>
         These records do not contain decrypted vault entries. They may be kept only
