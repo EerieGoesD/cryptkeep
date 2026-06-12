@@ -3,99 +3,391 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CryptKeep account deletion instructions and zero-knowledge data handling details.">
   <title>CryptKeep Account Deletion</title>
   <style>
     :root {
       color-scheme: dark;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f1220;
-      color: #f4f7fb;
+      --bg: #0A0A12;
+      --surface: #12121E;
+      --card: #1A1A2E;
+      --line: #2A2A3E;
+      --primary: #8B5CF6;
+      --primary-strong: #6D28D9;
+      --text: #E2E8F0;
+      --muted: #94A3B8;
+      --danger: #F87171;
+      --success: #34D399;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: #0f1220;
-    }
-
-    main {
-      width: min(760px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 56px 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.6;
     }
 
-    h1 {
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 650;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    .shell {
+      width: min(1040px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 0 36px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+      gap: 28px;
+      align-items: stretch;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
       margin: 0 0 12px;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.1;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 720px;
+      font-size: 44px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .status-card {
+      align-self: start;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    .status-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      flex: 0 0 9px;
+      margin-top: 7px;
+      border-radius: 999px;
+      background: var(--success);
+    }
+
+    .dot.purple {
+      background: var(--primary);
+    }
+
+    .section {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
     }
 
     h2 {
-      margin-top: 32px;
-      color: #8fe3cf;
+      margin: 0 0 14px;
+      color: var(--text);
+      font-size: 24px;
+      line-height: 1.25;
+      letter-spacing: 0;
     }
 
-    a {
-      color: #8fe3cf;
+    h3 {
+      margin: 24px 0 8px;
+      color: var(--text);
+      font-size: 17px;
+      letter-spacing: 0;
     }
 
-    .muted {
-      color: #b7c0d8;
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    ul,
+    ol {
+      margin: 12px 0 0;
+      padding-left: 22px;
+      color: var(--muted);
+    }
+
+    li {
+      margin: 8px 0;
+    }
+
+    strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
     }
 
     .panel {
-      margin-top: 24px;
-      padding: 20px;
-      border: 1px solid #2a3150;
+      padding: 18px;
+      border: 1px solid var(--line);
       border-radius: 8px;
-      background: #151a2d;
+      background: var(--surface);
+    }
+
+    .panel h3 {
+      margin-top: 0;
+    }
+
+    .callout {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      border-radius: 8px;
+      background: rgba(139, 92, 246, 0.10);
+      color: var(--text);
+    }
+
+    .danger {
+      border-color: rgba(248, 113, 113, 0.45);
+      background: rgba(248, 113, 113, 0.08);
+    }
+
+    .footer {
+      padding-top: 28px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 28px, 1040px);
+        padding-top: 18px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-bottom: 28px;
+      }
+
+      .nav {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .hero,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .lead {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>CryptKeep Account Deletion</h1>
-    <p class="muted">
-      This page explains how CryptKeep users can request deletion of their account
-      and associated app data.
-    </p>
+  <main class="shell">
+    <header class="topbar" aria-label="CryptKeep">
+      <a class="brand" href="/cryptkeep/">
+        <img src="icons/Icon-192.png" alt="" width="36" height="36">
+        <span>CryptKeep</span>
+      </a>
+      <nav class="nav" aria-label="Support links">
+        <a href="/cryptkeep/">App</a>
+        <a href="https://eeriegoesd.com/privacy-policy/cryptkeep/">Privacy Policy</a>
+        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Account%20Deletion">Contact</a>
+      </nav>
+    </header>
 
-    <h2>Delete your account in the app</h2>
-    <p>
-      Open CryptKeep, sign in, go to <strong>Settings</strong>, then choose
-      <strong>Delete Account</strong>. You will be asked to confirm with your
-      master password. This permanently deletes your CryptKeep account and vault
-      data from the server.
-    </p>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Account deletion</p>
+        <h1>Delete your CryptKeep account and encrypted vault data.</h1>
+        <p class="lead">
+          CryptKeep is built as a zero-knowledge password manager. Your vault entries
+          are encrypted on your device before they are stored or synced. CryptKeep
+          cannot read, recover, inspect, or export the plaintext contents of your vault.
+        </p>
+      </div>
 
-    <h2>Request deletion by email</h2>
-    <p>
-      If you cannot access the app, email
-      <a href="mailto:eeriegoesd@gmail.com">eeriegoesd@gmail.com</a> from the
-      email address connected to your CryptKeep account and request account
-      deletion. Include the app name, CryptKeep, in the message.
-    </p>
+      <aside class="status-card" aria-label="Security summary">
+        <p class="status-row"><span class="dot"></span><span>Vault entries are encrypted client-side before sync.</span></p>
+        <p class="status-row"><span class="dot"></span><span>The master password is not sent to CryptKeep.</span></p>
+        <p class="status-row"><span class="dot purple"></span><span>Account deletion removes the account and encrypted vault records.</span></p>
+      </aside>
+    </section>
 
-    <div class="panel">
-      <h2>What is deleted</h2>
+    <section class="section">
+      <h2>Delete your account in CryptKeep</h2>
+      <ol>
+        <li>Open CryptKeep and sign in.</li>
+        <li>Go to <strong>Settings</strong>.</li>
+        <li>Select <strong>Delete account</strong> in the Danger Zone section.</li>
+        <li>Confirm the deletion with your master password.</li>
+      </ol>
+      <div class="callout danger">
+        <strong>This action is permanent.</strong> After deletion, your CryptKeep account
+        and encrypted vault records cannot be restored by CryptKeep.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>If you cannot access the app</h2>
       <p>
-        Account deletion removes your CryptKeep account and associated encrypted
-        vault data, including saved vault entries and categories stored by
-        CryptKeep.
+        Send an account deletion request to
+        <a href="mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Account%20Deletion">eeriegoesd@gmail.com</a>
+        from the email address connected to your CryptKeep account. Include
+        <strong>CryptKeep account deletion</strong> in the subject or message.
       </p>
-
-      <h2>What may be kept</h2>
       <p>
-        Some records may be retained only when required for legal, security,
-        fraud-prevention, payment, tax, dispute, or compliance purposes.
-        Retained records are kept only for the required retention period.
+        Email deletion requests are used as a backup path for users who cannot open
+        the app or reach the in-app deletion control.
       </p>
-    </div>
+    </section>
 
-    <p class="muted">
-      Last updated: June 12, 2026.
-    </p>
+    <section class="section">
+      <h2>What CryptKeep deletes</h2>
+      <div class="grid">
+        <div class="panel">
+          <h3>Account data</h3>
+          <p>
+            Your CryptKeep account is deleted, including the account identity used
+            to sign in to the app.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Encrypted vault records</h3>
+          <p>
+            Saved vault entries and categories stored by CryptKeep are deleted from
+            the server. These records are stored as encrypted data, not readable
+            plaintext.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Zero-knowledge security model</h2>
+      <p>
+        CryptKeep is designed so the server does not receive your readable vault
+        contents or your master password.
+      </p>
+      <ul>
+        <li>Your master password is used locally on your device.</li>
+        <li>CryptKeep derives a separate authentication password for sign-in, so the master password itself is not transmitted.</li>
+        <li>Your vault encryption key is derived locally with PBKDF2-SHA256 and a cryptographically random salt.</li>
+        <li>Vault entries are encrypted before storage using AES-256-GCM with a random nonce.</li>
+        <li>Category names are also encrypted before they are stored.</li>
+      </ul>
+      <div class="callout">
+        Because CryptKeep does not have your master password or vault encryption key,
+        it cannot decrypt your saved passwords, notes, usernames, categories, or
+        other vault fields.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Records outside the encrypted vault</h2>
+      <p>
+        Account deletion is for your CryptKeep account and encrypted vault data.
+        Some non-vault operational records can exist outside the encrypted vault,
+        such as support emails you send, authentication/security logs, and
+        subscription or payment records handled by an app store or payment provider.
+      </p>
+      <p>
+        These records do not contain decrypted vault entries. They may be kept only
+        when needed for account security, abuse prevention, payment history,
+        chargebacks, tax, legal, or compliance reasons.
+      </p>
+    </section>
+
+    <footer class="footer">
+      Last updated: June 12, 2026
+    </footer>
   </main>
 </body>
 </html>
