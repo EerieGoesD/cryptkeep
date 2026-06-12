@@ -12,3 +12,5 @@ class SupabaseConfig {
 // Set with --dart-define=PRO_INCLUDED=true to ship a Pro-bundled build
 // (e.g. Microsoft Store paid version). Skips Stripe checkout entirely.
 const bool kProIncluded = bool.fromEnvironment('PRO_INCLUDED', defaultValue: false);
+
+const String kAuthRedirectUrl = 'https://eeriegoesd.com/cryptkeep/';

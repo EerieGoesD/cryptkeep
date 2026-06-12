@@ -15,7 +15,9 @@ import 'mfa_verify_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? initialNotice;
+
+  const LoginScreen({super.key, this.initialNotice});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -36,6 +38,20 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final notice = widget.initialNotice;
+    if (notice != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(notice)),
+        );
+      });
+    }
   }
 
   Future<void> _login() async {

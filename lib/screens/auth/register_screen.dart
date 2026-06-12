@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
+import '../../config.dart';
 import '../../services/crypto_service.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -71,6 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await supabase.auth.signUp(
         email: email,
         password: authPassword,
+        emailRedirectTo: kAuthRedirectUrl,
         data: {
           'crypto_salt': base64.encode(salt),
           'key_check': keyCheck,
