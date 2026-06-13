@@ -1,6 +1,10 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:async';
+
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
@@ -14,10 +18,27 @@ class PremiumScreen extends StatefulWidget {
   State<PremiumScreen> createState() => _PremiumScreenState();
 }
 
-class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserver {
+class _PremiumScreenState extends State<PremiumScreen>
+    with WidgetsBindingObserver {
+  static const _googlePlayProductId = 'cryptkeep_pro_monthly';
+  static const _googlePlayPackageName = 'com.eerie.cryptkeep';
+  static const _stripeCheckoutBaseUrl =
+      'https://buy.stripe.com/14A3cwgAc0Jc96K8X2cQU00';
+
   bool _isPremium = false;
   bool _checking = false;
   bool _openingPortal = false;
+  bool _billingAvailable = false;
+  bool _loadingBilling = false;
+  bool _purchasePending = false;
+  ProductDetails? _googlePlayProduct;
+  StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
+  String? _billingMessage;
+
+  bool get _usesGooglePlayBilling =>
+      !kIsWeb &&
+      defaultTargetPlatform == TargetPlatform.android &&
+      !kProIncluded;
 
   static const _features = [
     (
@@ -42,11 +63,15 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _isPremium = PremiumService.isPremium();
+    if (_usesGooglePlayBilling) {
+      _initGooglePlayBilling();
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _purchaseSubscription?.cancel();
     super.dispose();
   }
 
@@ -54,6 +79,81 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _refreshStatus();
+    }
+  }
+
+  Future<void> _initGooglePlayBilling() async {
+    setState(() {
+      _loadingBilling = true;
+      _billingMessage = null;
+    });
+
+    _purchaseSubscription = InAppPurchase.instance.purchaseStream.listen(
+      _handlePurchaseUpdates,
+      onError: (Object error) {
+        if (!mounted) return;
+        setState(() {
+          _purchasePending = false;
+          _billingMessage = 'Purchase update failed. Please try again.';
+        });
+        debugPrint('Google Play purchase stream error: $error');
+      },
+    );
+
+    try {
+      final available = await InAppPurchase.instance.isAvailable();
+      if (!mounted) return;
+
+      if (!available) {
+        setState(() {
+          _billingAvailable = false;
+          _loadingBilling = false;
+          _billingMessage =
+              'Google Play Billing is not available on this device.';
+        });
+        return;
+      }
+
+      final response = await InAppPurchase.instance.queryProductDetails({
+        _googlePlayProductId,
+      });
+      if (!mounted) return;
+
+      if (response.error != null) {
+        setState(() {
+          _billingAvailable = false;
+          _loadingBilling = false;
+          _billingMessage = 'Could not load Google Play subscription details.';
+        });
+        debugPrint('Google Play product query error: ${response.error}');
+        return;
+      }
+
+      if (response.productDetails.isEmpty ||
+          response.notFoundIDs.contains(_googlePlayProductId)) {
+        setState(() {
+          _billingAvailable = false;
+          _loadingBilling = false;
+          _billingMessage = 'Google Play subscription is not active yet.';
+        });
+        return;
+      }
+
+      setState(() {
+        _billingAvailable = true;
+        _loadingBilling = false;
+        _googlePlayProduct = response.productDetails.first;
+      });
+
+      await InAppPurchase.instance.restorePurchases();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _billingAvailable = false;
+        _loadingBilling = false;
+        _billingMessage = 'Could not initialize Google Play Billing.';
+      });
+      debugPrint('Google Play billing init error: $e');
     }
   }
 
@@ -66,6 +166,9 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
       final nowPremium = PremiumService.isPremium();
       if (nowPremium != _isPremium) {
         setState(() => _isPremium = nowPremium);
+      }
+      if (_usesGooglePlayBilling) {
+        await InAppPurchase.instance.restorePurchases();
       }
     } finally {
       if (mounted) setState(() => _checking = false);
@@ -102,6 +205,211 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
     });
   }
 
+  Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
+    for (final purchase in purchases) {
+      if (purchase.productID != _googlePlayProductId) continue;
+
+      switch (purchase.status) {
+        case PurchaseStatus.pending:
+          if (mounted) {
+            setState(() {
+              _purchasePending = true;
+              _billingMessage = 'Purchase is pending in Google Play.';
+            });
+          }
+          break;
+        case PurchaseStatus.purchased:
+        case PurchaseStatus.restored:
+          try {
+            await _grantGooglePlayPremium(purchase);
+            if (purchase.pendingCompletePurchase) {
+              await InAppPurchase.instance.completePurchase(purchase);
+            }
+            if (!mounted) return;
+            setState(() {
+              _isPremium = true;
+              _purchasePending = false;
+              _billingMessage = null;
+            });
+          } catch (e) {
+            if (!mounted) return;
+            setState(() {
+              _purchasePending = false;
+              _billingMessage =
+                  'Subscription was purchased, but Pro activation failed.';
+            });
+            debugPrint('Google Play premium grant error: $e');
+          }
+          break;
+        case PurchaseStatus.error:
+          if (mounted) {
+            setState(() {
+              _purchasePending = false;
+              _billingMessage =
+                  purchase.error?.message ?? 'Google Play purchase failed.';
+            });
+          }
+          break;
+        case PurchaseStatus.canceled:
+          if (mounted) {
+            setState(() {
+              _purchasePending = false;
+              _billingMessage = 'Purchase canceled.';
+            });
+          }
+          break;
+      }
+    }
+  }
+
+  Future<void> _grantGooglePlayPremium(PurchaseDetails purchase) async {
+    final metadata = Map<String, dynamic>.from(
+      supabase.auth.currentUser?.userMetadata ?? {},
+    );
+    final premiumUntil = DateTime.now()
+        .toUtc()
+        .add(const Duration(days: 32))
+        .toIso8601String();
+
+    // TODO: move this entitlement write behind server-side Google Play token
+    // verification before production launch.
+    metadata
+      ..['premium_until'] = premiumUntil
+      ..['premium_source'] = 'google_play'
+      ..['premium_product_id'] = purchase.productID;
+
+    await supabase.auth.updateUser(UserAttributes(data: metadata));
+    await supabase.auth.refreshSession();
+  }
+
+  Future<void> _buyGooglePlaySubscription() async {
+    final product = _googlePlayProduct;
+    if (!_billingAvailable || product == null || _purchasePending) return;
+
+    setState(() {
+      _purchasePending = true;
+      _billingMessage = null;
+    });
+
+    try {
+      final purchaseParam = PurchaseParam(productDetails: product);
+      final started = await InAppPurchase.instance.buyNonConsumable(
+        purchaseParam: purchaseParam,
+      );
+      if (!started && mounted) {
+        setState(() {
+          _purchasePending = false;
+          _billingMessage = 'Google Play purchase could not be started.';
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _purchasePending = false;
+        _billingMessage = 'Google Play purchase could not be started.';
+      });
+      debugPrint('Google Play buy error: $e');
+    }
+  }
+
+  Future<void> _restoreGooglePlayPurchase() async {
+    if (_purchasePending) return;
+    setState(() {
+      _checking = true;
+      _billingMessage = 'Checking Google Play subscriptions...';
+    });
+    try {
+      await InAppPurchase.instance.restorePurchases();
+    } catch (e) {
+      if (!mounted) return;
+      setState(
+        () => _billingMessage = 'Could not restore Google Play purchases.',
+      );
+      debugPrint('Google Play restore error: $e');
+    } finally {
+      if (mounted) setState(() => _checking = false);
+    }
+  }
+
+  Future<void> _openStripeCheckout() async {
+    final email = supabase.auth.currentUser?.email ?? '';
+    final url = Uri.parse(
+      '$_stripeCheckoutBaseUrl?prefilled_email=${Uri.encodeComponent(email)}',
+    );
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+    _startPolling();
+  }
+
+  Future<void> _openSubscriptionManagement() async {
+    if (_openingPortal) return;
+    setState(() => _openingPortal = true);
+
+    try {
+      if (_usesGooglePlayBilling) {
+        final url = Uri.parse(
+          'https://play.google.com/store/account/subscriptions'
+          '?sku=$_googlePlayProductId&package=$_googlePlayPackageName',
+        );
+        final fallback = Uri.parse(
+          'https://play.google.com/store/account/subscriptions',
+        );
+        final opened = await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        );
+        if (!opened) {
+          await launchUrl(fallback, mode: LaunchMode.externalApplication);
+        }
+      } else {
+        final email = supabase.auth.currentUser?.email;
+        if (email == null) return;
+        final response = await supabase.functions.invoke(
+          'manage-subscription',
+          body: {'email': email},
+        );
+        final url = response.data['url'];
+        if (url != null) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        } else if (mounted) {
+          setState(
+            () => _billingMessage =
+                'No subscription portal is available for this account.',
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(
+          () => _billingMessage = 'Could not open subscription management.',
+        );
+      }
+      debugPrint('Manage subscription error: $e');
+    } finally {
+      if (mounted) setState(() => _openingPortal = false);
+    }
+  }
+
+  String get _priceText {
+    if (_usesGooglePlayBilling) {
+      return _googlePlayProduct?.price ?? 'CryptKeep Pro';
+    }
+    return '\$3 / month';
+  }
+
+  String get _subscribeButtonText {
+    if (_purchasePending) return 'Processing...';
+    if (_loadingBilling) return 'Loading...';
+    return 'Subscribe';
+  }
+
+  bool get _canSubscribe {
+    if (_purchasePending || _loadingBilling) return false;
+    if (_usesGooglePlayBilling) {
+      return _billingAvailable && _googlePlayProduct != null;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,24 +436,43 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                 kProIncluded
                     ? 'Pro is included with your Microsoft Store purchase.'
                     : _isPremium
-                        ? 'You have an active Pro subscription.'
-                        : 'Unlock premium features to keep your vault secure.',
+                    ? 'You have an active Pro subscription.'
+                    : 'Unlock premium features to keep your vault secure.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Color(0xFF94A3B8)),
               ),
-              if (_checking) ...[
+              if (_checking || _purchasePending) ...[
                 const SizedBox(height: 20),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 16, height: 16,
+                    const SizedBox(
+                      width: 16,
+                      height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    SizedBox(width: 10),
-                    Text('Waiting for payment confirmation...',
-                        style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+                    const SizedBox(width: 10),
+                    Text(
+                      _purchasePending
+                          ? 'Waiting for Google Play...'
+                          : 'Checking subscription...',
+                      style: const TextStyle(
+                        color: Color(0xFF94A3B8),
+                        fontSize: 13,
+                      ),
+                    ),
                   ],
+                ),
+              ],
+              if (_billingMessage != null) ...[
+                const SizedBox(height: 14),
+                Text(
+                  _billingMessage!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFFFBBF24),
+                    fontSize: 13,
+                  ),
                 ),
               ],
               const SizedBox(height: 28),
@@ -164,29 +491,47 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFF8B5CF6,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(f.icon, color: const Color(0xFF8B5CF6), size: 22),
+                        child: Icon(
+                          f.icon,
+                          color: const Color(0xFF8B5CF6),
+                          size: 22,
+                        ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(f.title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14)),
+                            Text(
+                              f.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
                             const SizedBox(height: 2),
-                            Text(f.desc,
-                                style: const TextStyle(
-                                    color: Color(0xFF94A3B8), fontSize: 12)),
+                            Text(
+                              f.desc,
+                              style: const TextStyle(
+                                color: Color(0xFF94A3B8),
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       if (_isPremium)
-                        const Icon(Icons.check_circle, color: Color(0xFF22C55E), size: 20),
+                        const Icon(
+                          Icons.check_circle,
+                          color: Color(0xFF22C55E),
+                          size: 20,
+                        ),
                     ],
                   ),
                 );
@@ -194,85 +539,80 @@ class _PremiumScreenState extends State<PremiumScreen> with WidgetsBindingObserv
               const SizedBox(height: 24),
               if (_isPremium && !kProIncluded) ...[
                 ElevatedButton.icon(
-                  onPressed: () async {
-                    if (_openingPortal) return;
-                    setState(() => _openingPortal = true);
-                    final email = supabase.auth.currentUser?.email;
-                    if (email == null) {
-                      setState(() => _openingPortal = false);
-                      return;
-                    }
-                    try {
-                      final response = await supabase.functions.invoke(
-                        'manage-subscription',
-                        body: {'email': email},
-                      );
-                      final url = response.data['url'];
-                      if (url != null) {
-                        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                      }
-                    } catch (e) {
-                      debugPrint('Manage subscription error: $e');
-                    }
-                    if (mounted) setState(() => _openingPortal = false);
-                  },
+                  onPressed: _openingPortal
+                      ? null
+                      : _openSubscriptionManagement,
                   icon: _openingPortal
-                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(Icons.settings, size: 18),
-                  label: Text(_openingPortal ? 'Opening...' : 'Manage Subscription'),
+                  label: Text(
+                    _openingPortal ? 'Opening...' : 'Manage Subscription',
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2A2A3E),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Cancel, resume, or update payment method',
+                Text(
+                  _usesGooglePlayBilling
+                      ? 'Managed through Google Play'
+                      : 'Cancel, resume, or update payment method',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                  style: const TextStyle(
+                    color: Color(0xFF94A3B8),
+                    fontSize: 12,
+                  ),
                 ),
               ],
               if (!_isPremium && !kProIncluded) ...[
-                const Text(
-                  '\$3 / month',
+                Text(
+                  _priceText,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF8B5CF6),
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Cancel anytime',
+                Text(
+                  _usesGooglePlayBilling
+                      ? 'Billed monthly through Google Play'
+                      : 'Cancel anytime',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                  style: const TextStyle(
+                    color: Color(0xFF94A3B8),
+                    fontSize: 13,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () async {
-                    final email = supabase.auth.currentUser?.email ?? '';
-                    final url =
-                      'https://buy.stripe.com/14A3cwgAc0Jc96K8X2cQU00'
-                      '?prefilled_email=${Uri.encodeComponent(email)}';
-
-                    if (!kIsWeb && Theme.of(context).platform == TargetPlatform.android) {
-                      // Use Google Play External Offers API on Android
-                      try {
-                        const channel = MethodChannel('com.eerie.cryptkeep/external_offers');
-                        await channel.invokeMethod('launchExternalOffer', {'url': url});
-                      } catch (_) {
-                        // Fallback to direct URL if external offers unavailable
-                        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                      }
-                    } else {
-                      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                    }
-                    _startPolling();
-                  },
-                  child: const Text('Subscribe'),
+                  onPressed: _canSubscribe
+                      ? (_usesGooglePlayBilling
+                            ? _buyGooglePlaySubscription
+                            : _openStripeCheckout)
+                      : null,
+                  child: Text(_subscribeButtonText),
                 ),
+                if (_usesGooglePlayBilling) ...[
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: _checking ? null : _restoreGooglePlayPurchase,
+                    child: const Text('Restore Google Play purchase'),
+                  ),
+                ],
               ],
             ],
           ),

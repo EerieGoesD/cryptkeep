@@ -61,10 +61,6 @@ android {
     }
 }
 
-dependencies {
-    implementation("com.android.billingclient:billing:8.2.1")
-}
-
 flutter {
     source = "../.."
 }

@@ -2,7 +2,7 @@ name: cryptkeep
 description: "CryptKeep — zero-knowledge password manager by EERIE"
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ^3.11.1
@@ -22,6 +22,7 @@ dependencies:
   qr_flutter: ^4.1.0
   crypto: ^3.0.3
   webcrypto: ^0.6.0
+  in_app_purchase: ^3.3.0
 
 dev_dependencies:
   flutter_test:
