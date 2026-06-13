@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
@@ -31,6 +30,8 @@ class _PremiumScreenState extends State<PremiumScreen>
   bool _billingAvailable = false;
   bool _loadingBilling = false;
   bool _purchasePending = false;
+  int _restoreAttempt = 0;
+  bool _restoreMatchedPurchase = false;
   ProductDetails? _googlePlayProduct;
   StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
   String? _billingMessage;
@@ -208,6 +209,7 @@ class _PremiumScreenState extends State<PremiumScreen>
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
       if (purchase.productID != _googlePlayProductId) continue;
+      _restoreMatchedPurchase = true;
 
       switch (purchase.status) {
         case PurchaseStatus.pending:
@@ -221,16 +223,24 @@ class _PremiumScreenState extends State<PremiumScreen>
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
           try {
-            await _grantGooglePlayPremium(purchase);
-            if (purchase.pendingCompletePurchase) {
+            final active = await _verifyGooglePlayPremium(purchase);
+            if (active && purchase.pendingCompletePurchase) {
               await InAppPurchase.instance.completePurchase(purchase);
             }
             if (!mounted) return;
-            setState(() {
-              _isPremium = true;
-              _purchasePending = false;
-              _billingMessage = null;
-            });
+            if (active) {
+              setState(() {
+                _isPremium = true;
+                _purchasePending = false;
+                _billingMessage = null;
+              });
+            } else {
+              setState(() {
+                _purchasePending = false;
+                _billingMessage =
+                    'No active Google Play subscription was found for this account.';
+              });
+            }
           } catch (e) {
             if (!mounted) return;
             setState(() {
@@ -262,24 +272,28 @@ class _PremiumScreenState extends State<PremiumScreen>
     }
   }
 
-  Future<void> _grantGooglePlayPremium(PurchaseDetails purchase) async {
-    final metadata = Map<String, dynamic>.from(
-      supabase.auth.currentUser?.userMetadata ?? {},
+  Future<bool> _verifyGooglePlayPremium(PurchaseDetails purchase) async {
+    final purchaseToken = purchase.verificationData.serverVerificationData;
+    if (purchaseToken.isEmpty) {
+      throw StateError('Missing Google Play purchase token');
+    }
+
+    final response = await supabase.functions.invoke(
+      'verify-google-play-purchase',
+      body: {
+        'packageName': _googlePlayPackageName,
+        'productId': _googlePlayProductId,
+        'purchaseToken': purchaseToken,
+      },
     );
-    final premiumUntil = DateTime.now()
-        .toUtc()
-        .add(const Duration(days: 32))
-        .toIso8601String();
 
-    // TODO: move this entitlement write behind server-side Google Play token
-    // verification before production launch.
-    metadata
-      ..['premium_until'] = premiumUntil
-      ..['premium_source'] = 'google_play'
-      ..['premium_product_id'] = purchase.productID;
+    final data = response.data;
+    if (data is! Map || data['active'] != true) {
+      return false;
+    }
 
-    await supabase.auth.updateUser(UserAttributes(data: metadata));
     await supabase.auth.refreshSession();
+    return true;
   }
 
   Future<void> _buyGooglePlaySubscription() async {
@@ -314,12 +328,22 @@ class _PremiumScreenState extends State<PremiumScreen>
 
   Future<void> _restoreGooglePlayPurchase() async {
     if (_purchasePending) return;
+    final attempt = ++_restoreAttempt;
+    _restoreMatchedPurchase = false;
     setState(() {
       _checking = true;
       _billingMessage = 'Checking Google Play subscriptions...';
     });
     try {
       await InAppPurchase.instance.restorePurchases();
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted || attempt != _restoreAttempt) return;
+      if (!_isPremium && !_restoreMatchedPurchase && !_purchasePending) {
+        setState(
+          () => _billingMessage =
+              'No active Google Play subscription was found for this account.',
+        );
+      }
     } catch (e) {
       if (!mounted) return;
       setState(
@@ -327,7 +351,9 @@ class _PremiumScreenState extends State<PremiumScreen>
       );
       debugPrint('Google Play restore error: $e');
     } finally {
-      if (mounted) setState(() => _checking = false);
+      if (mounted && attempt == _restoreAttempt) {
+        setState(() => _checking = false);
+      }
     }
   }
 

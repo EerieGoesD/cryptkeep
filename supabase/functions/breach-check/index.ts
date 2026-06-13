@@ -35,8 +35,10 @@ Deno.serve(async (req) => {
     );
   }
 
-  // Check premium status server-side
-  const premiumUntil = user.user_metadata?.premium_until;
+  // Check premium status server-side. Google Play purchases are written to
+  // app_metadata; user_metadata remains a fallback for manual reviewer accounts.
+  const premiumUntil =
+    user.app_metadata?.premium_until ?? user.user_metadata?.premium_until;
   if (!premiumUntil || new Date(premiumUntil) <= new Date()) {
     return new Response(
       JSON.stringify({ error: "Pro subscription required" }),

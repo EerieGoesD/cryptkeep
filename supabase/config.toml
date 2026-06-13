@@ -420,3 +420,9 @@ verify_jwt = false
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/breach-check/*.html" ]
+
+[functions.verify-google-play-purchase]
+enabled = true
+verify_jwt = true
+import_map = "./functions/verify-google-play-purchase/deno.json"
+entrypoint = "./functions/verify-google-play-purchase/index.ts"
