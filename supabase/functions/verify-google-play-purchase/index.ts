@@ -64,12 +64,48 @@ function pemToArrayBuffer(pem: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+function decodeBase64Utf8(value: string): string {
+  const binary = atob(value);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+function parseServiceAccountJson(rawJson: string, source: string): GoogleServiceAccount {
+  let parsed: Partial<GoogleServiceAccount>;
+  try {
+    parsed = JSON.parse(rawJson) as Partial<GoogleServiceAccount>;
+  } catch {
+    throw new Error(`${source} is not valid JSON`);
+  }
+
+  if (
+    typeof parsed.client_email !== "string" ||
+    typeof parsed.private_key !== "string"
+  ) {
+    throw new Error(`${source} is missing client_email or private_key`);
+  }
+
+  return {
+    client_email: parsed.client_email,
+    private_key: parsed.private_key.replaceAll("\\n", "\n"),
+  };
+}
+
 function getServiceAccount(): GoogleServiceAccount {
+  const rawBase64Json = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64");
+  if (rawBase64Json) {
+    return parseServiceAccountJson(
+      decodeBase64Utf8(rawBase64Json),
+      "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_B64",
+    );
+  }
+
   const rawJson = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON");
   if (rawJson) {
-    const parsed = JSON.parse(rawJson) as GoogleServiceAccount;
-    parsed.private_key = parsed.private_key.replaceAll("\\n", "\n");
-    return parsed;
+    return parseServiceAccountJson(rawJson, "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON");
   }
 
   const clientEmail = Deno.env.get("GOOGLE_PLAY_SERVICE_ACCOUNT_EMAIL");
