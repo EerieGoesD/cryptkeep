@@ -138,7 +138,7 @@ class FaqScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // ── Buy Me a Coffee ──────────────────────────────────────────────
+          // ── Support This Project ─────────────────────────────────────────
           Center(
             child: OutlinedButton.icon(
               onPressed: () => launchUrl(
@@ -146,7 +146,7 @@ class FaqScreen extends StatelessWidget {
                 mode: LaunchMode.externalApplication,
               ),
               icon: const Text('☕', style: TextStyle(fontSize: 18)),
-              label: const Text('Buy Me a Coffee'),
+              label: const Text('Support This Project'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: const Color(0xFF8B5CF6),
                 side: const BorderSide(color: Color(0xFF8B5CF6)),

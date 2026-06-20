@@ -53,7 +53,13 @@ class _VaultScreenState extends State<VaultScreen> {
   void initState() {
     super.initState();
     _load();
+    _refreshEntitlement();
     _searchCtrl.addListener(() => setState(() {}));
+  }
+
+  Future<void> _refreshEntitlement() async {
+    await PremiumService.refreshStoreEntitlement();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -109,6 +115,130 @@ class _VaultScreenState extends State<VaultScreen> {
     } finally {
       if (mounted) setState(() => _syncing = false);
     }
+  }
+
+  Future<void> _handleAddEntry() async {
+    if (!PremiumService.isPremium() && _entries.length >= kFreeEntryLimit) {
+      await _showUpgradeDialog(
+        'Free vaults can store up to $kFreeEntryLimit passwords. '
+        'Subscribe to CryptKeep Pro to add unlimited passwords.',
+      );
+      return;
+    }
+    final created = await Navigator.of(context).push<VaultEntry>(
+      MaterialPageRoute(builder: (_) => const AddEditEntryScreen()),
+    );
+    if (created != null && mounted) {
+      setState(() => _entries.insert(0, created));
+    }
+  }
+
+  Future<void> _showUpgradeDialog(String message) async {
+    final goPro = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        title: const Text('CryptKeep Pro'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Not now'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Subscribe'),
+          ),
+        ],
+      ),
+    );
+    if (goPro == true && mounted) {
+      await _openPaywall();
+    }
+  }
+
+  /// Opens the Pro paywall and re-checks entitlement on return so the vault
+  /// unlocks immediately if the user subscribed.
+  Future<void> _openPaywall() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const PremiumScreen()),
+    );
+    if (!mounted) return;
+    await PremiumService.refreshStoreEntitlement();
+    if (mounted) setState(() {});
+  }
+
+  /// Full-screen lock shown when a non-Pro user's vault exceeds the free limit.
+  Widget _buildLockedScaffold() {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'CryptKeep',
+          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
+        ),
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.lock_outline,
+                    size: 64, color: Color(0xFF8B5CF6)),
+                const SizedBox(height: 20),
+                const Text(
+                  'Vault locked',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Your vault has ${_entries.length} passwords. The free plan '
+                  'includes $kFreeEntryLimit. Subscribe to CryptKeep Pro to '
+                  'unlock and access all of your passwords.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Color(0xFF94A3B8), fontSize: 14),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _openPaywall,
+                    icon: const Icon(Icons.workspace_premium, size: 18),
+                    label: const Text('Subscribe to Pro'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _exportKdbx,
+                    icon: const Icon(Icons.download_outlined, size: 18),
+                    label: const Text('Export my vault'),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Export your passwords to a .kdbx file you can open in any '
+                  'KeePass app, even without Pro.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Color(0xFF94A3B8), fontSize: 12),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: _signOut,
+                  child: const Text('Sign out'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   List<VaultEntry> get _filtered {
@@ -362,6 +492,20 @@ class _VaultScreenState extends State<VaultScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    // Free-tier vault lock: a non-Pro user whose vault exceeds the free limit
+    // (e.g. a lapsed subscription or a large pre-existing vault) is blocked from
+    // browsing their passwords until they subscribe. Sign out stays available.
+    if (!_loading &&
+        !PremiumService.isPremium() &&
+        _entries.length > kFreeEntryLimit) {
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => appState.resetAutoLock(),
+        onPanDown: (_) => appState.resetAutoLock(),
+        child: _buildLockedScaffold(),
+      );
+    }
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () => appState.resetAutoLock(),
@@ -415,15 +559,7 @@ class _VaultScreenState extends State<VaultScreen> {
       floatingActionButton: _selectionMode
           ? null
           : FloatingActionButton(
-              onPressed: () async {
-                final created = await Navigator.of(context).push<VaultEntry>(
-                  MaterialPageRoute(
-                      builder: (_) => const AddEditEntryScreen()),
-                );
-                if (created != null) {
-                  setState(() => _entries.insert(0, created));
-                }
-              },
+              onPressed: _handleAddEntry,
               child: const Icon(Icons.add),
             ),
     ),
@@ -484,7 +620,9 @@ class _VaultScreenState extends State<VaultScreen> {
           onSelected: (value) async {
             if (value == 'import') {
               final count = await Navigator.of(context).push<int>(
-                MaterialPageRoute(builder: (_) => const ImportScreen()),
+                MaterialPageRoute(
+                    builder: (_) =>
+                        ImportScreen(existingCount: _entries.length)),
               );
               if (count != null && count > 0) {
                 await _load();

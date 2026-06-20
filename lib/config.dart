@@ -10,7 +10,11 @@ class SupabaseConfig {
 }
 
 // Set with --dart-define=PRO_INCLUDED=true to ship a Pro-bundled build
-// (e.g. Microsoft Store paid version). Skips Stripe checkout entirely.
+// (e.g. a one-time-purchase build). Skips all checkout flows entirely.
 const bool kProIncluded = bool.fromEnvironment('PRO_INCLUDED', defaultValue: false);
+
+// Maximum number of vault entries a free (non-Pro) user can store. Adding
+// beyond this prompts an upgrade to Pro.
+const int kFreeEntryLimit = 15;
 
 const String kAuthRedirectUrl = 'https://eeriegoesd.com/cryptkeep/';

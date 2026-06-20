@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../config.dart';
+import '../../services/ms_store_service.dart';
 import '../../services/premium_service.dart';
 
 class PremiumScreen extends StatefulWidget {
@@ -41,6 +42,13 @@ class _PremiumScreenState extends State<PremiumScreen>
       defaultTargetPlatform == TargetPlatform.android &&
       !kProIncluded;
 
+  bool get _usesMsStoreBilling =>
+      !kIsWeb &&
+      defaultTargetPlatform == TargetPlatform.windows &&
+      !kProIncluded;
+
+  String? _msStorePrice;
+
   static const _features = [
     (
       icon: Icons.shield_outlined,
@@ -66,6 +74,56 @@ class _PremiumScreenState extends State<PremiumScreen>
     _isPremium = PremiumService.isPremium();
     if (_usesGooglePlayBilling) {
       _initGooglePlayBilling();
+    } else if (_usesMsStoreBilling) {
+      _initMsStoreBilling();
+    }
+  }
+
+  Future<void> _initMsStoreBilling() async {
+    final price = await MsStoreService.price();
+    final active = await PremiumService.refreshStoreEntitlement();
+    if (!mounted) return;
+    setState(() {
+      _msStorePrice = price;
+      _isPremium = active || _isPremium;
+    });
+  }
+
+  Future<void> _buyMsStoreSubscription() async {
+    if (_purchasePending) return;
+    setState(() {
+      _purchasePending = true;
+      _billingMessage = null;
+    });
+    final status = await MsStoreService.purchase();
+    if (!mounted) return;
+    if (status == 'succeeded' || status == 'alreadyPurchased') {
+      await PremiumService.refreshStoreEntitlement();
+      if (!mounted) return;
+      setState(() {
+        _isPremium = PremiumService.isPremium();
+        _purchasePending = false;
+      });
+    } else {
+      setState(() {
+        _purchasePending = false;
+        _billingMessage = _msStoreErrorMessage(status);
+      });
+    }
+  }
+
+  String _msStoreErrorMessage(String status) {
+    switch (status) {
+      case 'notPurchased':
+        return 'Purchase canceled.';
+      case 'networkError':
+        return 'Network error. Check your connection and try again.';
+      case 'serverError':
+        return 'Microsoft Store error. Please try again later.';
+      case 'productNotFound':
+        return 'Subscription is not available yet. Please try again later.';
+      default:
+        return 'Purchase could not be completed. Please try again.';
     }
   }
 
@@ -164,6 +222,9 @@ class _PremiumScreenState extends State<PremiumScreen>
     try {
       await supabase.auth.refreshSession();
       if (!mounted) return;
+      if (_usesMsStoreBilling) {
+        await PremiumService.refreshStoreEntitlement();
+      }
       final nowPremium = PremiumService.isPremium();
       if (nowPremium != _isPremium) {
         setState(() => _isPremium = nowPremium);
@@ -386,6 +447,11 @@ class _PremiumScreenState extends State<PremiumScreen>
         if (!opened) {
           await launchUrl(fallback, mode: LaunchMode.externalApplication);
         }
+      } else if (_usesMsStoreBilling) {
+        await launchUrl(
+          Uri.parse('https://account.microsoft.com/services'),
+          mode: LaunchMode.externalApplication,
+        );
       } else {
         final email = supabase.auth.currentUser?.email;
         if (email == null) return;
@@ -419,6 +485,9 @@ class _PremiumScreenState extends State<PremiumScreen>
     if (_usesGooglePlayBilling) {
       return _googlePlayProduct?.price ?? 'CryptKeep Pro';
     }
+    if (_usesMsStoreBilling) {
+      return _msStorePrice ?? 'CryptKeep Pro';
+    }
     return '\$3 / month';
   }
 
@@ -434,6 +503,12 @@ class _PremiumScreenState extends State<PremiumScreen>
       return _billingAvailable && _googlePlayProduct != null;
     }
     return true;
+  }
+
+  VoidCallback get _subscribeAction {
+    if (_usesGooglePlayBilling) return _buyGooglePlaySubscription;
+    if (_usesMsStoreBilling) return _buyMsStoreSubscription;
+    return _openStripeCheckout;
   }
 
   @override
@@ -594,7 +669,9 @@ class _PremiumScreenState extends State<PremiumScreen>
                 Text(
                   _usesGooglePlayBilling
                       ? 'Managed through Google Play'
-                      : 'Cancel, resume, or update payment method',
+                      : _usesMsStoreBilling
+                          ? 'Managed through the Microsoft Store'
+                          : 'Cancel, resume, or update payment method',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Color(0xFF94A3B8),
@@ -616,7 +693,9 @@ class _PremiumScreenState extends State<PremiumScreen>
                 Text(
                   _usesGooglePlayBilling
                       ? 'Billed monthly through Google Play'
-                      : 'Cancel anytime',
+                      : _usesMsStoreBilling
+                          ? 'Billed through the Microsoft Store'
+                          : 'Cancel anytime',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Color(0xFF94A3B8),
@@ -625,11 +704,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: _canSubscribe
-                      ? (_usesGooglePlayBilling
-                            ? _buyGooglePlaySubscription
-                            : _openStripeCheckout)
-                      : null,
+                  onPressed: _canSubscribe ? _subscribeAction : null,
                   child: Text(_subscribeButtonText),
                 ),
                 if (_usesGooglePlayBilling) ...[

@@ -340,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 InkWell(
                                   onTap: () => launchUrl(Uri.parse('https://buymeacoffee.com/eeriegoesd')),
-                                  child: const Text('☕ Buy Me a Coffee',
+                                  child: const Text('☕ Support This Project',
                                       style: TextStyle(
                                           color: Color(0xFF8B5CF6),
                                           fontSize: 13,
@@ -374,8 +374,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
                   ),
                   InkWell(
-                    onTap: () => launchUrl(Uri.parse('mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Support')),
-                    child: const Text('Need help?',
+                    onTap: () => launchUrl(Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=bug-report.md')),
+                    child: const Text('Report Issue',
                         style: TextStyle(
                             color: Color(0xFF8B5CF6),
                             fontSize: 13,
@@ -386,8 +386,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text('|', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
                   ),
                   InkWell(
-                    onTap: () => launchUrl(Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues')),
-                    child: const Text('Report an Issue',
+                    onTap: () => launchUrl(Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=feature-request.md')),
+                    child: const Text('Suggest Feature',
                         style: TextStyle(
                             color: Color(0xFF8B5CF6),
                             fontSize: 13,

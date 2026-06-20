@@ -226,17 +226,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 _tile(
-                  icon: Icons.mail_outline,
-                  title: 'Need help?',
+                  icon: Icons.bug_report_outlined,
+                  title: 'Report Issue',
                   onTap: () => launchUrl(
-                    Uri.parse('mailto:eeriegoesd@gmail.com?subject=CryptKeep%20Support'),
+                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=bug-report.md'),
+                    mode: LaunchMode.externalApplication,
                   ),
                 ),
                 _tile(
-                  icon: Icons.bug_report_outlined,
-                  title: 'Report an Issue',
+                  icon: Icons.lightbulb_outline,
+                  title: 'Suggest Feature',
                   onTap: () => launchUrl(
-                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues'),
+                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=feature-request.md'),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
