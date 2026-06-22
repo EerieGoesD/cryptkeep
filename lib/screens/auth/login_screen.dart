@@ -9,6 +9,7 @@ import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/crypto_service.dart';
 import '../../services/migration_service.dart';
+import '../../widgets/app_version_footer.dart';
 import '../vault/vault_screen.dart';
 import '../vault/faq_screen.dart';
 import 'mfa_verify_screen.dart';
@@ -118,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         // Already migrated - use existing key from metadata
-        key = MigrationService.getKey(masterPassword);
+        key = await MigrationService.getKeyAsync(masterPassword);
       }
 
       if (!MigrationService.verifyPassword(key)) {
@@ -347,6 +348,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: AppVersionFooter(),
             ),
           ],
         ),

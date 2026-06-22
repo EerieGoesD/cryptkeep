@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../config.dart';
 import '../../services/crypto_service.dart';
+import '../../widgets/app_version_footer.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -407,6 +408,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ],
               ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: AppVersionFooter(),
             ),
           ],
         ),

@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../providers/app_state.dart';
 import '../../services/migration_service.dart';
+import '../../widgets/app_version_footer.dart';
 import '../auth/login_screen.dart';
 import 'vault_screen.dart';
 
@@ -67,7 +68,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
           );
         }
       } else {
-        key = MigrationService.getKey(masterPassword);
+        key = await MigrationService.getKeyAsync(masterPassword);
       }
 
       if (!MigrationService.verifyPassword(key)) {
@@ -354,6 +355,10 @@ class _UnlockScreenState extends State<UnlockScreen> {
                   ),
                 ],
               ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12),
+              child: AppVersionFooter(),
             ),
           ],
         ),

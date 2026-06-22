@@ -150,11 +150,17 @@ class MigrationService {
   }
 
   /// For already-migrated users, get the encryption key from metadata.
-  static Uint8List getKey(String masterPassword) {
+  /// Uses the async (native, non-blocking) PBKDF2 so the heavy key derivation
+  /// does not freeze the UI thread and trigger an ANR on mobile.
+  static Future<Uint8List> getKeyAsync(String masterPassword) async {
     final meta = supabase.auth.currentUser!.userMetadata!;
     final salt = base64.decode(meta['crypto_salt'] as String);
     final iterations = meta['key_iterations'] as int? ?? 600000;
-    return CryptoService.deriveKey(masterPassword, salt, iterations: iterations);
+    return CryptoService.deriveKeyAsync(
+      masterPassword,
+      salt,
+      iterations: iterations,
+    );
   }
 
   /// Verify master password against stored key check.

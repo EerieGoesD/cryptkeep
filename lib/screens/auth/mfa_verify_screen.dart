@@ -77,7 +77,7 @@ class _MfaVerifyScreenState extends State<MfaVerifyScreen> {
           );
         }
       } else {
-        key = MigrationService.getKey(widget.masterPassword);
+        key = await MigrationService.getKeyAsync(widget.masterPassword);
       }
 
       if (!MigrationService.verifyPassword(key)) {

@@ -6,6 +6,7 @@ import '../../app.dart';
 import '../../config.dart';
 import '../../providers/app_state.dart';
 import '../../services/migration_service.dart';
+import '../../widgets/app_version_footer.dart';
 import '../auth/login_screen.dart';
 import 'faq_screen.dart';
 import 'mfa_setup_screen.dart';
@@ -80,8 +81,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              final key = MigrationService.getKey(controller.text);
+            onPressed: () async {
+              final key =
+                  await MigrationService.getKeyAsync(controller.text);
+              if (!ctx.mounted) return;
               if (MigrationService.verifyPassword(key)) {
                 Navigator.pop(ctx, true);
               } else {
@@ -268,11 +271,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: _deleteAccount,
                 ),
                 const SizedBox(height: 40),
-                const Text(
-                  'v1.0.0',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-                ),
+                const AppVersionFooter(),
               ],
             ),
     );

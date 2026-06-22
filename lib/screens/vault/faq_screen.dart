@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../widgets/app_version_footer.dart';
+
 class FaqScreen extends StatelessWidget {
   const FaqScreen({super.key});
 
@@ -175,11 +177,7 @@ class FaqScreen extends StatelessWidget {
           }),
 
           const SizedBox(height: 32),
-          const Text(
-            'v1.0.0 · Built with Flutter & Supabase',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
-          ),
+          const AppVersionFooter(suffix: 'Built with Flutter & Supabase'),
           const SizedBox(height: 8),
         ],
       ),
