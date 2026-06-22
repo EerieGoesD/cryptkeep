@@ -9,28 +9,25 @@ import 'package:flutter/services.dart';
 class MsStoreService {
   static const MethodChannel _channel = MethodChannel('cryptkeep/ms_store');
 
-  /// Add-on Product ID configured in Partner Center. Must match exactly.
-  static const String productId = 'cryptkeep_pro_monthly';
-
   static bool get isSupported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
-  /// Whether the user currently owns an active subscription.
+  /// Whether the user currently owns any active Pro subscription add-on
+  /// (monthly or yearly).
   static Future<bool> isSubscriptionActive() async {
     if (!isSupported) return false;
     try {
-      final active = await _channel.invokeMethod<bool>(
-        'isSubscriptionActive',
-        {'productId': productId},
-      );
+      final active =
+          await _channel.invokeMethod<bool>('isSubscriptionActive');
       return active ?? false;
     } catch (_) {
       return false;
     }
   }
 
-  /// Localized formatted price (e.g. "$3.00") or null if unavailable.
-  static Future<String?> price() async {
+  /// Localized formatted price (e.g. "$2.99") for the given add-on, or null if
+  /// unavailable.
+  static Future<String?> price(String productId) async {
     if (!isSupported) return null;
     try {
       return await _channel.invokeMethod<String>(
@@ -42,10 +39,10 @@ class MsStoreService {
     }
   }
 
-  /// Launches the Store purchase flow. Returns a status string:
-  /// 'succeeded', 'alreadyPurchased', 'notPurchased', 'networkError',
+  /// Launches the Store purchase flow for the given add-on. Returns a status
+  /// string: 'succeeded', 'alreadyPurchased', 'notPurchased', 'networkError',
   /// 'serverError', 'productNotFound', or 'error'.
-  static Future<String> purchase() async {
+  static Future<String> purchase(String productId) async {
     if (!isSupported) return 'error';
     try {
       final status = await _channel.invokeMethod<String>(

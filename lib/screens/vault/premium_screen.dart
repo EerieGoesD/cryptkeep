@@ -20,20 +20,23 @@ class PremiumScreen extends StatefulWidget {
 
 class _PremiumScreenState extends State<PremiumScreen>
     with WidgetsBindingObserver {
-  static const _googlePlayProductId = 'cryptkeep_pro_monthly';
   static const _googlePlayPackageName = 'com.eerie.cryptkeep';
   static const _stripeCheckoutBaseUrl =
       'https://buy.stripe.com/14A3cwgAc0Jc96K8X2cQU00';
 
+  static const _productIds = {kProductIdMonthly, kProductIdYearly};
+
   bool _isPremium = false;
   bool _checking = false;
   bool _openingPortal = false;
-  bool _billingAvailable = false;
   bool _loadingBilling = false;
   bool _purchasePending = false;
   int _restoreAttempt = 0;
   bool _restoreMatchedPurchase = false;
-  ProductDetails? _googlePlayProduct;
+  // Google Play product details, keyed by product ID.
+  final Map<String, ProductDetails> _gpProducts = {};
+  // Microsoft Store formatted prices, keyed by product ID.
+  final Map<String, String> _msPrices = {};
   StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
   String? _billingMessage;
 
@@ -47,7 +50,7 @@ class _PremiumScreenState extends State<PremiumScreen>
       defaultTargetPlatform == TargetPlatform.windows &&
       !kProIncluded;
 
-  String? _msStorePrice;
+  bool get _canInteract => !_purchasePending && !_loadingBilling;
 
   static const _features = [
     (
@@ -80,22 +83,24 @@ class _PremiumScreenState extends State<PremiumScreen>
   }
 
   Future<void> _initMsStoreBilling() async {
-    final price = await MsStoreService.price();
+    final monthly = await MsStoreService.price(kProductIdMonthly);
+    final yearly = await MsStoreService.price(kProductIdYearly);
     final active = await PremiumService.refreshStoreEntitlement();
     if (!mounted) return;
     setState(() {
-      _msStorePrice = price;
+      if (monthly != null) _msPrices[kProductIdMonthly] = monthly;
+      if (yearly != null) _msPrices[kProductIdYearly] = yearly;
       _isPremium = active || _isPremium;
     });
   }
 
-  Future<void> _buyMsStoreSubscription() async {
+  Future<void> _buyMsStoreSubscription(String productId) async {
     if (_purchasePending) return;
     setState(() {
       _purchasePending = true;
       _billingMessage = null;
     });
-    final status = await MsStoreService.purchase();
+    final status = await MsStoreService.purchase(productId);
     if (!mounted) return;
     if (status == 'succeeded' || status == 'alreadyPurchased') {
       await PremiumService.refreshStoreEntitlement();
@@ -165,7 +170,6 @@ class _PremiumScreenState extends State<PremiumScreen>
 
       if (!available) {
         setState(() {
-          _billingAvailable = false;
           _loadingBilling = false;
           _billingMessage =
               'Google Play Billing is not available on this device.';
@@ -173,14 +177,12 @@ class _PremiumScreenState extends State<PremiumScreen>
         return;
       }
 
-      final response = await InAppPurchase.instance.queryProductDetails({
-        _googlePlayProductId,
-      });
+      final response =
+          await InAppPurchase.instance.queryProductDetails(_productIds);
       if (!mounted) return;
 
       if (response.error != null) {
         setState(() {
-          _billingAvailable = false;
           _loadingBilling = false;
           _billingMessage = 'Could not load Google Play subscription details.';
         });
@@ -188,27 +190,20 @@ class _PremiumScreenState extends State<PremiumScreen>
         return;
       }
 
-      if (response.productDetails.isEmpty ||
-          response.notFoundIDs.contains(_googlePlayProductId)) {
-        setState(() {
-          _billingAvailable = false;
-          _loadingBilling = false;
-          _billingMessage = 'Google Play subscription is not active yet.';
-        });
-        return;
-      }
-
       setState(() {
-        _billingAvailable = true;
+        for (final product in response.productDetails) {
+          _gpProducts[product.id] = product;
+        }
         _loadingBilling = false;
-        _googlePlayProduct = response.productDetails.first;
+        if (_gpProducts.isEmpty) {
+          _billingMessage = 'Google Play subscriptions are not active yet.';
+        }
       });
 
       await InAppPurchase.instance.restorePurchases();
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _billingAvailable = false;
         _loadingBilling = false;
         _billingMessage = 'Could not initialize Google Play Billing.';
       });
@@ -269,7 +264,7 @@ class _PremiumScreenState extends State<PremiumScreen>
 
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases) async {
     for (final purchase in purchases) {
-      if (purchase.productID != _googlePlayProductId) continue;
+      if (!_productIds.contains(purchase.productID)) continue;
       _restoreMatchedPurchase = true;
 
       switch (purchase.status) {
@@ -343,7 +338,7 @@ class _PremiumScreenState extends State<PremiumScreen>
       'verify-google-play-purchase',
       body: {
         'packageName': _googlePlayPackageName,
-        'productId': _googlePlayProductId,
+        'productId': purchase.productID,
         'purchaseToken': purchaseToken,
       },
     );
@@ -357,9 +352,8 @@ class _PremiumScreenState extends State<PremiumScreen>
     return true;
   }
 
-  Future<void> _buyGooglePlaySubscription() async {
-    final product = _googlePlayProduct;
-    if (!_billingAvailable || product == null || _purchasePending) return;
+  Future<void> _buyGooglePlaySubscription(ProductDetails product) async {
+    if (_purchasePending) return;
 
     setState(() {
       _purchasePending = true;
@@ -433,20 +427,10 @@ class _PremiumScreenState extends State<PremiumScreen>
 
     try {
       if (_usesGooglePlayBilling) {
-        final url = Uri.parse(
-          'https://play.google.com/store/account/subscriptions'
-          '?sku=$_googlePlayProductId&package=$_googlePlayPackageName',
-        );
-        final fallback = Uri.parse(
-          'https://play.google.com/store/account/subscriptions',
-        );
-        final opened = await launchUrl(
-          url,
+        await launchUrl(
+          Uri.parse('https://play.google.com/store/account/subscriptions'),
           mode: LaunchMode.externalApplication,
         );
-        if (!opened) {
-          await launchUrl(fallback, mode: LaunchMode.externalApplication);
-        }
       } else if (_usesMsStoreBilling) {
         await launchUrl(
           Uri.parse('https://account.microsoft.com/services'),
@@ -481,34 +465,111 @@ class _PremiumScreenState extends State<PremiumScreen>
     }
   }
 
-  String get _priceText {
+  // Builds the monthly + yearly plan buttons for the active billing backend.
+  List<Widget> _buildPlans() {
     if (_usesGooglePlayBilling) {
-      return _googlePlayProduct?.price ?? 'CryptKeep Pro';
+      final monthly = _gpProducts[kProductIdMonthly];
+      final yearly = _gpProducts[kProductIdYearly];
+      return [
+        _planButton(
+          title: 'Monthly',
+          subtitle: 'Billed monthly, cancel anytime',
+          price: monthly?.price,
+          highlight: false,
+          onTap: (_canInteract && monthly != null)
+              ? () => _buyGooglePlaySubscription(monthly)
+              : null,
+        ),
+        _planButton(
+          title: 'Yearly',
+          subtitle: 'Best value',
+          price: yearly?.price,
+          highlight: true,
+          onTap: (_canInteract && yearly != null)
+              ? () => _buyGooglePlaySubscription(yearly)
+              : null,
+        ),
+      ];
     }
     if (_usesMsStoreBilling) {
-      return _msStorePrice ?? 'CryptKeep Pro';
+      return [
+        _planButton(
+          title: 'Monthly',
+          subtitle: 'Billed monthly, cancel anytime',
+          price: _msPrices[kProductIdMonthly],
+          highlight: false,
+          onTap: _canInteract
+              ? () => _buyMsStoreSubscription(kProductIdMonthly)
+              : null,
+        ),
+        _planButton(
+          title: 'Yearly',
+          subtitle: 'Best value',
+          price: _msPrices[kProductIdYearly],
+          highlight: true,
+          onTap: _canInteract
+              ? () => _buyMsStoreSubscription(kProductIdYearly)
+              : null,
+        ),
+      ];
     }
-    return '\$3 / month';
+    // Stripe (web / macOS / other): single monthly checkout.
+    return [
+      _planButton(
+        title: 'Monthly',
+        subtitle: 'Cancel anytime',
+        price: '\$3',
+        highlight: false,
+        onTap: _canInteract ? _openStripeCheckout : null,
+      ),
+    ];
   }
 
-  String get _subscribeButtonText {
-    if (_purchasePending) return 'Processing...';
-    if (_loadingBilling) return 'Loading...';
-    return 'Subscribe';
-  }
-
-  bool get _canSubscribe {
-    if (_purchasePending || _loadingBilling) return false;
-    if (_usesGooglePlayBilling) {
-      return _billingAvailable && _googlePlayProduct != null;
-    }
-    return true;
-  }
-
-  VoidCallback get _subscribeAction {
-    if (_usesGooglePlayBilling) return _buyGooglePlaySubscription;
-    if (_usesMsStoreBilling) return _buyMsStoreSubscription;
-    return _openStripeCheckout;
+  Widget _planButton({
+    required String title,
+    required String subtitle,
+    required String? price,
+    required bool highlight,
+    required VoidCallback? onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor:
+              highlight ? const Color(0xFF8B5CF6) : const Color(0xFF2A2A3E),
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                        fontSize: 11, color: Color(0xFFE2E8F0)),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              price ?? '',
+              style: const TextStyle(
+                  fontWeight: FontWeight.w700, fontSize: 15),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -555,7 +616,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                     const SizedBox(width: 10),
                     Text(
                       _purchasePending
-                          ? 'Waiting for Google Play...'
+                          ? 'Processing purchase...'
                           : 'Checking subscription...',
                       style: const TextStyle(
                         color: Color(0xFF94A3B8),
@@ -680,35 +741,19 @@ class _PremiumScreenState extends State<PremiumScreen>
                 ),
               ],
               if (!_isPremium && !kProIncluded) ...[
-                Text(
-                  _priceText,
+                const Text(
+                  'Choose your plan',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8B5CF6),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _usesGooglePlayBilling
-                      ? 'Billed monthly through Google Play'
-                      : _usesMsStoreBilling
-                          ? 'Billed through the Microsoft Store'
-                          : 'Cancel anytime',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                     color: Color(0xFF94A3B8),
-                    fontSize: 13,
                   ),
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _canSubscribe ? _subscribeAction : null,
-                  child: Text(_subscribeButtonText),
-                ),
+                const SizedBox(height: 14),
+                ..._buildPlans(),
                 if (_usesGooglePlayBilling) ...[
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 4),
                   TextButton(
                     onPressed: _checking ? null : _restoreGooglePlayPurchase,
                     child: const Text('Restore Google Play purchase'),

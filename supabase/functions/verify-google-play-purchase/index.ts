@@ -2,7 +2,7 @@ import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const packageName = "com.eerie.cryptkeep";
-const productId = "cryptkeep_pro_monthly";
+const productIds = ["cryptkeep_pro_monthly", "cryptkeep_pro_yearly"];
 const androidPublisherScope = "https://www.googleapis.com/auth/androidpublisher";
 const tokenUrl = "https://oauth2.googleapis.com/token";
 
@@ -206,7 +206,7 @@ async function verifySubscription(purchaseToken: string): Promise<{
   }
 
   const purchase = await response.json() as SubscriptionPurchaseV2;
-  const lineItem = purchase.lineItems?.find((item) => item.productId === productId) ?? null;
+  const lineItem = purchase.lineItems?.find((item) => productIds.includes(item.productId ?? "")) ?? null;
   const expiryTime = lineItem?.expiryTime ?? null;
   const expiryMs = expiryTime ? Date.parse(expiryTime) : Number.NaN;
   const hasFutureAccess = Number.isFinite(expiryMs) && expiryMs > Date.now();
@@ -255,7 +255,7 @@ Deno.serve(async (req) => {
     const requestProductId = String(body.productId ?? "");
     const purchaseToken = String(body.purchaseToken ?? "");
 
-    if (requestPackageName !== packageName || requestProductId !== productId) {
+    if (requestPackageName !== packageName || !productIds.includes(requestProductId)) {
       return json({ error: "Invalid package name or product ID" }, 400);
     }
     if (!purchaseToken) {
@@ -281,7 +281,7 @@ Deno.serve(async (req) => {
           ...currentAppMetadata,
           premium_until: verification.premiumUntil,
           premium_source: "google_play",
-          premium_product_id: productId,
+          premium_product_id: lineItem.productId ?? requestProductId,
           google_play_subscription_state: purchase.subscriptionState,
           google_play_acknowledgement_state: purchase.acknowledgementState,
           google_play_latest_order_id: lineItem.latestSuccessfulOrderId ?? purchase.latestOrderId ?? null,

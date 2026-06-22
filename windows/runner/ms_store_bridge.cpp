@@ -88,9 +88,10 @@ std::string PurchaseStatusToString(StorePurchaseStatus status) {
   }
 }
 
-// Reports whether the subscription identified by |product_id| is active.
+// Reports whether the user holds any active Pro subscription add-on. The app's
+// only add-ons are the monthly and yearly Pro subscriptions, so any active
+// add-on license grants Pro.
 winrt::fire_and_forget HandleIsActive(
-    std::string product_id,
     std::shared_ptr<FlMethodResult> result) {
   winrt::apartment_context ui_thread;
   bool active = false;
@@ -99,7 +100,7 @@ winrt::fire_and_forget HandleIsActive(
     StoreAppLicense license = co_await context.GetAppLicenseAsync();
     for (auto const& pair : license.AddOnLicenses()) {
       StoreLicense addon = pair.Value();
-      if (addon.IsActive() && ToUtf8(addon.InAppOfferToken()) == product_id) {
+      if (addon.IsActive()) {
         active = true;
         break;
       }
@@ -178,7 +179,7 @@ void RegisterMsStoreChannel(flutter::FlutterEngine* engine, HWND hwnd) {
         std::string product_id = GetStringArg(call.arguments(), "productId");
         const std::string& method = call.method_name();
         if (method == "isSubscriptionActive") {
-          HandleIsActive(product_id, shared_result);
+          HandleIsActive(shared_result);
         } else if (method == "getPrice") {
           HandleGetPrice(product_id, shared_result);
         } else if (method == "purchaseSubscription") {

@@ -17,4 +17,9 @@ const bool kProIncluded = bool.fromEnvironment('PRO_INCLUDED', defaultValue: fal
 // beyond this prompts an upgrade to Pro.
 const int kFreeEntryLimit = 15;
 
+// Pro subscription product IDs. These must match the products configured in
+// both Google Play (subscriptions) and the Microsoft Store (add-ons).
+const String kProductIdMonthly = 'cryptkeep_pro_monthly';
+const String kProductIdYearly = 'cryptkeep_pro_yearly';
+
 const String kAuthRedirectUrl = 'https://eeriegoesd.com/cryptkeep/';
