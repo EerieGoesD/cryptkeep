@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_autofill_service/flutter_autofill_service.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../config.dart';
 import '../../providers/app_state.dart';
+import '../../services/biometric_service.dart';
 import '../../services/migration_service.dart';
+import '../../services/vault_cache_service.dart';
 import '../../widgets/app_version_footer.dart';
 import '../auth/login_screen.dart';
 import 'faq_screen.dart';
@@ -21,8 +24,63 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _deleting = false;
+  bool _biometricAvailable = false;
+  bool _biometricEnabled = false;
+  AutofillServiceStatus? _autofillStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBiometric();
+    _loadAutofill();
+  }
+
+  Future<void> _loadAutofill() async {
+    try {
+      final status = await AutofillService().status;
+      if (!mounted) return;
+      setState(() => _autofillStatus = status);
+    } catch (_) {
+      // Not supported on this platform/device; the tile stays hidden.
+    }
+  }
+
+  Future<void> _toggleAutofill() async {
+    if (_autofillStatus == AutofillServiceStatus.enabled) {
+      await AutofillService().disableAutofillServices();
+    } else {
+      await AutofillService().requestSetAutofillService();
+    }
+    await _loadAutofill();
+  }
+
+  Future<void> _loadBiometric() async {
+    final email = supabase.auth.currentUser?.email ?? '';
+    final available = await BiometricService.isAvailable();
+    final enabled = available && await BiometricService.isEnabledFor(email);
+    if (!mounted) return;
+    setState(() {
+      _biometricAvailable = available;
+      _biometricEnabled = enabled;
+    });
+  }
+
+  Future<void> _toggleBiometric(bool value) async {
+    final email = supabase.auth.currentUser?.email ?? '';
+    final appState = context.read<AppState>();
+    if (value) {
+      if (!appState.isUnlocked) return;
+      await BiometricService.enable(email, appState.encryptionKey);
+    } else {
+      await BiometricService.disable();
+    }
+    if (!mounted) return;
+    setState(() => _biometricEnabled = value);
+  }
 
   Future<void> _signOut() async {
+    await BiometricService.disable();
+    await VaultCacheService.clear();
     await supabase.auth.signOut();
     if (!mounted) return;
     context.read<AppState>().lock();
@@ -105,6 +163,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     setState(() => _deleting = true);
     try {
       await supabase.rpc('delete_own_account');
+      await BiometricService.disable();
+      await VaultCacheService.clear();
 
       if (!mounted) return;
       context.read<AppState>().lock();
@@ -202,6 +262,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     MaterialPageRoute(builder: (_) => const MfaSetupScreen()),
                   ),
                 ),
+                if (_biometricAvailable)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A1A2E),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.fingerprint,
+                          color: Color(0xFF8B5CF6), size: 22),
+                      title: const Text('Unlock with Biometrics',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 14)),
+                      subtitle: const Text(
+                          'Use fingerprint or face to unlock the vault',
+                          style:
+                              TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                      trailing: Switch(
+                        value: _biometricEnabled,
+                        onChanged: _toggleBiometric,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                if (_autofillStatus != null &&
+                    _autofillStatus != AutofillServiceStatus.unsupported)
+                  _tile(
+                    icon: Icons.password_outlined,
+                    title: 'Autofill Service',
+                    subtitle: _autofillStatus == AutofillServiceStatus.enabled
+                        ? 'On - fill passwords in other apps'
+                        : 'Off - tap to fill passwords in other apps',
+                    onTap: _toggleAutofill,
+                  ),
                 const SizedBox(height: 28),
                 const Text(
                   'SUPPORT',

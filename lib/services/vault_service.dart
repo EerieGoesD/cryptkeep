@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../app.dart';
 import '../models/vault_entry.dart';
 import '../services/crypto_service.dart';
+import '../services/vault_cache_service.dart';
 
 class VaultService {
   static const _table = 'vault_entries';
@@ -20,16 +21,23 @@ class VaultService {
         .order('created_at', ascending: false);
 
     final entries = <VaultEntry>[];
+    final encryptedRows = <String>[];
     for (final row in rows) {
+      final encryptedData = row['encrypted_data'] as String;
       try {
-        final plaintext = CryptoService.decrypt(row['encrypted_data'] as String, key);
+        final plaintext = CryptoService.decrypt(encryptedData, key);
         final json = jsonDecode(plaintext) as Map<String, dynamic>;
         entries.add(VaultEntry.fromJson(json));
+        encryptedRows.add(encryptedData);
       } catch (e) {
         if (kDebugMode) debugPrint('Failed to decrypt entry ${row['id']}: $e');
         // Skip entries that can't be decrypted (wrong key from migration)
       }
     }
+
+    // Keep the offline copy in step with the server on every load. The vault
+    // screen reloads after each add/edit/delete, so this stays current.
+    await VaultCacheService.save(encryptedRows);
     return entries;
   }
 

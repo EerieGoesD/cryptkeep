@@ -30,7 +30,9 @@ android {
 
     defaultConfig {
         applicationId = "com.eerie.cryptkeep"
-        minSdk = flutter.minSdkVersion
+        // Android 10+. Required by flutter_autofill_service (the autofill
+        // service API the app relies on is not available below SDK 29).
+        minSdk = 29
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -59,6 +61,15 @@ android {
             useLegacyPackaging = true
         }
     }
+}
+
+dependencies {
+    // Required by flutter_autofill_service: its FlutterAutofillService.onCreate
+    // casts the tinylog provider to its own DynamicLevelLoggingProvider, which
+    // is registered from this module's resources/META-INF/services.
+    implementation("org.tinylog:tinylog-api:2.7.0")
+    implementation("org.tinylog:tinylog-impl:2.7.0")
+    implementation("org.tinylog:slf4j-tinylog:2.7.0")
 }
 
 flutter {

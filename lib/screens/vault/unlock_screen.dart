@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app.dart';
 import '../../providers/app_state.dart';
+import '../../services/biometric_service.dart';
 import '../../services/migration_service.dart';
 import '../../widgets/app_version_footer.dart';
 import '../auth/login_screen.dart';
@@ -25,6 +26,44 @@ class _UnlockScreenState extends State<UnlockScreen> {
   bool _obscure = true;
   int _failedAttempts = 0;
   DateTime? _lockoutUntil;
+  bool _biometricEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkBiometric();
+  }
+
+  Future<void> _checkBiometric() async {
+    final email = supabase.auth.currentUser?.email ?? '';
+    if (email.isEmpty) return;
+    final available = await BiometricService.isAvailable();
+    final enabled = available && await BiometricService.isEnabledFor(email);
+    if (!mounted) return;
+    setState(() => _biometricEnabled = enabled);
+    // Auto-prompt biometrics as soon as the unlock screen opens.
+    if (enabled) _biometricUnlock();
+  }
+
+  Future<void> _biometricUnlock() async {
+    if (_loading) return;
+    final key = await BiometricService.unlock();
+    if (key == null || !mounted) return;
+    // Show the blocking loading state immediately: unlocking fetches and
+    // decrypts categories, so the screen must not stay interactive meanwhile.
+    setState(() => _loading = true);
+    try {
+      // Biometrics are a strong local factor; the session already passed any 2FA
+      // at sign-in, so re-unlocking the in-memory key does not re-prompt for it.
+      await context.read<AppState>().unlock(key);
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const VaultScreen()),
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -197,6 +236,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
   }
 
   Future<void> _signOut() async {
+    await BiometricService.disable();
     await supabase.auth.signOut();
     if (!mounted) return;
     context.read<AppState>().lock();
@@ -237,6 +277,7 @@ class _UnlockScreenState extends State<UnlockScreen> {
                           TextFormField(
                             controller: _passwordCtrl,
                             obscureText: _obscure,
+                            enabled: !_loading,
                             autofocus: true,
                             decoration: InputDecoration(
                               labelText: 'Master Password',
@@ -257,10 +298,20 @@ class _UnlockScreenState extends State<UnlockScreen> {
                                   onPressed: _unlock,
                                   child: const Text('Unlock'),
                                 ),
+                          if (_biometricEnabled) ...[
+                            const SizedBox(height: 12),
+                            Center(
+                              child: TextButton.icon(
+                                onPressed: _loading ? null : _biometricUnlock,
+                                icon: const Icon(Icons.fingerprint),
+                                label: const Text('Unlock with Biometrics'),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 16),
                           Center(
                             child: TextButton(
-                              onPressed: _signOut,
+                              onPressed: _loading ? null : _signOut,
                               child: const Text('Sign out'),
                             ),
                           ),

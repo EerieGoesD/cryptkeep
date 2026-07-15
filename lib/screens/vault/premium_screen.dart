@@ -33,8 +33,8 @@ class _PremiumScreenState extends State<PremiumScreen>
   bool _purchasePending = false;
   int _restoreAttempt = 0;
   bool _restoreMatchedPurchase = false;
-  // Google Play product details, keyed by product ID.
-  final Map<String, ProductDetails> _gpProducts = {};
+  // in_app_purchase product details (Google Play + App Store), keyed by product ID.
+  final Map<String, ProductDetails> _storeProducts = {};
   // Microsoft Store formatted prices, keyed by product ID.
   final Map<String, String> _msPrices = {};
   StreamSubscription<List<PurchaseDetails>>? _purchaseSubscription;
@@ -44,6 +44,15 @@ class _PremiumScreenState extends State<PremiumScreen>
       !kIsWeb &&
       defaultTargetPlatform == TargetPlatform.android &&
       !kProIncluded;
+
+  bool get _usesAppStoreBilling =>
+      !kIsWeb &&
+      defaultTargetPlatform == TargetPlatform.iOS &&
+      !kProIncluded;
+
+  // StoreKit (iOS) and Google Play (Android) both go through the in_app_purchase
+  // plugin with the same flow; only the server-side verification differs.
+  bool get _usesInAppPurchase => _usesGooglePlayBilling || _usesAppStoreBilling;
 
   bool get _usesMsStoreBilling =>
       !kIsWeb &&
@@ -75,8 +84,8 @@ class _PremiumScreenState extends State<PremiumScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _isPremium = PremiumService.isPremium();
-    if (_usesGooglePlayBilling) {
-      _initGooglePlayBilling();
+    if (_usesInAppPurchase) {
+      _initInAppPurchase();
     } else if (_usesMsStoreBilling) {
       _initMsStoreBilling();
     }
@@ -146,7 +155,7 @@ class _PremiumScreenState extends State<PremiumScreen>
     }
   }
 
-  Future<void> _initGooglePlayBilling() async {
+  Future<void> _initInAppPurchase() async {
     setState(() {
       _loadingBilling = true;
       _billingMessage = null;
@@ -160,7 +169,7 @@ class _PremiumScreenState extends State<PremiumScreen>
           _purchasePending = false;
           _billingMessage = 'Purchase update failed. Please try again.';
         });
-        debugPrint('Google Play purchase stream error: $error');
+        debugPrint('Purchase stream error: $error');
       },
     );
 
@@ -172,7 +181,7 @@ class _PremiumScreenState extends State<PremiumScreen>
         setState(() {
           _loadingBilling = false;
           _billingMessage =
-              'Google Play Billing is not available on this device.';
+              'In-app purchases are not available on this device.';
         });
         return;
       }
@@ -184,19 +193,19 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (response.error != null) {
         setState(() {
           _loadingBilling = false;
-          _billingMessage = 'Could not load Google Play subscription details.';
+          _billingMessage = 'Could not load subscription details.';
         });
-        debugPrint('Google Play product query error: ${response.error}');
+        debugPrint('Product query error: ${response.error}');
         return;
       }
 
       setState(() {
         for (final product in response.productDetails) {
-          _gpProducts[product.id] = product;
+          _storeProducts[product.id] = product;
         }
         _loadingBilling = false;
-        if (_gpProducts.isEmpty) {
-          _billingMessage = 'Google Play subscriptions are not active yet.';
+        if (_storeProducts.isEmpty) {
+          _billingMessage = 'Subscriptions are not active yet.';
         }
       });
 
@@ -205,9 +214,9 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (!mounted) return;
       setState(() {
         _loadingBilling = false;
-        _billingMessage = 'Could not initialize Google Play Billing.';
+        _billingMessage = 'Could not initialize in-app purchases.';
       });
-      debugPrint('Google Play billing init error: $e');
+      debugPrint('In-app purchase init error: $e');
     }
   }
 
@@ -224,7 +233,7 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (nowPremium != _isPremium) {
         setState(() => _isPremium = nowPremium);
       }
-      if (_usesGooglePlayBilling) {
+      if (_usesInAppPurchase) {
         await InAppPurchase.instance.restorePurchases();
       }
     } finally {
@@ -272,14 +281,14 @@ class _PremiumScreenState extends State<PremiumScreen>
           if (mounted) {
             setState(() {
               _purchasePending = true;
-              _billingMessage = 'Purchase is pending in Google Play.';
+              _billingMessage = 'Purchase is pending.';
             });
           }
           break;
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
           try {
-            final active = await _verifyGooglePlayPremium(purchase);
+            final active = await _verifyStorePurchase(purchase);
             if (active && purchase.pendingCompletePurchase) {
               await InAppPurchase.instance.completePurchase(purchase);
             }
@@ -294,7 +303,7 @@ class _PremiumScreenState extends State<PremiumScreen>
               setState(() {
                 _purchasePending = false;
                 _billingMessage =
-                    'No active Google Play subscription was found for this account.';
+                    'No active subscription was found for this account.';
               });
             }
           } catch (e) {
@@ -304,7 +313,7 @@ class _PremiumScreenState extends State<PremiumScreen>
               _billingMessage =
                   'Subscription was purchased, but Pro activation failed.';
             });
-            debugPrint('Google Play premium grant error: $e');
+            debugPrint('Premium grant error: $e');
           }
           break;
         case PurchaseStatus.error:
@@ -312,7 +321,7 @@ class _PremiumScreenState extends State<PremiumScreen>
             setState(() {
               _purchasePending = false;
               _billingMessage =
-                  purchase.error?.message ?? 'Google Play purchase failed.';
+                  purchase.error?.message ?? 'Purchase failed.';
             });
           }
           break;
@@ -328,20 +337,30 @@ class _PremiumScreenState extends State<PremiumScreen>
     }
   }
 
-  Future<bool> _verifyGooglePlayPremium(PurchaseDetails purchase) async {
-    final purchaseToken = purchase.verificationData.serverVerificationData;
-    if (purchaseToken.isEmpty) {
-      throw StateError('Missing Google Play purchase token');
+  // Verifies the purchase server-side. iOS receipts go to the App Store verify
+  // function; Android tokens go to the Google Play verify function.
+  Future<bool> _verifyStorePurchase(PurchaseDetails purchase) async {
+    final token = purchase.verificationData.serverVerificationData;
+    if (token.isEmpty) {
+      throw StateError('Missing purchase verification data');
     }
 
-    final response = await supabase.functions.invoke(
-      'verify-google-play-purchase',
-      body: {
-        'packageName': _googlePlayPackageName,
-        'productId': purchase.productID,
-        'purchaseToken': purchaseToken,
-      },
-    );
+    final response = _usesAppStoreBilling
+        ? await supabase.functions.invoke(
+            'verify-app-store-purchase',
+            body: {
+              'receiptData': token,
+              'productId': purchase.productID,
+            },
+          )
+        : await supabase.functions.invoke(
+            'verify-google-play-purchase',
+            body: {
+              'packageName': _googlePlayPackageName,
+              'productId': purchase.productID,
+              'purchaseToken': token,
+            },
+          );
 
     final data = response.data;
     if (data is! Map || data['active'] != true) {
@@ -352,7 +371,7 @@ class _PremiumScreenState extends State<PremiumScreen>
     return true;
   }
 
-  Future<void> _buyGooglePlaySubscription(ProductDetails product) async {
+  Future<void> _buyStoreSubscription(ProductDetails product) async {
     if (_purchasePending) return;
 
     setState(() {
@@ -368,26 +387,26 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (!started && mounted) {
         setState(() {
           _purchasePending = false;
-          _billingMessage = 'Google Play purchase could not be started.';
+          _billingMessage = 'Purchase could not be started.';
         });
       }
     } catch (e) {
       if (!mounted) return;
       setState(() {
         _purchasePending = false;
-        _billingMessage = 'Google Play purchase could not be started.';
+        _billingMessage = 'Purchase could not be started.';
       });
-      debugPrint('Google Play buy error: $e');
+      debugPrint('Buy error: $e');
     }
   }
 
-  Future<void> _restoreGooglePlayPurchase() async {
+  Future<void> _restorePurchase() async {
     if (_purchasePending) return;
     final attempt = ++_restoreAttempt;
     _restoreMatchedPurchase = false;
     setState(() {
       _checking = true;
-      _billingMessage = 'Checking Google Play subscriptions...';
+      _billingMessage = 'Checking your subscriptions...';
     });
     try {
       await InAppPurchase.instance.restorePurchases();
@@ -396,15 +415,15 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (!_isPremium && !_restoreMatchedPurchase && !_purchasePending) {
         setState(
           () => _billingMessage =
-              'No active Google Play subscription was found for this account.',
+              'No active subscription was found for this account.',
         );
       }
     } catch (e) {
       if (!mounted) return;
       setState(
-        () => _billingMessage = 'Could not restore Google Play purchases.',
+        () => _billingMessage = 'Could not restore purchases.',
       );
-      debugPrint('Google Play restore error: $e');
+      debugPrint('Restore error: $e');
     } finally {
       if (mounted && attempt == _restoreAttempt) {
         setState(() => _checking = false);
@@ -429,6 +448,11 @@ class _PremiumScreenState extends State<PremiumScreen>
       if (_usesGooglePlayBilling) {
         await launchUrl(
           Uri.parse('https://play.google.com/store/account/subscriptions'),
+          mode: LaunchMode.externalApplication,
+        );
+      } else if (_usesAppStoreBilling) {
+        await launchUrl(
+          Uri.parse('https://apps.apple.com/account/subscriptions'),
           mode: LaunchMode.externalApplication,
         );
       } else if (_usesMsStoreBilling) {
@@ -467,9 +491,9 @@ class _PremiumScreenState extends State<PremiumScreen>
 
   // Builds the monthly + yearly plan buttons for the active billing backend.
   List<Widget> _buildPlans() {
-    if (_usesGooglePlayBilling) {
-      final monthly = _gpProducts[kProductIdMonthly];
-      final yearly = _gpProducts[kProductIdYearly];
+    if (_usesInAppPurchase) {
+      final monthly = _storeProducts[kProductIdMonthly];
+      final yearly = _storeProducts[kProductIdYearly];
       return [
         _planButton(
           title: 'Monthly',
@@ -477,7 +501,7 @@ class _PremiumScreenState extends State<PremiumScreen>
           price: monthly?.price,
           highlight: false,
           onTap: (_canInteract && monthly != null)
-              ? () => _buyGooglePlaySubscription(monthly)
+              ? () => _buyStoreSubscription(monthly)
               : null,
         ),
         _planButton(
@@ -486,7 +510,7 @@ class _PremiumScreenState extends State<PremiumScreen>
           price: yearly?.price,
           highlight: true,
           onTap: (_canInteract && yearly != null)
-              ? () => _buyGooglePlaySubscription(yearly)
+              ? () => _buyStoreSubscription(yearly)
               : null,
         ),
       ];
@@ -730,9 +754,11 @@ class _PremiumScreenState extends State<PremiumScreen>
                 Text(
                   _usesGooglePlayBilling
                       ? 'Managed through Google Play'
-                      : _usesMsStoreBilling
-                          ? 'Managed through the Microsoft Store'
-                          : 'Cancel, resume, or update payment method',
+                      : _usesAppStoreBilling
+                          ? 'Managed through the App Store'
+                          : _usesMsStoreBilling
+                              ? 'Managed through the Microsoft Store'
+                              : 'Cancel, resume, or update payment method',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Color(0xFF94A3B8),
@@ -752,11 +778,11 @@ class _PremiumScreenState extends State<PremiumScreen>
                 ),
                 const SizedBox(height: 14),
                 ..._buildPlans(),
-                if (_usesGooglePlayBilling) ...[
+                if (_usesInAppPurchase) ...[
                   const SizedBox(height: 4),
                   TextButton(
-                    onPressed: _checking ? null : _restoreGooglePlayPurchase,
-                    child: const Text('Restore Google Play purchase'),
+                    onPressed: _checking ? null : _restorePurchase,
+                    child: const Text('Restore purchases'),
                   ),
                 ],
               ],

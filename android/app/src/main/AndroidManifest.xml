@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="CryptKeep"
@@ -27,6 +28,42 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Autofill: launched by the autofill service to unlock and pick a
+             credential for the requesting app/website. -->
+        <activity
+            android:name=".AutofillActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+              android:name="io.flutter.embedding.android.NormalTheme"
+              android:resource="@style/NormalTheme"
+              />
+        </activity>
+
+        <meta-data
+            android:name="com.keevault.flutter_autofill_service.ACTIVITY_NAME"
+            android:value="com.eerie.cryptkeep.AutofillActivity" />
+        <meta-data
+            android:name="com.keevault.flutter_autofill_service.SAVE_ACTIVITY_NAME"
+            android:value="com.eerie.cryptkeep.MainActivity" />
+        <meta-data
+            android:name="com.keevault.flutter_autofill_service.select_another_entry"
+            android:value="Pick a different entry" />
+
+        <service
+            android:name="com.keevault.flutter_autofill_service.FlutterAutofillService"
+            tools:replace="label"
+            android:label="CryptKeep">
+            <meta-data
+                android:name="com.keevault.flutter_autofill_service.unlock_label"
+                android:value="Unlock CryptKeep to fill" />
+        </service>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

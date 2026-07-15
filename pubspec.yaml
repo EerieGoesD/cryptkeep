@@ -24,6 +24,9 @@ dependencies:
   webcrypto: ^0.6.0
   in_app_purchase: ^3.3.0
   package_info_plus: ^9.0.1
+  local_auth: ^3.0.2
+  flutter_secure_storage: ^10.3.1
+  flutter_autofill_service: ^0.21.0
 
 dev_dependencies:
   flutter_test:
