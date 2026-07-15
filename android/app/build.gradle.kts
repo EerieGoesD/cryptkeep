@@ -70,6 +70,10 @@ dependencies {
     implementation("org.tinylog:tinylog-api:2.7.0")
     implementation("org.tinylog:tinylog-impl:2.7.0")
     implementation("org.tinylog:slf4j-tinylog:2.7.0")
+
+    // Passkeys (PasskeyProviderService). Declared directly rather than leaned
+    // on via flutter_autofill_service, which happens to pull the same library.
+    implementation("androidx.credentials:credentials:1.5.0")
 }
 
 flutter {

@@ -1,3 +1,5 @@
+import 'passkey_data.dart';
+
 class VaultEntry {
   final String id;
   final String title;
@@ -6,6 +8,11 @@ class VaultEntry {
   final String url;
   final String notes;
   final String category;
+
+  /// Set when this entry is a passkey rather than a password. Entries saved
+  /// before passkeys existed simply have none.
+  final PasskeyData? passkey;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -17,9 +24,13 @@ class VaultEntry {
     this.url = '',
     this.notes = '',
     this.category = '',
+    this.passkey,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  /// True if this entry is a passkey.
+  bool get isPasskey => passkey != null;
 
   VaultEntry copyWith({
     String? title,
@@ -28,6 +39,7 @@ class VaultEntry {
     String? url,
     String? notes,
     String? category,
+    PasskeyData? passkey,
   }) {
     return VaultEntry(
       id: id,
@@ -37,6 +49,7 @@ class VaultEntry {
       url: url ?? this.url,
       notes: notes ?? this.notes,
       category: category ?? this.category,
+      passkey: passkey ?? this.passkey,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
     );
@@ -50,6 +63,7 @@ class VaultEntry {
         'url': url,
         'notes': notes,
         'category': category,
+        if (passkey != null) 'passkey': passkey!.toJson(),
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
       };
@@ -62,6 +76,9 @@ class VaultEntry {
         url: (json['url'] as String?) ?? '',
         notes: (json['notes'] as String?) ?? '',
         category: (json['category'] as String?) ?? '',
+        passkey: json['passkey'] == null
+            ? null
+            : PasskeyData.fromJson(json['passkey'] as Map<String, dynamic>),
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );

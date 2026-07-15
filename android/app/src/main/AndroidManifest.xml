@@ -45,6 +45,27 @@
               />
         </activity>
 
+        <!-- Passkeys: launched by PasskeyProviderService's PendingIntent once
+             the user picks CryptKeep to save a passkey. -->
+        <activity
+            android:name=".PasskeyActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="com.eerie.cryptkeep.CREATE_PASSKEY" />
+                <action android:name="com.eerie.cryptkeep.UNLOCK_PASSKEY" />
+                <action android:name="com.eerie.cryptkeep.GET_PASSKEY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.keevault.flutter_autofill_service.ACTIVITY_NAME"
             android:value="com.eerie.cryptkeep.AutofillActivity" />
@@ -62,6 +83,24 @@
             <meta-data
                 android:name="com.keevault.flutter_autofill_service.unlock_label"
                 android:value="Unlock CryptKeep to fill" />
+        </service>
+
+        <!-- Passkeys: offers CryptKeep as a credential provider. Android 14+
+             only, so the platform simply never binds it on older devices. -->
+        <service
+            android:name=".PasskeyProviderService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="CryptKeep"
+            android:icon="@mipmap/ic_launcher"
+            android:permission="android.permission.BIND_CREDENTIAL_PROVIDER_SERVICE"
+            tools:targetApi="upside_down_cake">
+            <intent-filter>
+                <action android:name="android.service.credentials.CredentialProviderService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.credentials.provider"
+                android:resource="@xml/provider" />
         </service>
 
         <!-- Don't delete the meta-data below.

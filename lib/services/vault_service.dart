@@ -35,8 +35,9 @@ class VaultService {
       }
     }
 
-    // Keep the offline copy in step with the server on every load. The vault
-    // screen reloads after each add/edit/delete, so this stays current.
+    // Rebuild the offline copy from the server on every load. Writes clear it
+    // rather than patch it, so a stale copy can never outlive a change - the
+    // passkey flow writes without ever going through the vault screen.
     await VaultCacheService.save(encryptedRows);
     return entries;
   }
@@ -55,6 +56,7 @@ class VaultService {
       'updated_at': entry.updatedAt.toIso8601String(),
     });
 
+    await VaultCacheService.clear();
     return entry;
   }
 
@@ -69,6 +71,7 @@ class VaultService {
       'updated_at': entry.updatedAt.toIso8601String(),
     }).eq('id', entry.id).eq('user_id', userId);
 
+    await VaultCacheService.clear();
     return entry;
   }
 
@@ -76,5 +79,6 @@ class VaultService {
   static Future<void> delete(String id) async {
     final userId = supabase.auth.currentUser!.id;
     await supabase.from(_table).delete().eq('id', id).eq('user_id', userId);
+    await VaultCacheService.clear();
   }
 }

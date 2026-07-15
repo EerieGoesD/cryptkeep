@@ -150,8 +150,12 @@ class _AutofillScreenState extends State<AutofillScreen> {
     try {
       // Prefer the local copy: autofill is launched from another app and may
       // have no connection, and a network round trip here is a visible stall.
-      final entries =
+      final all =
           await VaultCacheService.load(key) ?? await VaultService.fetchAll(key);
+
+      // Passkeys are not passwords: they have nothing to type into a field,
+      // and are offered through the credential provider instead.
+      final entries = all.where((e) => !e.isPasskey).toList();
       final matches = entries.where(_matchesRequest).toList();
 
       // Android authenticated the whole fill response here, so it expects a
