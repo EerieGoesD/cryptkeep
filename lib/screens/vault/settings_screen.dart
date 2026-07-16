@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app.dart';
 import '../../config.dart';
 import '../../providers/app_state.dart';
+import '../../services/app_settings_service.dart';
 import '../../services/biometric_service.dart';
 import '../../services/migration_service.dart';
 import '../../services/vault_cache_service.dart';
@@ -33,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     _loadBiometric();
     _loadAutofill();
+    _loadSiteIcons();
   }
 
   Future<void> _loadAutofill() async {
@@ -63,6 +65,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _biometricAvailable = available;
       _biometricEnabled = enabled;
     });
+  }
+
+  bool _siteIcons = false;
+
+  Future<void> _loadSiteIcons() async {
+    final enabled = await AppSettingsService.siteIconsEnabled();
+    if (mounted) setState(() => _siteIcons = enabled);
+  }
+
+  Future<void> _toggleSiteIcons(bool value) async {
+    await AppSettingsService.setSiteIconsEnabled(value);
+    if (!mounted) return;
+    setState(() => _siteIcons = value);
   }
 
   Future<void> _toggleBiometric(bool value) async {
@@ -297,6 +312,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         : 'Off - tap to fill passwords in other apps',
                     onTap: _toggleAutofill,
                   ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A2E),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.image_outlined,
+                        color: Color(0xFF8B5CF6), size: 22),
+                    title: const Text('Website Icons',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14)),
+                    // Say the cost plainly. Someone choosing a zero-knowledge
+                    // password manager deserves to know what turning this on
+                    // gives away, rather than find out later.
+                    subtitle: const Text(
+                        'Show site logos instead of letters. Icons load from '
+                        'Google, so Google can see which sites you have '
+                        'accounts with.',
+                        style:
+                            TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                    isThreeLine: true,
+                    trailing: Switch(
+                      value: _siteIcons,
+                      onChanged: _toggleSiteIcons,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
                 const SizedBox(height: 28),
                 const Text(
                   'SUPPORT',

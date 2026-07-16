@@ -1,4 +1,5 @@
 import 'passkey_data.dart';
+import 'totp_config.dart';
 
 class VaultEntry {
   final String id;
@@ -8,6 +9,11 @@ class VaultEntry {
   final String url;
   final String notes;
   final String category;
+
+  /// The site's two-factor code setup, or null if it has none. Encrypted with
+  /// the rest of the entry - as sensitive as the password, since together they
+  /// are the whole login.
+  final TotpConfig? totp;
 
   /// Set when this entry is a passkey rather than a password. Entries saved
   /// before passkeys existed simply have none.
@@ -24,6 +30,7 @@ class VaultEntry {
     this.url = '',
     this.notes = '',
     this.category = '',
+    this.totp,
     this.passkey,
     required this.createdAt,
     required this.updatedAt,
@@ -32,6 +39,9 @@ class VaultEntry {
   /// True if this entry is a passkey.
   bool get isPasskey => passkey != null;
 
+  /// True if this entry can produce a two-factor code.
+  bool get hasTotp => totp != null;
+
   VaultEntry copyWith({
     String? title,
     String? username,
@@ -39,6 +49,8 @@ class VaultEntry {
     String? url,
     String? notes,
     String? category,
+    TotpConfig? totp,
+    bool clearTotp = false,
     PasskeyData? passkey,
   }) {
     return VaultEntry(
@@ -49,6 +61,8 @@ class VaultEntry {
       url: url ?? this.url,
       notes: notes ?? this.notes,
       category: category ?? this.category,
+      // clearTotp is needed because passing null cannot mean "remove it".
+      totp: clearTotp ? null : (totp ?? this.totp),
       passkey: passkey ?? this.passkey,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
@@ -63,6 +77,7 @@ class VaultEntry {
         'url': url,
         'notes': notes,
         'category': category,
+        if (totp != null) 'totp': totp!.toJson(),
         if (passkey != null) 'passkey': passkey!.toJson(),
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
@@ -76,6 +91,9 @@ class VaultEntry {
         url: (json['url'] as String?) ?? '',
         notes: (json['notes'] as String?) ?? '',
         category: (json['category'] as String?) ?? '',
+        totp: json['totp'] == null
+            ? null
+            : TotpConfig.fromJson(json['totp'] as Map<String, dynamic>),
         passkey: json['passkey'] == null
             ? null
             : PasskeyData.fromJson(json['passkey'] as Map<String, dynamic>),

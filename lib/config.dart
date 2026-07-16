@@ -13,9 +13,9 @@ class SupabaseConfig {
 // (e.g. a one-time-purchase build). Skips all checkout flows entirely.
 const bool kProIncluded = bool.fromEnvironment('PRO_INCLUDED', defaultValue: false);
 
-// Maximum number of vault entries a free (non-Pro) user can store. Adding
-// beyond this prompts an upgrade to Pro.
-const int kFreeEntryLimit = 15;
+// Storing passwords is free and unlimited, as it is with Bitwarden and Proton
+// Pass. Pro sells the security extras (2FA codes, breach checks, health
+// report, icons) rather than permission to keep more than a handful.
 
 // Pro subscription product IDs. These must match the products configured in
 // both Google Play (subscriptions) and the Microsoft Store (add-ons).

@@ -63,6 +63,12 @@ class _PremiumScreenState extends State<PremiumScreen>
 
   static const _features = [
     (
+      icon: Icons.timer_outlined,
+      title: '6-Digit Sign-In Codes',
+      desc: 'Store your two-factor codes next to each password, so you can '
+          'stop reaching for a separate app.',
+    ),
+    (
       icon: Icons.shield_outlined,
       title: 'Password Health Dashboard',
       desc: 'Find weak, reused, and old passwords across your vault.',
@@ -74,8 +80,9 @@ class _PremiumScreenState extends State<PremiumScreen>
     ),
     (
       icon: Icons.image_outlined,
-      title: 'Custom Icons',
-      desc: 'Website favicons for your vault entries instead of plain letters.',
+      title: 'Website Icons',
+      desc: 'Site logos instead of plain letters. Off by default, and you turn '
+          'it on in Settings.',
     ),
   ];
 

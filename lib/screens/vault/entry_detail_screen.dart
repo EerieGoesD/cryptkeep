@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../models/vault_entry.dart';
+import '../../services/premium_service.dart';
+import '../../services/totp_service.dart';
 import '../../utils/app_notification.dart';
 import 'add_edit_entry_screen.dart';
+import 'premium_screen.dart';
 
 class EntryDetailScreen extends StatefulWidget {
   final VaultEntry entry;
@@ -22,15 +25,25 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
   bool _wasModified = false;
   Timer? _clipboardTimer;
 
+  /// Redraws the code and its countdown once a second.
+  Timer? _totpTimer;
+
   @override
   void initState() {
     super.initState();
     _entry = widget.entry;
+    if (_entry.hasTotp && PremiumService.isPremium()) {
+      _totpTimer = Timer.periodic(
+        const Duration(seconds: 1),
+        (_) => setState(() {}),
+      );
+    }
   }
 
   @override
   void dispose() {
     _clipboardTimer?.cancel();
+    _totpTimer?.cancel();
     super.dispose();
   }
 
@@ -88,6 +101,8 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
             ),
           if (_entry.password.isNotEmpty)
             _buildPasswordField(),
+          if (_entry.hasTotp)
+            _buildTotpField(),
           if (_entry.url.isNotEmpty)
             _buildField(
               label: 'URL',
@@ -130,6 +145,139 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  /// The rotating 6-digit sign-in code, with a countdown so you can see
+  /// whether there is time to type it before it changes.
+  Widget _buildTotpField() {
+    if (!PremiumService.isPremium()) return _buildTotpLocked();
+
+    final totp = _entry.totp!;
+    String code;
+    try {
+      code = TotpService.generate(totp);
+    } catch (_) {
+      // A key that will not decode: say so rather than show a wrong code.
+      return _buildField(
+        label: 'Two-factor code',
+        value: 'This code could not be read. Edit the entry to fix it.',
+        icon: Icons.warning_amber_outlined,
+      );
+    }
+
+    final remaining = TotpService.secondsRemaining(totp);
+    final runningOut = remaining <= 5;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.lock_clock_outlined,
+              color: Color(0xFF8B5CF6), size: 20),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Two-factor code',
+                    style:
+                        TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                const SizedBox(height: 4),
+                Text(
+                  // Split down the middle: easier to read off and retype.
+                  // Works for 6 and 8 digit codes alike.
+                  '${code.substring(0, code.length ~/ 2)} '
+                  '${code.substring(code.length ~/ 2)}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 2,
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 32,
+            height: 32,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                CircularProgressIndicator(
+                  value: remaining / totp.period,
+                  strokeWidth: 2.5,
+                  backgroundColor: const Color(0xFF2A2A3E),
+                  valueColor: AlwaysStoppedAnimation(
+                    runningOut
+                        ? const Color(0xFFFBBF24)
+                        : const Color(0xFF8B5CF6),
+                  ),
+                ),
+                Text(
+                  '$remaining',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: runningOut
+                        ? const Color(0xFFFBBF24)
+                        : const Color(0xFF94A3B8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.copy, size: 18, color: Color(0xFF94A3B8)),
+            tooltip: 'Copy',
+            onPressed: () => _copy(code, 'Two-factor code'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Shown to free users: the entry has a code, but reading it needs Pro.
+  Widget _buildTotpLocked() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF2A2A3E)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.lock_clock_outlined,
+              color: Color(0xFF94A3B8), size: 20),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Two-factor code',
+                    style:
+                        TextStyle(color: Color(0xFF94A3B8), fontSize: 12)),
+                SizedBox(height: 4),
+                Text('Included with CryptKeep Pro',
+                    style: TextStyle(fontSize: 15)),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PremiumScreen()),
+            ),
+            child: const Text('Get Pro'),
+          ),
+        ],
+      ),
     );
   }
 

@@ -4,10 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../config.dart';
 import '../../providers/app_state.dart';
 import '../../services/kdbx_import_service.dart';
-import '../../services/premium_service.dart';
 import '../../services/vault_service.dart';
 import '../../utils/app_notification.dart';
 
@@ -68,41 +66,13 @@ class _ImportScreenState extends State<ImportScreen> {
       if (!mounted) return;
       final key = context.read<AppState>().encryptionKey;
 
-      // Enforce the free-tier limit. Pro users import everything.
-      var toImport = entries;
-      var skipped = 0;
-      if (!PremiumService.isPremium()) {
-        final remaining = kFreeEntryLimit - widget.existingCount;
-        if (remaining <= 0) {
-          showAppNotification(
-            context,
-            'Free vaults are limited to $kFreeEntryLimit passwords. '
-            'Subscribe to Pro to import more.',
-          );
-          setState(() => _loading = false);
-          return;
-        }
-        if (entries.length > remaining) {
-          toImport = entries.take(remaining).toList();
-          skipped = entries.length - remaining;
-        }
-      }
-
       int imported = 0;
-      for (final entry in toImport) {
+      for (final entry in entries) {
         await VaultService.create(entry, key);
         imported++;
       }
 
       if (!mounted) return;
-      if (skipped > 0) {
-        showAppNotification(
-          context,
-          'Imported $imported of ${entries.length}. '
-          '$skipped skipped (free limit of $kFreeEntryLimit reached). '
-          'Subscribe to Pro for unlimited.',
-        );
-      }
       Navigator.of(context).pop(imported);
     } catch (e) {
       if (!mounted) return;

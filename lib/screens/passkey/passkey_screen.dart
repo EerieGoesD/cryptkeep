@@ -4,12 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../app.dart';
-import '../../config.dart';
 import '../../models/vault_entry.dart';
 import '../../services/biometric_service.dart';
 import '../../services/migration_service.dart';
 import '../../services/passkey_service.dart';
-import '../../services/premium_service.dart';
 import '../../services/vault_cache_service.dart';
 import '../../services/vault_service.dart';
 
@@ -229,16 +227,6 @@ class _PasskeyScreenState extends State<PasskeyScreen> {
     });
 
     try {
-      // Straight from the server: a passkey has to be saved to be worth
-      // anything, so this needs the network regardless, and the count must be
-      // authoritative before we decide about the limit.
-      final entries = await VaultService.fetchAll(key);
-      if (!PremiumService.isPremium() && entries.length >= kFreeEntryLimit) {
-        _fail('Free vaults hold $kFreeEntryLimit logins, and passkeys count '
-            'towards that. Subscribe to CryptKeep Pro to add more.');
-        return;
-      }
-
       final creation = await PasskeyService.create(
         rpId: _request!['rpId'] as String,
         userHandle: _request!['userHandle'] as String,
