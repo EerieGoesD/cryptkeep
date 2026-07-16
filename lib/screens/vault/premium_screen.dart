@@ -63,10 +63,10 @@ class _PremiumScreenState extends State<PremiumScreen>
 
   static const _features = [
     (
-      icon: Icons.timer_outlined,
-      title: '6-Digit Sign-In Codes',
-      desc: 'Store your two-factor codes next to each password, so you can '
-          'stop reaching for a separate app.',
+      icon: Icons.lock_clock_outlined,
+      title: 'Built-in Authenticator',
+      desc: 'Keep your two-factor codes beside each password and skip the '
+          'separate authenticator app.',
     ),
     (
       icon: Icons.shield_outlined,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -163,18 +164,30 @@ class _AddEditEntryScreenState extends State<AddEditEntryScreen> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _scanTotp,
-                  icon: const Icon(Icons.qr_code_scanner, size: 18),
-                  label: const Text('Scan QR code'),
+              // The camera scanner only exists on phones (mobile_scanner has no
+              // Windows/Linux support). On a desktop there is nothing to hold up
+              // to a camera anyway, so those platforms enter the key instead.
+              if (_canScanQr) ...[
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _scanTotp,
+                    icon: const Icon(Icons.qr_code_scanner, size: 18),
+                    label: const Text('Scan QR code'),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              TextButton(
-                onPressed: _enterTotpByHand,
-                child: const Text('Enter key'),
-              ),
+                const SizedBox(width: 10),
+                TextButton(
+                  onPressed: _enterTotpByHand,
+                  child: const Text('Enter key'),
+                ),
+              ] else
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _enterTotpByHand,
+                    icon: const Icon(Icons.vpn_key_outlined, size: 18),
+                    label: const Text('Enter setup key'),
+                  ),
+                ),
             ],
           ),
         ],
@@ -192,6 +205,13 @@ class _AddEditEntryScreenState extends State<AddEditEntryScreen> {
         ),
         child: child,
       );
+
+  /// A camera scanner only exists on phones. Everywhere else (Windows desktop,
+  /// and the web build) the key is entered by hand.
+  bool get _canScanQr =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   Future<void> _scanTotp() async {
     final config = await Navigator.of(context).push<TotpConfig>(

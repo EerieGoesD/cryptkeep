@@ -148,8 +148,8 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
     );
   }
 
-  /// The rotating 6-digit sign-in code, with a countdown so you can see
-  /// whether there is time to type it before it changes.
+  /// The rotating two-factor code, with a countdown so you can see whether
+  /// there is time to type it before it changes.
   Widget _buildTotpField() {
     if (!PremiumService.isPremium()) return _buildTotpLocked();
 
