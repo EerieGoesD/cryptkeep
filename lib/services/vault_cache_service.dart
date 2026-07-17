@@ -24,8 +24,14 @@ class VaultCacheService {
 
   static const _storage = FlutterSecureStorage();
 
+  // Android and iOS: both have an autofill/credential extension that reads the
+  // vault while the app is closed and possibly offline, so both keep a local
+  // copy. Desktop and web have no such reader, so a cache there is only extra
+  // exposure.
   static bool get _supported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   /// Stores the encrypted rows for the signed-in user. Failures are ignored:
   /// the cache is an optimisation, never the source of truth.
