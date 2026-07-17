@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 
+import '../config.dart';
+
 /// Stores the derived vault key behind the device's secure hardware
 /// (Android Keystore / iOS Keychain) so the user can unlock with fingerprint or
 /// face instead of retyping the master password. The key is only released after
@@ -17,7 +19,13 @@ class BiometricService {
   static const _keyStoreKey = 'cryptkeep_vault_key';
   static const _emailStoreKey = 'cryptkeep_biometric_email';
 
-  static const _storage = FlutterSecureStorage();
+  // Shared keychain group on Apple platforms so the autofill/passkey extension
+  // can release the same key after its own Face ID / Touch ID check. Ignored on
+  // Android and Windows.
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(groupId: kAppleGroupId),
+    mOptions: MacOsOptions(groupId: kAppleGroupId),
+  );
   static final LocalAuthentication _auth = LocalAuthentication();
 
   /// True if the device has usable, enrolled biometrics.

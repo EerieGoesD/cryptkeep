@@ -23,3 +23,13 @@ const String kProductIdMonthly = 'cryptkeep_pro_monthly';
 const String kProductIdYearly = 'cryptkeep_pro_yearly';
 
 const String kAuthRedirectUrl = 'https://eeriegoesd.com/cryptkeep/';
+
+// Apple App Group / shared keychain group. On iOS and macOS the autofill and
+// passkey extension is a separate process, so anything it must read (the vault
+// copy and the unlock key) has to live in a shared keychain group, not the
+// app's private one. Both the app target and the extension target must declare
+// this exact group in their entitlements in Xcode. Ignored on Android/Windows.
+//
+// Convention is group.<bundle id>. If you register a different App Group in the
+// Apple Developer portal, change this one line to match.
+const String kAppleGroupId = 'group.com.eerie.cryptkeep';

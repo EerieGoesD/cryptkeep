@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../app.dart';
+import '../config.dart';
 import '../models/vault_entry.dart';
 import 'crypto_service.dart';
 
@@ -22,7 +23,13 @@ class VaultCacheService {
   static const _cacheKey = 'cryptkeep_vault_cache';
   static const _version = 1;
 
-  static const _storage = FlutterSecureStorage();
+  // On Apple platforms the copy lives in the shared keychain group so the
+  // autofill/passkey extension (a separate process) can read it. Android and
+  // Windows ignore these options and use their own private storage.
+  static const _storage = FlutterSecureStorage(
+    iOptions: IOSOptions(groupId: kAppleGroupId),
+    mOptions: MacOsOptions(groupId: kAppleGroupId),
+  );
 
   // Android and iOS: both have an autofill/credential extension that reads the
   // vault while the app is closed and possibly offline, so both keep a local
