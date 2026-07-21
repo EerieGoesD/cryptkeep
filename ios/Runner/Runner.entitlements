@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The vault key and the offline vault copy are written with
+	     kSecAttrAccessGroup set to kAppleGroupId (lib/config.dart), so the
+	     autofill/passkey extension can read them from its own process. Without
+	     this entitlement the keychain refuses the write and biometric unlock
+	     fails on a real device, while still appearing to work in the simulator.
+	     See BiometricService and VaultCacheService. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)group.com.eerie.cryptkeep</string>
+	</array>
+
+	<!-- For the autofill extension to share a container with the app. Not used
+	     by the current code, which shares through the keychain only, but the
+	     App ID declares it and the extension will need it. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.eerie.cryptkeep</string>
+	</array>
+</dict>
+</plist>

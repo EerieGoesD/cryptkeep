@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CryptKeep</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Locked: sign in with the account and master password. -->
+    <section id="view-locked" hidden>
+      <header class="brand">
+        <img src="../icons/icon48.png" alt="" width="28" height="28" />
+        <h1>CryptKeep</h1>
+      </header>
+      <form id="unlock-form">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required />
+        <label for="master">Master password</label>
+        <input id="master" type="password" autocomplete="current-password" required />
+        <button type="submit" class="primary" id="unlock-button">Unlock</button>
+      </form>
+      <p class="error" id="unlock-error" hidden></p>
+      <p class="footnote">
+        No account? <a href="#" id="open-web">Create one</a>
+      </p>
+    </section>
+
+    <!-- Second factor, only when the account has one. -->
+    <section id="view-mfa" hidden>
+      <header class="brand">
+        <h1>Two-factor code</h1>
+      </header>
+      <form id="mfa-form">
+        <label for="mfa-code">Enter the 6-digit code from your authenticator</label>
+        <input
+          id="mfa-code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          required
+        />
+        <button type="submit" class="primary">Verify</button>
+      </form>
+      <p class="error" id="mfa-error" hidden></p>
+    </section>
+
+    <!-- Unlocked: the vault. -->
+    <section id="view-vault" hidden>
+      <header class="topbar">
+        <input id="search" type="search" placeholder="Search vault" />
+        <button id="lock-button" class="icon" title="Lock now">Lock</button>
+      </header>
+      <p class="status" id="vault-status" hidden></p>
+      <div id="entries"></div>
+      <footer class="statusbar">
+        <span id="account"></span>
+        <button id="refresh-button" class="link">Refresh</button>
+      </footer>
+    </section>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

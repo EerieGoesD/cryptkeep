@@ -4,8 +4,16 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<!-- true, not false. The exemption covers apps that only use the operating
+	     system's own encryption, such as HTTPS through URLSession. CryptKeep
+	     ships its own AES-256-GCM and PBKDF2 via pointycastle and encrypts the
+	     user's vault with them (see lib/services/crypto_service.dart), which is
+	     non-exempt. Declaring false here would be a false statement to Apple.
+	     Consequence: a self-classification report must be filed annually with
+	     the US Bureau of Industry and Security, due 1 February each year for
+	     builds distributed in the previous calendar year. -->
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>CryptKeep uses Face ID to unlock your vault.</string>
 	<key>NSCameraUsageDescription</key>

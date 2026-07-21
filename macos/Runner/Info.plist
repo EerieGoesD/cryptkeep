@@ -28,5 +28,11 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<!-- Was missing entirely, so App Store Connect asked on every upload.
+	     true because CryptKeep ships its own AES-256-GCM and PBKDF2 rather than
+	     only using the operating system's encryption. Same declaration as iOS;
+	     see the note in ios/Runner/Info.plist. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<true/>
 </dict>
 </plist>

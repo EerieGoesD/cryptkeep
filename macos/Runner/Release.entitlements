@@ -4,5 +4,29 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+
+	<!-- Reaching Supabase. Without this the release build launches and every
+	     request fails, so nothing loads at all. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+
+	<!-- KeePass import reads a file the user picks; export writes one. Import
+	     alone would only need read-only. -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+
+	<!-- The vault key and the offline vault copy live in a shared keychain
+	     group so the autofill extension, a separate process, can read them.
+	     See kAppleGroupId in lib/config.dart, BiometricService and
+	     VaultCacheService. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)group.com.eerie.cryptkeep</string>
+	</array>
+
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.eerie.cryptkeep</string>
+	</array>
 </dict>
 </plist>

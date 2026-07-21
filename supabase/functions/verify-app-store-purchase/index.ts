@@ -1,5 +1,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { grantPremium } from "../_shared/premium.ts";
+import { rememberSubscription } from "../_shared/store_links.ts";
 
 // Must match the App Store Connect subscription Product IDs and the app code.
 const productIds = ["cryptkeep_pro_monthly", "cryptkeep_pro_yearly"];
@@ -115,12 +117,14 @@ Deno.serve(async (req) => {
     const entries = result.latest_receipt_info ?? result.receipt?.in_app ?? [];
     let latestExpiryMs = 0;
     let matchedProductId: string | null = null;
+    let originalTransactionId: string | null = null;
     for (const entry of entries) {
       if (!entry.product_id || !productIds.includes(entry.product_id)) continue;
       const ms = entry.expires_date_ms ? Number(entry.expires_date_ms) : 0;
       if (Number.isFinite(ms) && ms > latestExpiryMs) {
         latestExpiryMs = ms;
         matchedProductId = entry.product_id;
+        originalTransactionId = entry.original_transaction_id ?? null;
       }
     }
 
@@ -129,20 +133,28 @@ Deno.serve(async (req) => {
 
     if (active && premiumUntil) {
       const user = userData.user;
-      const currentAppMetadata = user.app_metadata ?? {};
-      const { error: updateError } = await supabaseAdmin.auth.admin
-        .updateUserById(user.id, {
-          app_metadata: {
-            ...currentAppMetadata,
-            premium_until: premiumUntil,
-            premium_source: "app_store",
-            premium_product_id: matchedProductId,
-          },
-        });
 
-      if (updateError) {
-        console.error("Failed to update premium app metadata:", updateError);
-        return json({ error: "Failed to update premium entitlement" }, 500);
+      await grantPremium(supabaseAdmin, user.id, {
+        until: new Date(latestExpiryMs),
+        source: "app_store",
+        productId: matchedProductId,
+      });
+
+      // The original transaction id is the only thing Apple sends with a
+      // renewal notification, so without this the renewal cannot be matched to
+      // an account and Pro lapses while Apple keeps charging.
+      if (originalTransactionId) {
+        await rememberSubscription(supabaseAdmin, {
+          userId: user.id,
+          source: "app_store",
+          storeSubscriptionId: originalTransactionId,
+          productId: matchedProductId,
+          expiresAt: new Date(latestExpiryMs),
+        });
+      } else {
+        console.warn(
+          `No original_transaction_id on the receipt for ${user.id}; renewals will not be picked up`,
+        );
       }
     }
 

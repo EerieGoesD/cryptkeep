@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "CryptKeep",
+  "version": "1.0.0",
+  "description": "Zero-knowledge password manager. Your vault is decrypted in your browser - the server only ever sees ciphertext.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "48": "icons/icon48.png",
+    "192": "icons/icon192.png",
+    "512": "icons/icon512.png"
+  },
+  "action": {
+    "default_title": "CryptKeep",
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "48": "icons/icon48.png",
+      "192": "icons/icon192.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://jhuxxolbcrjerztwqyap.supabase.co/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

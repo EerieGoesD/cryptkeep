@@ -439,9 +439,16 @@ class _PremiumScreenState extends State<PremiumScreen>
   }
 
   Future<void> _openStripeCheckout() async {
-    final email = supabase.auth.currentUser?.email ?? '';
+    final user = supabase.auth.currentUser;
+    final email = user?.email ?? '';
+    // client_reference_id carries the account id through Stripe and back out
+    // in the webhook. Without it the only link between the payment and the
+    // account is the email typed on Stripe's page, which the buyer can change -
+    // and then the money arrives while Pro does not.
     final url = Uri.parse(
-      '$_stripeCheckoutBaseUrl?prefilled_email=${Uri.encodeComponent(email)}',
+      '$_stripeCheckoutBaseUrl'
+      '?prefilled_email=${Uri.encodeComponent(email)}'
+      '&client_reference_id=${Uri.encodeComponent(user?.id ?? '')}',
     );
     await launchUrl(url, mode: LaunchMode.externalApplication);
     _startPolling();

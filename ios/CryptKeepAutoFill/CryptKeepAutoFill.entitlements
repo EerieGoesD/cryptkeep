@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Must match ios/Runner/Runner.entitlements exactly. This is the only
+	     reason the extension can read what the app wrote: same group, same
+	     keychain. Change one and you must change the other. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)group.com.eerie.cryptkeep</string>
+	</array>
+
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.eerie.cryptkeep</string>
+	</array>
+</dict>
+</plist>
