@@ -51,8 +51,14 @@ class _EntryDetailScreenState extends State<EntryDetailScreen> {
     _clipboardTimer?.cancel();
     Clipboard.setData(ClipboardData(text: value));
     showAppNotification(context, '$label copied — clipboard clears in 30s');
-    _clipboardTimer = Timer(const Duration(seconds: 30), () {
-      Clipboard.setData(const ClipboardData(text: ''));
+    _clipboardTimer = Timer(const Duration(seconds: 30), () async {
+      // Only wipe what we put there. If the user copied something else in the
+      // meantime, clearing would destroy their clipboard and paste would
+      // silently give them nothing.
+      final current = await Clipboard.getData(Clipboard.kTextPlain);
+      if (current?.text == value) {
+        await Clipboard.setData(const ClipboardData(text: ''));
+      }
     });
   }
 

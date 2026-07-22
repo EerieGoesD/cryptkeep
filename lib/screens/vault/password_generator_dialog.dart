@@ -108,11 +108,18 @@ class _PasswordGeneratorDialogState extends State<PasswordGeneratorDialog> {
                     onPressed: _password.isEmpty
                         ? null
                         : () {
-                            Clipboard.setData(
-                                ClipboardData(text: _password));
+                            final copied = _password;
+                            Clipboard.setData(ClipboardData(text: copied));
                             showAppNotification(context, 'Copied — clipboard clears in 30s');
-                            Timer(const Duration(seconds: 30), () {
-                              Clipboard.setData(const ClipboardData(text: ''));
+                            Timer(const Duration(seconds: 30), () async {
+                              // Only wipe what we put there, or we destroy
+                              // whatever the user copied since.
+                              final current =
+                                  await Clipboard.getData(Clipboard.kTextPlain);
+                              if (current?.text == copied) {
+                                await Clipboard.setData(
+                                    const ClipboardData(text: ''));
+                              }
                             });
                           },
                   ),
