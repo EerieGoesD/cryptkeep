@@ -372,23 +372,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Icons.bug_report_outlined,
                   title: 'Report Issue',
                   onTap: () => launchUrl(
-                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=bug-report.md'),
+                    Uri.parse('https://support.eeriegoesd.com/report-issue/cryptkeep'),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
                 _tile(
                   icon: Icons.lightbulb_outline,
-                  title: 'Suggest Feature',
+                  title: 'Feature Request',
                   onTap: () => launchUrl(
-                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/issues/new?template=feature-request.md'),
+                    Uri.parse('https://support.eeriegoesd.com/suggest-feature/cryptkeep'),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
                 _tile(
                   icon: Icons.feedback_outlined,
-                  title: 'Feedback',
+                  title: 'Discussions',
                   onTap: () => launchUrl(
-                    Uri.parse('https://github.com/EerieGoesD/cryptkeep/discussions'),
+                    Uri.parse('https://support.eeriegoesd.com/community/cryptkeep'),
                     mode: LaunchMode.externalApplication,
                   ),
                 ),
