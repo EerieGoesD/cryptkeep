@@ -17,7 +17,10 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.eerie.cryptkeep"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // NDK 28 aligns native libraries to 16 KB memory pages by default, which
+    // Google Play now requires. The Flutter default (NDK 27) does not, and Play
+    // rejects the release with a 16 KB page size error.
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
