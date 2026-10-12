@@ -55,6 +55,18 @@ class _MfaSetupScreenState extends State<MfaSetupScreen> {
   Future<void> _startEnrollment() async {
     setState(() => _enrolling = true);
     try {
+      // A setup that was abandoned (page closed or left before entering the
+      // code) stays on the server as an unverified factor named "CryptKeep",
+      // and Supabase then rejects every new enroll with a name conflict.
+      // listFactors().totp only holds verified factors, so read `all`.
+      final existing = await supabase.auth.mfa.listFactors();
+      for (final f in existing.all) {
+        if (f.factorType == FactorType.totp &&
+            f.status == FactorStatus.unverified) {
+          await supabase.auth.mfa.unenroll(f.id);
+        }
+      }
+
       final response = await supabase.auth.mfa.enroll(
         factorType: FactorType.totp,
         issuer: 'CryptKeep',
